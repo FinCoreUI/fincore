@@ -1,2 +1,2 @@
-Add File
-→ Create New File
+Insert Template
+→ Code of Conduct

@@ -1,5 +1,10 @@
 # FinCore Principles
 
+## Status
+
+- Status: Draft
+- Applies to: Contributors, design, code, AI tooling
+
 This is the constitution of FinCore.
 
 Every contributor should be able to read it and know:
@@ -110,3 +115,8 @@ These are commitments, not additional principles.
 * **Trust First** — a commitment within Fintech First.
 * **Clarity Over Decoration** — a commitment within Semantic Over Visual.
 * **Mobile First** — a cross-cutting design and implementation commitment.
+
+## Relationship to Other Foundations
+
+* [Color System](color-system.md)
+* [Token Architecture](token-architecture.md)

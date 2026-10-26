@@ -3,7 +3,7 @@
 ## Status
 
 - Version: 0.1.0
-- Status: Foundation
+- Status: Draft
 - Layer: Design Tokens
 - Applies to: Figma, CSS, React, AI tooling
 
@@ -34,6 +34,8 @@ Consumers may replace primitive values without changing component architecture.
 ---
 
 ## 2. Core Principles
+
+See [FinCore Principles](principles.md); the constitution is authoritative.
 
 ### 2.1 Semantic over visual
 
@@ -316,7 +318,7 @@ Semantic tokens must be remapped for dark mode.
 
 The primitive palette does not need to change.
 
-Example:
+Current explicit dark mappings (partial):
 
 | Token                   | Dark        |
 | ----------------------- | ----------- |
@@ -334,6 +336,8 @@ Example:
 | color.border.subtle     | neutral.800 |
 | color.border.default    | neutral.700 |
 | color.border.strong     | neutral.600 |
+
+The remaining semantic roles are not yet mapped.
 
 Interactive and feedback colors must be validated for sufficient contrast in dark mode rather than simply inverted.
 
@@ -379,6 +383,8 @@ The Button component does not change.
 ---
 
 ## 8. Accessibility
+
+Validation status: not yet evaluated. No contrast matrix or automated checks exist yet.
 
 All semantic color combinations must be evaluated for WCAG contrast requirements.
 

@@ -32,12 +32,20 @@ FinCore exists to create a shared foundation that improves consistency across th
 
 ## Core Principles
 
-* Trust First
-* Clarity Over Decoration
-* Mobile First
-* Accessibility by Default
-* AI Ready
-* Open Collaboration
+FinCore is governed by eight principles. The authoritative definitions and supporting
+commitments are maintained in [`docs/foundation/principles.md`](docs/foundation/principles.md).
+
+* Accessible by Default
+* Semantic Over Visual
+* Themeable by Design
+* Source Owned
+* Consistent Yet Flexible
+* AI Friendly
+* Fintech First
+* Component Driven
+
+Supporting commitments, including Mobile First, are recorded there rather than as
+additional principles.
 
 ---
 

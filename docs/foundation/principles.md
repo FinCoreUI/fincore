@@ -102,3 +102,11 @@ Pages are assembled from components.
 Components are assembled from tokens.
 
 Never design pages first.
+
+## Supporting Commitments
+
+These are commitments, not additional principles.
+
+* **Trust First** — a commitment within Fintech First.
+* **Clarity Over Decoration** — a commitment within Semantic Over Visual.
+* **Mobile First** — a cross-cutting design and implementation commitment.

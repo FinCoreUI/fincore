@@ -26,7 +26,7 @@ Goal: Establish the foundations of FinCore and publish the first public release.
 
 ### Documentation
 
-* Design Principles
+* [Design Principles](docs/foundation/principles.md)
 * Usage Guidelines
 * Accessibility Standards
 

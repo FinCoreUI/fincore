@@ -19,7 +19,7 @@ Primitive Color
 ↓
 Semantic Color
 ↓
-Component Token
+Component Tokens
 
 Example:
 
@@ -43,7 +43,7 @@ Do not use:
 
 blue.600
 red.500
-gray.900
+neutral.900
 
 directly inside components.
 
@@ -88,13 +88,13 @@ Future consumers may create additional themes.
 
 ---
 
-# 3. Primitive Color Tokens
+## 3. Primitive Color Tokens
 
 Primitive tokens represent raw color values.
 
 They do not communicate meaning.
 
-## 3.1 Neutral
+### 3.1 Neutral
 
 | Token       | Value   |
 | ----------- | ------- |
@@ -110,7 +110,7 @@ They do not communicate meaning.
 | neutral.900 | #18181B |
 | neutral.950 | #09090B |
 
-## 3.2 Blue
+### 3.2 Blue
 
 | Token    | Value   |
 | -------- | ------- |
@@ -126,7 +126,7 @@ They do not communicate meaning.
 | blue.900 | #1E3A8A |
 | blue.950 | #172554 |
 
-## 3.3 Green
+### 3.3 Green
 
 | Token     | Value   |
 | --------- | ------- |
@@ -142,7 +142,7 @@ They do not communicate meaning.
 | green.900 | #14532D |
 | green.950 | #052E16 |
 
-## 3.4 Amber
+### 3.4 Amber
 
 | Token     | Value   |
 | --------- | ------- |
@@ -158,7 +158,7 @@ They do not communicate meaning.
 | amber.900 | #78350F |
 | amber.950 | #451A03 |
 
-## 3.5 Red
+### 3.5 Red
 
 | Token   | Value   |
 | ------- | ------- |
@@ -174,7 +174,7 @@ They do not communicate meaning.
 | red.900 | #7F1D1D |
 | red.950 | #450A0A |
 
-## 3.6 Purple
+### 3.6 Purple
 
 | Token      | Value   |
 | ---------- | ------- |
@@ -190,7 +190,7 @@ They do not communicate meaning.
 | purple.900 | #581C87 |
 | purple.950 | #3B0764 |
 
-## 3.7 Orange
+### 3.7 Orange
 
 | Token      | Value   |
 | ---------- | ------- |
@@ -208,11 +208,11 @@ They do not communicate meaning.
 
 ---
 
-# 4. Semantic Color Tokens
+## 4. Semantic Color Tokens
 
 Semantic tokens describe purpose.
 
-## 4.1 Content
+### 4.1 Content
 
 | Token                    | Light       |
 | ------------------------ | ----------- |
@@ -226,7 +226,7 @@ Semantic tokens describe purpose.
 
 ---
 
-## 4.2 Surface
+### 4.2 Surface
 
 | Token                 | Light       |
 | --------------------- | ----------- |
@@ -239,7 +239,7 @@ Semantic tokens describe purpose.
 
 ---
 
-## 4.3 Border
+### 4.3 Border
 
 | Token                 | Light       |
 | --------------------- | ----------- |
@@ -251,7 +251,7 @@ Semantic tokens describe purpose.
 
 ---
 
-## 4.4 Actions
+### 4.4 Actions
 
 | Token                             | Light       |
 | --------------------------------- | ----------- |
@@ -270,38 +270,38 @@ Semantic tokens describe purpose.
 
 ---
 
-## 4.5 Feedback
+### 4.5 Feedback
 
-### Success
+#### Success
 
-| Token                             | Value     |
+| Token                             | Light     |
 | --------------------------------- | --------- |
 | color.feedback.success            | green.600 |
 | color.feedback.success-background | green.50  |
 | color.feedback.success-border     | green.200 |
 | color.feedback.success-foreground | green.800 |
 
-### Warning
+#### Warning
 
-| Token                             | Value     |
+| Token                             | Light     |
 | --------------------------------- | --------- |
 | color.feedback.warning            | amber.600 |
 | color.feedback.warning-background | amber.50  |
 | color.feedback.warning-border     | amber.200 |
 | color.feedback.warning-foreground | amber.800 |
 
-### Error
+#### Error
 
-| Token                           | Value   |
+| Token                           | Light   |
 | ------------------------------- | ------- |
 | color.feedback.error            | red.600 |
 | color.feedback.error-background | red.50  |
 | color.feedback.error-border     | red.200 |
 | color.feedback.error-foreground | red.800 |
 
-### Information
+#### Information
 
-| Token                          | Value    |
+| Token                          | Light    |
 | ------------------------------ | -------- |
 | color.feedback.info            | blue.600 |
 | color.feedback.info-background | blue.50  |
@@ -310,7 +310,7 @@ Semantic tokens describe purpose.
 
 ---
 
-# 5. Dark Theme
+## 5. Dark Theme
 
 Semantic tokens must be remapped for dark mode.
 
@@ -339,7 +339,7 @@ Interactive and feedback colors must be validated for sufficient contrast in dar
 
 ---
 
-# 6. Component Consumption Rule
+## 6. Component Consumption Rule
 
 Components must not consume primitive tokens directly.
 
@@ -358,7 +358,7 @@ This preserves themeability.
 
 ---
 
-# 7. Customization
+## 7. Customization
 
 Consumers may override primitive values and semantic mappings.
 
@@ -378,7 +378,7 @@ The Button component does not change.
 
 ---
 
-# 8. Accessibility
+## 8. Accessibility
 
 All semantic color combinations must be evaluated for WCAG contrast requirements.
 
@@ -395,7 +395,7 @@ Components must provide appropriate supporting indicators such as text, icons, b
 
 ---
 
-# 9. Naming Convention
+## 9. Naming Convention
 
 Tokens use:
 
@@ -422,7 +422,7 @@ Names describe meaning, not visual appearance.
 
 ---
 
-# 10. Source of Truth
+## 10. Source of Truth
 
 The canonical token definitions will eventually live in:
 

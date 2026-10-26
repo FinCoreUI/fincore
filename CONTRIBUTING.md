@@ -45,20 +45,24 @@ Please:
 
 1. Check existing issues.
 2. Discuss major changes before implementation.
-3. Follow FinCore design principles.
+3. Follow the [FinCore principles](docs/foundation/principles.md).
 4. Prioritize accessibility.
 
 ---
 
-## Design Principles
+## FinCore Principles
 
-All contributions should align with:
+All contributions follow the eight principles defined in
+[`docs/foundation/principles.md`](docs/foundation/principles.md).
 
-* Trust First
-* Clarity Over Decoration
-* Mobile First
-* Accessibility by Default
-* AI Ready
+### Contribution Expectations
+
+* Accessibility is reviewed as part of every component change.
+* Components use tokens rather than hard-coded values.
+* Component documentation covers anatomy, tokens used, states, and accessibility notes.
+* Design and implementation work is Mobile First.
+
+Open Collaboration is a community value; see [Community](#community).
 
 ---
 
@@ -70,10 +74,10 @@ Details will be added as the project evolves.
 
 ## Community
 
-Be respectful.
+FinCore is built on **Open Collaboration**.
 
-Be constructive.
-
-Be collaborative.
+* Be respectful.
+* Be constructive.
+* Be collaborative.
 
 We are building FinCore together.

@@ -1,0 +1,332 @@
+/*
+ * Application layout for the FinCore transaction-history proof of concept.
+ *
+ * This is NOT a FinCore component stylesheet and it defines no FinCore tokens.
+ * It consumes existing --fc-* variables only, and it never selects or overrides
+ * .fc-button or .fc-input state rules.
+ *
+ * FinCore currently has no semantic spacing, radius or typography tokens, so
+ * primitive tokens (space.*, radius.*, font.size.*, font.line-height.*,
+ * font.weight.*, size.border.width) are used for page-level layout. That
+ * exception is documented in README.md and does not change the rule for
+ * production components.
+ *
+ * No colour literals appear here. The page font stack is application-owned
+ * because the token source has no font-family token.
+ */
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  background-color: var(--fc-color-surface-canvas);
+  color: var(--fc-color-content-primary);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: var(--fc-font-size-sm);
+  line-height: var(--fc-font-line-height-sm);
+}
+
+.tx-page {
+  max-width: 960px;
+  margin-inline: auto;
+  padding: var(--fc-space-4);
+}
+
+.tx-header {
+  margin-block-end: var(--fc-space-4);
+}
+
+.tx-title {
+  margin: 0 0 var(--fc-space-1);
+}
+
+.tx-account {
+  margin: 0 0 var(--fc-space-1);
+  color: var(--fc-color-content-secondary);
+}
+
+.tx-account__number {
+  font-variant-numeric: tabular-nums;
+}
+
+.tx-disclaimer {
+  margin: 0;
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.tx-summary {
+  margin-block-end: var(--fc-space-4);
+  padding: var(--fc-space-3);
+  border: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  border-radius: var(--fc-radius-lg);
+  background-color: var(--fc-color-surface-default);
+}
+
+.tx-summary__label {
+  margin: 0 0 var(--fc-space-1);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.tx-summary__value {
+  margin: 0 0 var(--fc-space-1);
+  font-weight: var(--fc-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+.tx-summary__note {
+  margin: 0;
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.tx-filters {
+  margin-block-end: var(--fc-space-3);
+}
+
+.tx-section-title {
+  margin: 0 0 var(--fc-space-2);
+  font-size: var(--fc-font-size-sm);
+  font-weight: var(--fc-font-weight-medium);
+  line-height: var(--fc-font-line-height-sm);
+}
+
+.tx-filter-form {
+  display: grid;
+  gap: var(--fc-space-3);
+}
+
+.tx-filter-field {
+  min-width: 0;
+}
+
+.tx-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fc-space-2);
+}
+
+.tx-result-status {
+  margin: 0 0 var(--fc-space-2);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.tx-table-wrap {
+  overflow-x: auto;
+  border: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  border-radius: var(--fc-radius-lg);
+  background-color: var(--fc-color-surface-default);
+}
+
+.tx-table-wrap[hidden] {
+  display: none;
+}
+
+.tx-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tx-table__caption {
+  padding: var(--fc-space-2) var(--fc-space-3);
+  border-block-end: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+  text-align: start;
+}
+
+.tx-table th,
+.tx-table td {
+  padding: var(--fc-space-2) var(--fc-space-3);
+  border-block-end: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  text-align: start;
+  vertical-align: top;
+}
+
+.tx-table th {
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  font-weight: var(--fc-font-weight-medium);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.tx-table tbody tr:last-child td {
+  border-block-end: 0;
+}
+
+.tx-table th.tx-table__amount-heading,
+.tx-table td.tx-table__amount {
+  text-align: end;
+}
+
+.tx-table__amount {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tx-table__date {
+  white-space: nowrap;
+}
+
+.tx-table__description,
+.tx-table__reference {
+  overflow-wrap: anywhere;
+}
+
+.tx-amount {
+  display: block;
+  font-weight: var(--fc-font-weight-medium);
+}
+
+.tx-direction {
+  display: block;
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.tx-empty {
+  padding: var(--fc-space-4);
+  border: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  border-radius: var(--fc-radius-lg);
+  background-color: var(--fc-color-surface-default);
+}
+
+.tx-empty[hidden] {
+  display: none;
+}
+
+.tx-empty__heading {
+  margin: 0 0 var(--fc-space-1);
+  font-size: var(--fc-font-size-sm);
+  font-weight: var(--fc-font-weight-medium);
+  line-height: var(--fc-font-line-height-sm);
+}
+
+.tx-empty__body {
+  margin: 0;
+  color: var(--fc-color-content-secondary);
+}
+
+.tx-footer {
+  margin-block-start: var(--fc-space-4);
+  padding-block-start: var(--fc-space-3);
+  border-block-start: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.tx-footer p {
+  margin: 0;
+}
+
+/* Mobile transaction list. Application scaffolding, not a FinCore component. */
+.tx-list {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  border-radius: var(--fc-radius-lg);
+  background-color: var(--fc-color-surface-default);
+}
+
+.tx-card {
+  padding: var(--fc-space-3);
+  border-block-end: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+}
+
+.tx-card:last-child {
+  border-block-end: 0;
+}
+
+.tx-card__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--fc-space-2);
+  align-items: start;
+}
+
+.tx-card__description {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.tx-card__amount {
+  margin: 0;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tx-card__meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--fc-space-2);
+  row-gap: var(--fc-space-1);
+  margin: var(--fc-space-2) 0 0;
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.tx-card__meta dt {
+  font-weight: var(--fc-font-weight-medium);
+}
+
+.tx-card__meta dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.tx-card__meta time {
+  white-space: nowrap;
+}
+
+/* Visually hidden text that still reaches the accessibility tree. */
+.tx-sr-only {
+  position: absolute;
+  display: block;
+  width: max-content;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 639px) {
+  .tx-page {
+    padding: var(--fc-space-3) var(--fc-space-2);
+  }
+
+  .tx-table-wrap {
+    display: none;
+  }
+
+  .tx-list:not([hidden]) {
+    display: block;
+  }
+}

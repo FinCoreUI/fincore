@@ -1,0 +1,726 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.otp",
+    "name": "OTP",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0-alpha.2",
+    "summary": "FinCore's native OTP input: label + group of single-character digit cells + helper/error message, four states, independent focus ring and only otp.* component tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring Input canonical patterns with single-character cells.",
+        "The token block was added to tokens/tokens.json and generated into tokens/dist/tokens.css; node tokens/check.mjs passed with 27 otp.* component tokens.",
+        "The stylesheet consumes only variables generated from otp.* component tokens.",
+        "No Figma component set exists for OTP in v0.1, so canonical.figma is null and no design-evidence claims are made."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the OTP anatomy: label, row of single-character input cells, and helper/error row.",
+      "Apply only otp.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for each cell surface and border.",
+      "Render the focus ring as an independent overlay on the focused cell.",
+      "Handle single-digit input, auto-advancing to the next cell, backspace navigation, and paste distribution."
+    ],
+    "application": [
+      "Provide the label and handle the completed code.",
+      "Own validation: decide when an entered code is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for OTP in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "One-time passwords, 2FA/MFA verification codes, and security PINs."
+    ],
+    "inappropriate": [
+      {
+        "use": "Standard arbitrary-length text entry.",
+        "reason": "OTP is designed for fixed-length segmented codes.",
+        "alternative": "Use Input."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: container with label, horizontal row of cells, and helper/error message.",
+      "Cell wrapper: relative container for each single-character input and its focus ring overlay.",
+      "Cell: 40px square input with centered text.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [
+      {
+        "property": "cell size",
+        "value": "40px",
+        "token": "otp.cell-size"
+      },
+      {
+        "property": "cell gap",
+        "value": "8px",
+        "token": "otp.cell-gap"
+      },
+      {
+        "property": "cell corner radius",
+        "value": "6px",
+        "token": "otp.radius"
+      },
+      {
+        "property": "border width",
+        "value": "1px",
+        "token": "otp.border-width"
+      },
+      {
+        "property": "label gap",
+        "value": "8px",
+        "token": "otp.label-gap"
+      },
+      {
+        "property": "helper gap",
+        "value": "4px",
+        "token": "otp.helper-gap"
+      },
+      {
+        "property": "focus ring width",
+        "value": "2px",
+        "token": "otp.focus.width"
+      },
+      {
+        "property": "focus ring offset",
+        "value": "2px",
+        "token": "otp.focus.offset"
+      },
+      {
+        "property": "focus ring radius",
+        "value": "8px",
+        "token": "otp.focus.radius"
+      }
+    ],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Label",
+      "figmaType": "TEXT",
+      "figmaDefault": "OTP",
+      "required": true,
+      "description": "Visible label for the OTP group.",
+      "translation": "direct",
+      "production": {
+        "prop": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "derived": false,
+        "notes": "Accessible name for the OTP group."
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "length",
+      "type": "number",
+      "default": 6,
+      "required": false,
+      "description": "Number of OTP digit cells.",
+      "notes": "Defaults to 6."
+    },
+    {
+      "prop": "value",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Controlled value string.",
+      "notes": "Length matches the cell count."
+    },
+    {
+      "prop": "onChange",
+      "type": "(value: string) => void",
+      "default": null,
+      "required": false,
+      "description": "Callback fired when any digit changes.",
+      "notes": "Provides current code string."
+    },
+    {
+      "prop": "onComplete",
+      "type": "(value: string) => void",
+      "default": null,
+      "required": false,
+      "description": "Callback fired when all cells are filled.",
+      "notes": "Useful for auto-submitting verification."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and displays error message.",
+      "notes": "Application owns error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Replaced by error message."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "otp.cell-size",
+        "otp.cell-gap",
+        "otp.radius",
+        "otp.border-width",
+        "otp.font-size",
+        "otp.line-height",
+        "otp.font-weight",
+        "otp.label-gap",
+        "otp.helper-gap",
+        "otp.focus.color",
+        "otp.focus.width",
+        "otp.focus.offset",
+        "otp.focus.radius",
+        "otp.background",
+        "otp.border",
+        "otp.text",
+        "otp.border-hover",
+        "otp.border-error",
+        "otp.text-error",
+        "otp.background-disabled",
+        "otp.border-disabled",
+        "otp.text-disabled",
+        "otp.label.color",
+        "otp.label.font-weight",
+        "otp.helper.color",
+        "otp.helper.font-size",
+        "otp.helper.line-height"
+      ],
+      "notes": "Runtime token surface."
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "Component code consumes only otp.* component tokens.",
+    "dependencies": [
+      {
+        "name": "otp.cell-size",
+        "type": "dimension",
+        "cssVar": "--fc-otp-cell-size",
+        "alias": "size.control.md",
+        "resolved": "40px",
+        "role": "Cell size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.cell-gap",
+        "type": "dimension",
+        "cssVar": "--fc-otp-cell-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Gap between cells",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.radius",
+        "type": "dimension",
+        "cssVar": "--fc-otp-radius",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Cell corner radius",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-otp-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Border width",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-otp-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Digit font size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-otp-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Digit line height",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-otp-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Digit font weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.label-gap",
+        "type": "dimension",
+        "cssVar": "--fc-otp-label-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Label gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.helper-gap",
+        "type": "dimension",
+        "cssVar": "--fc-otp-helper-gap",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Helper gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.focus.color",
+        "type": "color",
+        "cssVar": "--fc-otp-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "Focus ring color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.focus.width",
+        "type": "dimension",
+        "cssVar": "--fc-otp-focus-width",
+        "alias": "size.focus-ring.width",
+        "resolved": "2px",
+        "role": "Focus ring stroke width",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.focus.offset",
+        "type": "dimension",
+        "cssVar": "--fc-otp-focus-offset",
+        "alias": "size.focus-ring.offset",
+        "resolved": "2px",
+        "role": "Focus ring offset",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.focus.radius",
+        "type": "dimension",
+        "cssVar": "--fc-otp-focus-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Concentric focus ring radius",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.background",
+        "type": "color",
+        "cssVar": "--fc-otp-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "Cell background",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.border",
+        "type": "color",
+        "cssVar": "--fc-otp-border",
+        "alias": "color.border.control",
+        "resolved": "#71717A",
+        "role": "Border color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.text",
+        "type": "color",
+        "cssVar": "--fc-otp-text",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Digit text color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.border-hover",
+        "type": "color",
+        "cssVar": "--fc-otp-border-hover",
+        "alias": "color.border.control-hover",
+        "resolved": "#52525B",
+        "role": "Hovered border color",
+        "usedBy": [
+          "Hover"
+        ]
+      },
+      {
+        "name": "otp.border-error",
+        "type": "color",
+        "cssVar": "--fc-otp-border-error",
+        "alias": "color.border.error",
+        "resolved": "#DC2626",
+        "role": "Error border color",
+        "usedBy": [
+          "Error"
+        ]
+      },
+      {
+        "name": "otp.text-error",
+        "type": "color",
+        "cssVar": "--fc-otp-text-error",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "Error message text color",
+        "usedBy": [
+          "Error"
+        ]
+      },
+      {
+        "name": "otp.background-disabled",
+        "type": "color",
+        "cssVar": "--fc-otp-background-disabled",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "Disabled cell fill",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "otp.border-disabled",
+        "type": "color",
+        "cssVar": "--fc-otp-border-disabled",
+        "alias": "color.border.disabled",
+        "resolved": "#E4E4E7",
+        "role": "Disabled border color",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "otp.text-disabled",
+        "type": "color",
+        "cssVar": "--fc-otp-text-disabled",
+        "alias": "color.content.disabled",
+        "resolved": "#A1A1AA",
+        "role": "Disabled text color",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "otp.label.color",
+        "type": "color",
+        "cssVar": "--fc-otp-label-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "Label text color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.label.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-otp-label-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Label weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.helper.color",
+        "type": "color",
+        "cssVar": "--fc-otp-helper-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "Helper copy color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.helper.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-otp-helper-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Helper font size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "otp.helper.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-otp-helper-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Helper line height",
+        "usedBy": [
+          "Default"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "otp.background",
+        "foreground": "otp.text",
+        "border": "otp.border",
+        "label": "otp.label.color",
+        "helper": "otp.helper.color",
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Do not consume color.* or space.* directly in OTP code."
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Each cell is 40px square, meeting target size requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "accessible-label",
+        "requirement": "OTP group and individual cells have programmatic accessible names.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "otp.text",
+        "background": "otp.background",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 17.72
+        },
+        "status": "pass",
+        "notes": "Digit on cell background."
+      },
+      {
+        "role": "non-text",
+        "foreground": "otp.border",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 4.83
+        },
+        "status": "pass",
+        "notes": "Boundary on surface."
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-otp\"><label class=\"fc-otp__label\" for=\"code\">Code</label><div class=\"fc-otp__cells\"><div class=\"fc-otp__cell-wrapper\"><input class=\"fc-otp__cell\" maxlength=\"1\" /></div></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-otp\"><label class=\"fc-otp__label\" for=\"code\">Code</label><div class=\"fc-otp__cells\"><div class=\"fc-otp__cell-wrapper\"><input class=\"fc-otp__cell\" maxlength=\"1\" /></div></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-otp",
+      "configuration": "OTP group without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "digit-input",
+        "given": "an enabled OTP input",
+        "when": "digit is entered",
+        "then": "cell updates and advances focus."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled OTP input",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "OTP css",
+        "when": "inspected",
+        "then": "only otp.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible on active cell."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for OTP in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/otp/otp.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only otp.* tokens in OTP code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native OTP",
+        "language": "html",
+        "code": "<div class=\"fc-otp\"><span class=\"fc-otp__label\">Code</span><div class=\"fc-otp__cells\"><div class=\"fc-otp__cell-wrapper\"><input class=\"fc-otp__cell\" maxlength=\"1\" /></div></div></div>",
+        "explanation": "Valid OTP composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled OTP",
+        "language": "html",
+        "code": "<div class=\"fc-otp__cells\"><input class=\"fc-otp__cell\" /></div>",
+        "explanation": "Missing container, cell wrapper and label."
+      }
+    ]
+  }
+}

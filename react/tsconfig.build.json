@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "allowImportingTsExtensions": false
+  },
+  "include": ["button", "input", "types", "utils", "index.ts"],
+  "exclude": ["node_modules", "test", "dist"]
+}

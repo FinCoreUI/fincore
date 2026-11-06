@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Limitations and support — Sorleed</title>
+  <meta name="description" content="What Sorleed does not implement, what is not certified and how to report a problem.">
+  <link rel="stylesheet" href="../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="limits">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="index.html" data-page="overview">Overview</a></li>
+          <li><a href="getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="components.html" data-page="components">Components</a></li>
+          <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="cli.html" data-page="cli">CLI</a></li>
+          <li><a href="customisation.html" data-page="customisation">Customisation</a></li>
+          <li><a href="accessibility.html" data-page="accessibility">Accessibility</a></li>
+          <li><a href="ai.html" data-page="ai">AI</a></li>
+          <li><a href="limitations.html" data-page="limits">Limits</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="On this page">
+        <h2>On this page</h2>
+        <ul>
+          <li><a href="#not-implemented">Not implemented</a></li>
+          <li><a href="#alpha">Alpha constraints</a></li>
+          <li><a href="#certification">Certification</a></li>
+          <li><a href="#support">Support and security</a></li>
+        </ul>
+      </aside>
+
+      <div class="content">
+        <h1>Limitations and support</h1>
+        <p class="lede">What is not here, stated plainly. This page is part of the product, not an afterthought.</p>
+
+        <h2 id="not-implemented">Not implemented</h2>
+        <ul>
+          <li>Dark mode or any inverse theme.</li>
+          <li>Components beyond Button, Input, PasswordInput and PhoneInput.</li>
+          <li>A searchable country picker; PhoneInput uses a native select.</li>
+          <li>Figma-to-code synchronisation or a published Figma Community Library.</li>
+          <li>A hosted documentation service, analytics or dashboard.</li>
+          <li>Published npm packages. The packages are private and unpublished.</li>
+          <li>Phone deliverability, reachability or ownership checks.</li>
+          <li>A React Native, Vue, Svelte or Angular adapter.</li>
+        </ul>
+
+        <h2 id="alpha">Alpha constraints</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable table">
+          <table>
+            <thead><tr><th>Area</th><th>Constraint</th></tr></thead>
+            <tbody>
+              <tr><td>Packages</td><td><code>@sorleed/react</code> 0.1.0-alpha.1 and <code>@sorleed/cli</code> 0.1.0-alpha.0 are private and unpublished.</td></tr>
+              <tr><td>Theme</td><td>Light theme only.</td></tr>
+              <tr><td>PhoneInput</td><td>English region names; native select; format validation only; <code>international</code> prop is accepted but unused.</td></tr>
+              <tr><td>PasswordInput</td><td>Composes Input and Button tokens; no separate token family.</td></tr>
+              <tr><td>Input types</td><td>Only text, email, tel, number and url.</td></tr>
+              <tr><td>CLI</td><td>No <code>--force</code> or interactive conflict resolution; no browser verification.</td></tr>
+              <tr><td>Figma</td><td>Preparation and specifications, not a published library.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="certification">Certification</h2>
+        <p>Sorleed has not been certified with screen readers or assistive-technology users. Automated checks and manual review are documented, but they are not certification. See <a href="accessibility.html">Accessibility</a>.</p>
+
+        <h2 id="support">Support and security</h2>
+        <ul>
+          <li><strong>Questions and bugs:</strong> open an issue in the repository.</li>
+          <li><strong>Security:</strong> do not publish vulnerability details in an issue. Follow <a href="../SECURITY.md">SECURITY.md</a>.</li>
+          <li><strong>Conduct:</strong> follow <a href="../CODE_OF_CONDUCT.md">CODE_OF_CONDUCT.md</a>. The project has a single maintainer and no independent conduct handler.</li>
+          <li><strong>Contributions:</strong> read <a href="../CONTRIBUTING.md">CONTRIBUTING.md</a>.</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed — UI Infrastructure. MIT licensed. Copyright (c) 2026 Sorleed.</p>
+      <p><a href="../README.md">Repository README</a> · <a href="../PRODUCT.md">Product</a> · <a href="../SECURITY.md">Security</a></p>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>

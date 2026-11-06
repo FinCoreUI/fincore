@@ -1,0 +1,2483 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.input",
+    "name": "Input",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0-alpha.2",
+    "summary": "FinCore's single-line text field: label + control + helper, four mutually exclusive Figma states, an independent keyboard-focus ring and 28 component tokens. Validation is owned by the consuming application, not the component. Implemented as framework-agnostic CSS with native HTML reference markup; no runtime package or adapter.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no runtime package",
+    "lastUpdated": "2026-10-26",
+    "canonical": {
+      "figma": {
+        "fileKey": "llp3APU7qaknEGJWq7vTI4",
+        "pageId": "1:3",
+        "pageName": "02 - Components",
+        "nodeId": "99:46",
+        "componentSet": "Input",
+        "variantCount": 4,
+        "width": 1448,
+        "height": 136,
+        "x": 80,
+        "y": 440,
+        "propertyKeys": {
+          "Label": "Label#99:0",
+          "Value": "Value#99:5",
+          "Placeholder": "Placeholder#99:10",
+          "Helper": "Helper#99:15",
+          "Focused": "Focused#99:20",
+          "Filled": "Filled#99:25",
+          "ShowPlaceholder": "ShowPlaceholder#99:30",
+          "ShowLabel": "ShowLabel#99:35",
+          "ShowHelper": "ShowHelper#99:40",
+          "State": "State"
+        }
+      },
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Figma file llp3APU7qaknEGJWq7vTI4, page 1:3, Input set 99:46: Stage C verification PASS with 4 variants, 10 properties and 176/176 bound fields (44 per variant).",
+        "Stage C behaviour matrix: Default, Hover, Error, Disabled, Default+Focused, Error+Focused, Hover+Focused and Disabled+Focused (ring suppressed) all PASS.",
+        "Stage C contrast: 41/41 gated pairs pass on default, canvas, subtle, muted and raised; disabled pairs are exempt; inverse is measured as advisory and unsupported.",
+        "Repository token source tokens/tokens.json sha256 68caea55e0bdf9f5cda067d7993eee91ad6cc277a7aca81a19ec566bd33c6379: 195 foundation tokens, including 28 input.* component tokens.",
+        "tokens/check.mjs: structure PASS, required contrast pairs PASS, generated CSS current at contract authoring."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the full field anatomy: label, single-line control, and a helper/error row.",
+      "Apply only input.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay when keyboard focus is present, except when disabled.",
+      "Keep the error message visible in Error regardless of the helper-visibility flag.",
+      "Render whatever value, placeholder, helper and error copy the application supplies.",
+      "Expose native input semantics and the native disabled state; it does not validate, format, mask, or submit data."
+    ],
+    "application": [
+      "Own all validation: decide when a value is invalid, when to show an error, and what the error says.",
+      "Validate on blur or submit, not on every keystroke; move focus to the first invalid field.",
+      "Provide a programmatic label association and an accessible name for every field.",
+      "Set aria-invalid and connect the error message with aria-describedby and/or aria-errormessage; announce new errors appropriately.",
+      "Supply the correct input type, inputMode, autoComplete, name, required state and constraints for the field's purpose.",
+      "Use native disabled only when the field is genuinely unavailable; clear or withhold validation presentation while disabled.",
+      "Own layout width and responsive behaviour; 320px in Figma is a demo literal, not a production width.",
+      "Use another component for password, search, textarea, select, OTP, currency and PIN inputs.",
+      "Never put validation logic, masking, currency formatting or async lookup inside this Input."
+    ],
+    "figmaOnly": [
+      "State is a Figma VARIANT axis with four values; it is design metadata, not a runtime prop or ARIA value.",
+      "Focused is a BOOLEAN overlay property, not a fifth State; production derives focus from the interaction.",
+      "Filled and ShowPlaceholder are complementary Figma booleans because Figma cannot negate a boolean; production derives both from the value.",
+      "ShowLabel and ShowHelper toggle Figma layer visibility; production maps them to content presence and a visually hidden label, never to an absent accessible name.",
+      "Helper is one shared TEXT property that carries both helper and error copy; production exposes helperText and errorMessage separately.",
+      "The 320px field width is a demo literal; no width token exists.",
+      "The focus ring is an absolute sibling overlay at -2,-2 because Figma cannot bind x/y."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Single-line text entry in a form, including text, email, telephone, number and URL values.",
+      "Financial form fields such as recipient email, transfer amount, account reference and payee name.",
+      "Fields that need a persistent visible label and supporting helper copy.",
+      "Fields that show a post-validation error in the same slot as the helper, so the message cannot be missed.",
+      "Disabled fields that are genuinely unavailable in the current context, with the reason explained nearby.",
+      "Required fields, when the application supplies the required semantics and a visible required indication."
+    ],
+    "inappropriate": [
+      {
+        "use": "Using the placeholder as the only label.",
+        "reason": "The placeholder disappears once the field is filled, is not a reliable accessible name, and fails the separate-label requirement.",
+        "alternative": "Always supply a visible Label. Use Placeholder only for an example or format hint, and keep the label visible or visually hidden with an accessible name."
+      },
+      {
+        "use": "Password entry, search, multiline text, select, OTP, currency or PIN.",
+        "reason": "Those controls need reveal/clear affordances, multiline layout, option semantics, grouped cells, currency formatting or masking that this component does not model.",
+        "alternative": "Use a future Password Input, Search Input, Textarea, Select, OTP, Currency Input or PIN component. Only text, email, tel, number and url share this visual."
+      },
+      {
+        "use": "Placing the field on an inverse or dark surface.",
+        "reason": "The full field fails contrast on color.surface.inverse: label 1.70:1, helper 2.29:1, error 2.13:1, hover border 2.29:1. Inverse is not a supported Input context in v0.1.",
+        "alternative": "Stay on default, canvas, subtle, muted or raised. A future inverse contract must add surface-specific tokens."
+      },
+      {
+        "use": "Validating while the user types.",
+        "reason": "Per-character validation interrupts entry, announces errors before the user has finished, and is explicitly outside this contract.",
+        "alternative": "Validate on blur or submit. Keep the field in its current state until validation runs; move focus to the first invalid field."
+      },
+      {
+        "use": "Communicating an error with a red border only.",
+        "reason": "Colour alone is not an accessible error signal; the Error state requires a text message in the helper slot.",
+        "alternative": "Always set errorMessage so the error text appears with the red border."
+      },
+      {
+        "use": "Using readOnly as a substitute for disabled, or disabled as a substitute for validation.",
+        "reason": "ReadOnly has no visual treatment or contract; disabled is for genuinely unavailable fields and cannot explain validation failures.",
+        "alternative": "Use native disabled only when the field is unavailable. Keep fields enabled for validation and show errors in the helper slot."
+      },
+      {
+        "use": "A success, warning or info state.",
+        "reason": "Only Default, Hover, Error and Disabled exist. Feedback tokens exist for other components, but Input has no success/warning treatment.",
+        "alternative": "Use helper copy for neutral guidance. Request a new state and tokens before adding one."
+      },
+      {
+        "use": "Hiding the label without providing an accessible name.",
+        "reason": "ShowLabel=false removes the row in Figma. In production, removing the label also removes the accessible name and the programmatic association.",
+        "alternative": "Use hideLabel to render a visually hidden label, or supply an equivalent programmatic label association."
+      },
+      {
+        "use": "Exposing Figma's Focused, Filled, ShowPlaceholder or ShowHelper as runtime props.",
+        "reason": "Those are design-time layer switches. Exposing them lets an application fake focus, desynchronise value and placeholder, or hide an error.",
+        "alternative": "Derive focus from :focus-visible, filled from value, placeholder from an empty value, and error/helper visibility from errorMessage/helperText."
+      },
+      {
+        "use": "Adding icons, a password reveal, a clear button or an inline action.",
+        "reason": "There is no icon system or adornment slot; the control is text-only.",
+        "alternative": "Use a text-only field. Wait for an icon/adornment contract."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of Top and Helper, with a 4px control-to-helper gap.",
+      "Top: vertical stack of Label and Control Wrapper, with an 8px label-to-control gap.",
+      "Label: 14/20, weight 500, input.label.color. Visible by default; can be hidden in Figma through ShowLabel.",
+      "Control: 40px high, 1px INSIDE border, 6px radius, 12px horizontal padding, white fill by default.",
+      "Text Area: one 20px line containing the Value layer and the Placeholder layer. Value is shown when Filled; Placeholder is shown when ShowPlaceholder.",
+      "Focus Ring: absolute sibling overlay, 324x44 at (-2,-2), 2px OUTSIDE stroke, 8px radius, hidden by default and shown when Focused.",
+      "Helper: 12/16, weight 400, input.helper.color. In Error, the same row carries the error copy in input.text-error and remains visible regardless of ShowHelper.",
+      "No icon, affix, clear button, character counter, success icon or adornment slot exists."
+    ],
+    "geometry": [
+      {
+        "property": "control height",
+        "value": "40px",
+        "token": "input.height"
+      },
+      {
+        "property": "horizontal padding",
+        "value": "12px",
+        "token": "input.padding-x"
+      },
+      {
+        "property": "control corner radius",
+        "value": "6px",
+        "token": "input.radius"
+      },
+      {
+        "property": "border width",
+        "value": "1px (INSIDE)",
+        "token": "input.border-width"
+      },
+      {
+        "property": "value font size",
+        "value": "14px",
+        "token": "input.font-size"
+      },
+      {
+        "property": "value line height",
+        "value": "20px",
+        "token": "input.line-height"
+      },
+      {
+        "property": "value font weight",
+        "value": "400",
+        "token": "input.font-weight"
+      },
+      {
+        "property": "label-to-control gap",
+        "value": "8px",
+        "token": "input.label-gap"
+      },
+      {
+        "property": "control-to-helper gap",
+        "value": "4px",
+        "token": "input.helper-gap"
+      },
+      {
+        "property": "focus ring width",
+        "value": "2px",
+        "token": "input.focus.width"
+      },
+      {
+        "property": "focus ring offset",
+        "value": "2px",
+        "token": "input.focus.offset"
+      },
+      {
+        "property": "focus ring radius",
+        "value": "8px",
+        "token": "input.focus.radius"
+      },
+      {
+        "property": "label font size",
+        "value": "14px",
+        "token": "input.font-size"
+      },
+      {
+        "property": "label line height",
+        "value": "20px",
+        "token": "input.line-height"
+      },
+      {
+        "property": "label font weight",
+        "value": "500",
+        "token": "input.label.font-weight"
+      },
+      {
+        "property": "helper font size",
+        "value": "12px",
+        "token": "input.helper.font-size"
+      },
+      {
+        "property": "helper line height",
+        "value": "16px",
+        "token": "input.helper.line-height"
+      },
+      {
+        "property": "helper font weight",
+        "value": "400",
+        "token": "input.font-weight"
+      },
+      {
+        "property": "focus ring position",
+        "value": "-2px, -2px",
+        "token": null
+      },
+      {
+        "property": "field demo width",
+        "value": "320px",
+        "token": null
+      },
+      {
+        "property": "focus ring stroke alignment",
+        "value": "OUTSIDE",
+        "token": null
+      }
+    ],
+    "literals": [
+      {
+        "property": "focus ring position",
+        "value": "-2px, -2px",
+        "reason": "Figma variables cannot bind x/y. The position is derived from input.focus.offset; the offset token still drives ring padding and size."
+      },
+      {
+        "property": "field width",
+        "value": "320px",
+        "reason": "A demo literal. No width or size token exists; production width belongs to layout."
+      },
+      {
+        "property": "font family",
+        "value": "IBM Plex Sans",
+        "reason": "Font family is a Figma text property; no font-family token exists in v0.1."
+      },
+      {
+        "property": "focus ring stroke alignment",
+        "value": "OUTSIDE",
+        "reason": "Figma stroke alignment is a geometry property, not a token. It keeps the control's 40px height."
+      },
+      {
+        "property": "long value behaviour",
+        "value": "Figma TRUNCATE; production ellipsis or horizontal scroll",
+        "reason": "No token or component prop defines truncation. Production must not lose or silently alter the stored value."
+      },
+      {
+        "property": "error row visibility",
+        "value": "Always visible in Error",
+        "reason": "ShowHelper is intentionally ignored in Error so the non-colour error signal cannot be hidden. This is behaviour, not a token."
+      }
+    ]
+  },
+  "properties": [
+    {
+      "name": "State",
+      "figmaType": "VARIANT",
+      "figmaValues": [
+        "Default",
+        "Hover",
+        "Error",
+        "Disabled"
+      ],
+      "figmaDefault": "Default",
+      "required": true,
+      "description": "One of four mutually exclusive field states. Disabled takes precedence over Error, Hover and Default; Focus is not a State.",
+      "translation": "derived",
+      "production": {
+        "prop": null,
+        "type": "derived",
+        "default": null,
+        "required": false,
+        "derived": true,
+        "notes": "Derive from disabled, errorMessage and interaction. Precedence: Disabled > Error > Hover > Default. Do not expose a state prop."
+      }
+    },
+    {
+      "name": "Label",
+      "figmaType": "TEXT",
+      "figmaKey": "Label#99:0",
+      "figmaDefault": "Email address",
+      "required": true,
+      "description": "The field label. The Figma default is demo copy, not production copy.",
+      "translation": "direct",
+      "production": {
+        "prop": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "derived": false,
+        "notes": "Must be non-empty. Always provide a programmatic association. If hideLabel is true, render the label visually hidden, not absent."
+      }
+    },
+    {
+      "name": "Value",
+      "figmaType": "TEXT",
+      "figmaKey": "Value#99:5",
+      "figmaDefault": "ada@fincore.dev",
+      "required": false,
+      "description": "The entered value. In Figma it is a text layer controlled by Filled.",
+      "translation": "renamed",
+      "production": {
+        "prop": "value",
+        "type": "string",
+        "default": "\"\"",
+        "required": true,
+        "derived": false,
+        "notes": "Controlled value. The component derives filled from value.length > 0 and does not expose a filled prop."
+      }
+    },
+    {
+      "name": "Placeholder",
+      "figmaType": "TEXT",
+      "figmaKey": "Placeholder#99:10",
+      "figmaDefault": "you@example.com",
+      "required": false,
+      "description": "Example or format hint shown when the field is empty.",
+      "translation": "direct",
+      "production": {
+        "prop": "placeholder",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "derived": false,
+        "notes": "Never a label. The component derives placeholder visibility from an empty value; do not expose ShowPlaceholder."
+      }
+    },
+    {
+      "name": "Helper",
+      "figmaType": "TEXT",
+      "figmaKey": "Helper#99:15",
+      "figmaDefault": "We never share this.",
+      "required": false,
+      "description": "Supporting copy in the helper row. In Error, this same Figma text property carries the error message.",
+      "translation": "renamed",
+      "production": {
+        "prop": "helperText",
+        "type": "string",
+        "default": null,
+        "required": false,
+        "derived": false,
+        "notes": "Expose errorMessage separately. Error replaces helper copy in the same row; helper and error are never stacked. Do not expose ShowHelper."
+      }
+    },
+    {
+      "name": "Focused",
+      "figmaType": "BOOLEAN",
+      "figmaKey": "Focused#99:20",
+      "figmaDefault": false,
+      "required": false,
+      "description": "Shows the focus-ring overlay. Independent of State except that Disabled suppresses it.",
+      "translation": "derived",
+      "production": {
+        "prop": null,
+        "type": "derived",
+        "default": null,
+        "required": false,
+        "derived": true,
+        "notes": "Derive from :focus-visible; browsers treat a focused text input as focus-visible. Suppressed when disabled. Do not expose a focused prop."
+      }
+    },
+    {
+      "name": "Filled",
+      "figmaType": "BOOLEAN",
+      "figmaKey": "Filled#99:25",
+      "figmaDefault": false,
+      "required": false,
+      "description": "Shows the Value layer. Complementary to ShowPlaceholder, not independent of it.",
+      "translation": "derived",
+      "production": {
+        "prop": null,
+        "type": "derived",
+        "default": null,
+        "required": false,
+        "derived": true,
+        "notes": "Derive from value.length > 0. Do not expose a filled prop."
+      }
+    },
+    {
+      "name": "ShowPlaceholder",
+      "figmaType": "BOOLEAN",
+      "figmaKey": "ShowPlaceholder#99:30",
+      "figmaDefault": true,
+      "required": false,
+      "description": "Shows the Placeholder layer. Complementary to Filled.",
+      "translation": "derived",
+      "production": {
+        "prop": null,
+        "type": "derived",
+        "default": null,
+        "required": false,
+        "derived": true,
+        "notes": "Derive from value.length === 0. Do not expose a showPlaceholder prop. Filled=true with ShowPlaceholder=true is invalid."
+      }
+    },
+    {
+      "name": "ShowLabel",
+      "figmaType": "BOOLEAN",
+      "figmaKey": "ShowLabel#99:35",
+      "figmaDefault": true,
+      "required": false,
+      "description": "Hides the label row and collapses its gap.",
+      "translation": "renamed",
+      "production": {
+        "prop": "hideLabel",
+        "type": "boolean",
+        "default": false,
+        "required": false,
+        "derived": false,
+        "notes": "Maps inversely. When true, the label must be visually hidden (not removed) so the field keeps its accessible name. Do not use display:none or aria-hidden."
+      }
+    },
+    {
+      "name": "ShowHelper",
+      "figmaType": "BOOLEAN",
+      "figmaKey": "ShowHelper#99:40",
+      "figmaDefault": true,
+      "required": false,
+      "description": "Hides the helper row in Default, Hover and Disabled. Ignored in Error so the error message cannot be hidden.",
+      "translation": "derived",
+      "production": {
+        "prop": null,
+        "type": "derived",
+        "default": null,
+        "required": false,
+        "derived": true,
+        "notes": "Derive from whether helperText or errorMessage is present. Do not expose a showHelper prop. If errorMessage is present, the message always renders."
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "id",
+      "type": "string",
+      "default": null,
+      "required": true,
+      "description": "Stable id used for the label association and error/helper references.",
+      "notes": "Must be unique in the document. A generated id is acceptable only if it is stable and exposed for the label association."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets State=Error and replaces helper copy in the same row. The application must then set aria-invalid and connect the error message.",
+      "notes": "Application-owned copy. Disabled wins over Error, so a disabled field must not present an error. Do not pass both an error and a helper expecting them to stack."
+    },
+    {
+      "prop": "disabled",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Maps to State=Disabled. Applies the native disabled attribute, removes the field from interaction and tab order, and suppresses hover, focus and error presentation.",
+      "notes": "Disabled takes precedence over Error and Hover. Do not use disabled as a validation strategy; do not use readOnly as a substitute."
+    },
+    {
+      "prop": "type",
+      "type": "\"text\" | \"email\" | \"tel\" | \"number\" | \"url\"",
+      "default": "\"text\"",
+      "required": false,
+      "description": "Native input type. All five supported types share one visual treatment.",
+      "notes": "Password, search, textarea, select and financial specialised inputs are out of scope."
+    },
+    {
+      "prop": "autoComplete",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Native autocomplete token appropriate to the field's purpose, such as email, tel, name or off for a non-sensitive reference.",
+      "notes": "The application must supply this; the component cannot infer it from the label."
+    },
+    {
+      "prop": "required",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Sets the native required attribute and exposes the required state to assistive technology.",
+      "notes": "Add a visible required indication in the application. An asterisk alone is not sufficient; include text such as 'Required'."
+    },
+    {
+      "prop": "onChange",
+      "type": "(event: React.ChangeEvent<HTMLInputElement>) => void",
+      "default": null,
+      "required": true,
+      "description": "Controlled change handler. It updates the value only; it must not run validation on every keystroke.",
+      "notes": "Validation belongs to onBlur or form submit."
+    },
+    {
+      "prop": "onBlur",
+      "type": "(event: React.FocusEvent<HTMLInputElement>) => void",
+      "default": null,
+      "required": false,
+      "description": "Blur handler where the application may run field validation.",
+      "notes": "If validation on blur sets an error, do not also announce every intermediate keystroke."
+    },
+    {
+      "prop": "name",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Native form field name used during submission.",
+      "notes": "Must be unique within the form."
+    },
+    {
+      "prop": "inputMode",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Native inputMode hint, for example decimal for an amount entered as text.",
+      "notes": "Use with a supported type; it must not be used to fake a specialised currency input."
+    },
+    {
+      "prop": "className",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Layout-only escape hatch for width, grid placement and external spacing.",
+      "notes": "Must not change colour, typography, radius, height, border, gaps or focus treatment."
+    },
+    {
+      "prop": "native input attributes",
+      "type": "InputHTMLAttributes<HTMLInputElement> excluding value, onChange, type, disabled, required and className",
+      "default": null,
+      "required": false,
+      "description": "Standard attributes such as maxLength, pattern, min, max, step, aria-* and data-* pass through.",
+      "notes": "The application supplies aria-invalid and the error association from errorMessage; do not duplicate them inconsistently."
+    },
+    {
+      "prop": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "required": false,
+      "description": "Controls the size variant (sm, md, lg) in component adapter.",
+      "notes": "Applies corresponding size modifier class."
+    },
+    {
+      "prop": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Applies loading state and sets aria-busy=\"true\".",
+      "notes": "Suppresses interactions while loading."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "99:2",
+      "tokens": [
+        "input.height",
+        "input.padding-x",
+        "input.radius",
+        "input.border-width",
+        "input.font-size",
+        "input.line-height",
+        "input.font-weight",
+        "input.label-gap",
+        "input.helper-gap",
+        "input.focus.color",
+        "input.focus.width",
+        "input.focus.offset",
+        "input.focus.radius",
+        "input.background",
+        "input.border",
+        "input.text",
+        "input.placeholder",
+        "input.label.color",
+        "input.label.font-weight",
+        "input.helper.color",
+        "input.helper.font-size",
+        "input.helper.line-height"
+      ],
+      "notes": "White fill, input.border boundary, primary value, tertiary placeholder, normal label and helper. Focus ring is bound but hidden."
+    },
+    {
+      "name": "Hover",
+      "figmaNodeId": "99:13",
+      "tokens": [
+        "input.height",
+        "input.padding-x",
+        "input.radius",
+        "input.border-width",
+        "input.font-size",
+        "input.line-height",
+        "input.font-weight",
+        "input.label-gap",
+        "input.helper-gap",
+        "input.focus.color",
+        "input.focus.width",
+        "input.focus.offset",
+        "input.focus.radius",
+        "input.background",
+        "input.border-hover",
+        "input.text",
+        "input.placeholder",
+        "input.label.color",
+        "input.label.font-weight",
+        "input.helper.color",
+        "input.helper.font-size",
+        "input.helper.line-height"
+      ],
+      "notes": "Only the border changes to input.border-hover. The fill, text, label and helper are unchanged."
+    },
+    {
+      "name": "Error",
+      "figmaNodeId": "99:24",
+      "tokens": [
+        "input.height",
+        "input.padding-x",
+        "input.radius",
+        "input.border-width",
+        "input.font-size",
+        "input.line-height",
+        "input.font-weight",
+        "input.label-gap",
+        "input.helper-gap",
+        "input.focus.color",
+        "input.focus.width",
+        "input.focus.offset",
+        "input.focus.radius",
+        "input.background",
+        "input.border-error",
+        "input.text",
+        "input.placeholder",
+        "input.text-error",
+        "input.label.color",
+        "input.label.font-weight",
+        "input.helper.font-size",
+        "input.helper.line-height"
+      ],
+      "notes": "Red border and error copy in the helper row. The error message is visible even when ShowHelper=false. Label stays input.label.color; placeholder stays input.placeholder."
+    },
+    {
+      "name": "Disabled",
+      "figmaNodeId": "99:35",
+      "tokens": [
+        "input.height",
+        "input.padding-x",
+        "input.radius",
+        "input.border-width",
+        "input.font-size",
+        "input.line-height",
+        "input.font-weight",
+        "input.label-gap",
+        "input.helper-gap",
+        "input.focus.color",
+        "input.focus.width",
+        "input.focus.offset",
+        "input.focus.radius",
+        "input.background-disabled",
+        "input.border-disabled",
+        "input.text-disabled",
+        "input.label.color",
+        "input.label.font-weight",
+        "input.helper.color",
+        "input.helper.font-size",
+        "input.helper.line-height"
+      ],
+      "notes": "Flat muted fill with a matching border, muted value and placeholder. Label and helper stay legible. The focus ring is never shown; Focused is ignored."
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "Focused",
+        "kind": "boolean",
+        "values": [
+          "false",
+          "true"
+        ]
+      },
+      {
+        "name": "Filled",
+        "kind": "boolean",
+        "values": [
+          "false",
+          "true"
+        ]
+      },
+      {
+        "name": "ShowPlaceholder",
+        "kind": "boolean",
+        "values": [
+          "false",
+          "true"
+        ]
+      },
+      {
+        "name": "ShowLabel",
+        "kind": "boolean",
+        "values": [
+          "false",
+          "true"
+        ]
+      },
+      {
+        "name": "ShowHelper",
+        "kind": "boolean",
+        "values": [
+          "false",
+          "true"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, input.border boundary, placeholder or value, normal helper; no ring."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "input.border-hover boundary; all other Default properties unchanged."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "input.border-error boundary, input.text-error helper message; error message always visible."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, matching disabled border, muted value and placeholder; label and helper remain legible; no interaction."
+      },
+      {
+        "combination": "Default + Focused",
+        "supported": true,
+        "result": "Default boundary plus the 2px focus ring at 2px offset."
+      },
+      {
+        "combination": "Hover + Focused",
+        "supported": true,
+        "result": "input.border-hover boundary plus the focus ring."
+      },
+      {
+        "combination": "Error + Focused",
+        "supported": true,
+        "result": "input.border-error boundary, input.text-error message plus the focus ring."
+      },
+      {
+        "combination": "Disabled + Focused",
+        "supported": false,
+        "result": "Focused is ignored; Disabled wins and no ring appears."
+      },
+      {
+        "combination": "Error + Hover",
+        "supported": false,
+        "result": "Not modelled. The error border persists; no independent hover border treatment."
+      },
+      {
+        "combination": "Disabled + Error",
+        "supported": false,
+        "result": "Not modelled. Disabled wins; no error border or error-coloured message."
+      },
+      {
+        "combination": "Disabled + Hover",
+        "supported": false,
+        "result": "Not modelled. Disabled wins; no hover border."
+      },
+      {
+        "combination": "Filled=false + ShowPlaceholder=true",
+        "supported": true,
+        "result": "Empty field: placeholder only. Production derives this from value.length === 0."
+      },
+      {
+        "combination": "Filled=true + ShowPlaceholder=false",
+        "supported": true,
+        "result": "Filled field: value only. Production derives this from value.length > 0."
+      },
+      {
+        "combination": "Filled=true + ShowPlaceholder=true",
+        "supported": false,
+        "result": "Invalid overlap: value and placeholder would occupy the same text area."
+      },
+      {
+        "combination": "Filled=false + ShowPlaceholder=false",
+        "supported": false,
+        "result": "Invalid empty field with no placeholder; the control has no text layer."
+      },
+      {
+        "combination": "Error + ShowHelper=false",
+        "supported": true,
+        "result": "ShowHelper is ignored; the error message remains visible."
+      },
+      {
+        "combination": "ShowLabel=false",
+        "supported": true,
+        "result": "The label row is hidden and its gap collapses. Production must keep an accessible name via a visually hidden label."
+      },
+      {
+        "combination": "ShowHelper=false in Default, Hover or Disabled",
+        "supported": true,
+        "result": "The helper row is hidden and its gap collapses."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error. Disabled suppresses focus entirely.",
+      "Error suppresses the hover border. There is no independent Error+Hover visual treatment.",
+      "Disabled suppresses error treatment. There is no independent Disabled+Error visual treatment.",
+      "Error forces the helper row visible and changes its text to input.text-error. ShowHelper is ignored in Error.",
+      "Filled and ShowPlaceholder are complementary, not independent: exactly one is true in a valid field.",
+      "ShowHelper hides the helper row only in Default, Hover and Disabled. It never hides an error message.",
+      "ShowLabel hides the visual label row; production must still provide a programmatic label."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Do not add a hover border on top of the error border and do not claim a combined variant.",
+      "Disabled + Error is not modelled. Do not show a red border or red message on a disabled field.",
+      "Disabled + Focused is not modelled as a visible combination. The ring must be suppressed.",
+      "Filled=true + ShowPlaceholder=true is invalid; the value and placeholder would overlap.",
+      "Filled=false + ShowPlaceholder=false is invalid; the control would have no text layer.",
+      "Helper and error copy are never stacked. Error replaces the helper in the same row.",
+      "Focus is not a fifth State. Do not create State=Focus.",
+      "The Figma Helper property cannot hold different defaults for helper and error copy; the application supplies both separately in production."
+    ],
+    "notes": [
+      "Seven state combinations were verified in Stage C: Default, Hover, Error, Disabled, Default+Focused, Error+Focused and Hover+Focused. Disabled+Focused was verified to suppress the ring.",
+      "All 44 bound fields per variant, 176/176 total, resolve to input.* component tokens.",
+      "The 41 gated contrast pairs pass on default, canvas, subtle, muted and raised. Inverse is measured but unsupported.",
+      "The focus ring is an overlay, not a variant, because hiding a ring frame would also hide the control inside it.",
+      "Validation is not a state machine inside Input. The application decides when to set errorMessage and when to clear it.",
+      "Figma state names and booleans are design metadata; they are not DOM attributes, props or ARIA values."
+    ]
+  },
+  "tokens": {
+    "rule": "Component code and Figma instances consume only input.* component tokens. Colour tokens alias Semantic roles; geometry and typography tokens alias Primitives because no semantic geometry layer exists. Never consume a primitive or Semantic token directly, and never hardcode a hex or px value that a token already covers.",
+    "dependencies": [
+      {
+        "name": "input.height",
+        "type": "dimension",
+        "cssVar": "--fc-input-height",
+        "alias": "size.control.md",
+        "resolved": "40px",
+        "role": "Control height",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-input-padding-x",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Control horizontal padding",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.radius",
+        "type": "dimension",
+        "cssVar": "--fc-input-radius",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Control corner radius",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-input-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Control border width, INSIDE",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-input-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Value and label font size",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-input-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Value and label line height",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-input-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "Value and helper font weight",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.label-gap",
+        "type": "dimension",
+        "cssVar": "--fc-input-label-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Label-to-control gap",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.helper-gap",
+        "type": "dimension",
+        "cssVar": "--fc-input-helper-gap",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Control-to-helper gap",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.focus.color",
+        "type": "color",
+        "cssVar": "--fc-input-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "Focus ring colour",
+        "usedBy": [
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "input.focus.width",
+        "type": "dimension",
+        "cssVar": "--fc-input-focus-width",
+        "alias": "size.focus-ring.width",
+        "resolved": "2px",
+        "role": "Focus ring stroke width",
+        "usedBy": [
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "input.focus.offset",
+        "type": "dimension",
+        "cssVar": "--fc-input-focus-offset",
+        "alias": "size.focus-ring.offset",
+        "resolved": "2px",
+        "role": "Focus ring offset and padding",
+        "usedBy": [
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "input.focus.radius",
+        "type": "dimension",
+        "cssVar": "--fc-input-focus-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Concentric focus ring radius (6px + 2px)",
+        "usedBy": [
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "input.background",
+        "type": "color",
+        "cssVar": "--fc-input-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "Control fill in Default, Hover and Error",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "input.border",
+        "type": "color",
+        "cssVar": "--fc-input-border",
+        "alias": "color.border.control",
+        "resolved": "#71717A",
+        "role": "Default control boundary",
+        "usedBy": [
+          "Default",
+          "Default+Focused"
+        ]
+      },
+      {
+        "name": "input.text",
+        "type": "color",
+        "cssVar": "--fc-input-text",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Entered value",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "input.placeholder",
+        "type": "color",
+        "cssVar": "--fc-input-placeholder",
+        "alias": "color.content.tertiary",
+        "resolved": "#71717A",
+        "role": "Placeholder text",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "input.border-hover",
+        "type": "color",
+        "cssVar": "--fc-input-border-hover",
+        "alias": "color.border.control-hover",
+        "resolved": "#52525B",
+        "role": "Hovered control boundary",
+        "usedBy": [
+          "Hover",
+          "Hover+Focused"
+        ]
+      },
+      {
+        "name": "input.border-error",
+        "type": "color",
+        "cssVar": "--fc-input-border-error",
+        "alias": "color.border.error",
+        "resolved": "#DC2626",
+        "role": "Invalid control boundary",
+        "usedBy": [
+          "Error",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "input.text-error",
+        "type": "color",
+        "cssVar": "--fc-input-text-error",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "Error message text",
+        "usedBy": [
+          "Error",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "input.background-disabled",
+        "type": "color",
+        "cssVar": "--fc-input-background-disabled",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "Disabled control fill",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.border-disabled",
+        "type": "color",
+        "cssVar": "--fc-input-border-disabled",
+        "alias": "color.border.disabled",
+        "resolved": "#E4E4E7",
+        "role": "Disabled control boundary, matching the fill",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.text-disabled",
+        "type": "color",
+        "cssVar": "--fc-input-text-disabled",
+        "alias": "color.content.disabled",
+        "resolved": "#A1A1AA",
+        "role": "Disabled value and placeholder",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.label.color",
+        "type": "color",
+        "cssVar": "--fc-input-label-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "Label text, including disabled fields",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.label.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-input-label-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Label weight",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.helper.color",
+        "type": "color",
+        "cssVar": "--fc-input-helper-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "Helper text in Default, Hover and Disabled",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.helper.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-input-helper-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Helper and error message font size",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "input.helper.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-input-helper-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Helper and error message line height",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "input.background",
+        "foreground": "input.text",
+        "border": "input.border",
+        "placeholder": "input.placeholder",
+        "label": "input.label.color",
+        "helper": "input.helper.color",
+        "ring": null
+      },
+      {
+        "state": "Hover",
+        "background": "input.background",
+        "foreground": "input.text",
+        "border": "input.border-hover",
+        "placeholder": "input.placeholder",
+        "label": "input.label.color",
+        "helper": "input.helper.color",
+        "ring": null
+      },
+      {
+        "state": "Error",
+        "background": "input.background",
+        "foreground": "input.text",
+        "border": "input.border-error",
+        "placeholder": "input.placeholder",
+        "label": "input.label.color",
+        "helper": "input.text-error",
+        "ring": null,
+        "notes": "The helper row carries the error message and is always visible."
+      },
+      {
+        "state": "Disabled",
+        "background": "input.background-disabled",
+        "foreground": "input.text-disabled",
+        "border": "input.border-disabled",
+        "placeholder": "input.text-disabled",
+        "label": "input.label.color",
+        "helper": "input.helper.color",
+        "ring": null,
+        "notes": "Disabled wins over Error, Hover and Focused."
+      },
+      {
+        "state": "Default+Focused",
+        "background": "input.background",
+        "foreground": "input.text",
+        "border": "input.border",
+        "placeholder": "input.placeholder",
+        "label": "input.label.color",
+        "helper": "input.helper.color",
+        "ring": "input.focus.color",
+        "notes": "Ring width, offset and radius come from input.focus.width, input.focus.offset and input.focus.radius."
+      },
+      {
+        "state": "Hover+Focused",
+        "background": "input.background",
+        "foreground": "input.text",
+        "border": "input.border-hover",
+        "placeholder": "input.placeholder",
+        "label": "input.label.color",
+        "helper": "input.helper.color",
+        "ring": "input.focus.color"
+      },
+      {
+        "state": "Error+Focused",
+        "background": "input.background",
+        "foreground": "input.text",
+        "border": "input.border-error",
+        "placeholder": "input.placeholder",
+        "label": "input.label.color",
+        "helper": "input.text-error",
+        "ring": "input.focus.color",
+        "notes": "Red border, red message and blue ring coexist."
+      },
+      {
+        "state": "Disabled+Focused",
+        "background": "input.background-disabled",
+        "foreground": "input.text-disabled",
+        "border": "input.border-disabled",
+        "placeholder": "input.text-disabled",
+        "label": "input.label.color",
+        "helper": "input.helper.color",
+        "ring": null,
+        "notes": "Focused is ignored; no ring is rendered."
+      }
+    ],
+    "forbidden": [
+      "Do not consume color.*, blue.*, red.*, neutral.*, space.*, radius.*, font.* or size.* directly in Input code.",
+      "Do not hardcode #FFFFFF, #71717A, #52525B, #DC2626, #991B1B, #E4E4E7, #A1A1AA, #3F3F46, #18181B, 40px, 12px, 6px, 8px, 4px, 1px or 2px when an input.* token exists.",
+      "Do not introduce input.error.border, input.border.focus, input.success.*, input.warning.*, input.readonly.* or input.icon.* tokens.",
+      "Do not reuse button.focus.* for Input; Input has its own input.focus.* tokens, including input.focus.radius.",
+      "Do not override tokens per instance; theme overrides belong at the token layer and require contrast revalidation.",
+      "Do not bind label or helper text to input.text-disabled in Disabled; the chrome stays legible by design."
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "The control is 40px high, above the 24px minimum target.",
+        "verification": "Measure the rendered control height at 100% zoom."
+      },
+      {
+        "id": "focus-indicator",
+        "requirement": "Focus is a 2px ring at a 2px offset, drawn OUTSIDE, with an 8px concentric radius and at least 3:1 against the adjacent surface.",
+        "verification": "Inspect the overlay geometry and measure input.focus.color on all five supported surfaces."
+      },
+      {
+        "id": "text-contrast",
+        "requirement": "Value, placeholder, label, helper and error text meet 4.5:1 on every supported surface or control fill.",
+        "verification": "Recompute the contrast matrix from resolved token values; 41 gated pairs must pass."
+      },
+      {
+        "id": "boundary-contrast",
+        "requirement": "The control boundary, hover boundary, error boundary and focus ring meet 3:1 against the page surface and the control fill.",
+        "verification": "Measure input.border, input.border-hover, input.border-error and input.focus.color against the five supported surfaces and input.background."
+      },
+      {
+        "id": "error-not-colour-only",
+        "requirement": "Error is communicated by a red border and a text message in the helper row. The message is always visible in Error.",
+        "verification": "Render Error with ShowHelper=false and confirm the message remains; inspect grayscale."
+      },
+      {
+        "id": "label-separate-from-placeholder",
+        "requirement": "The label is a separate slot. The placeholder is an example or format hint and is never the label.",
+        "verification": "Inspect the field anatomy and the accessibility tree; the accessible name must not come from the placeholder."
+      },
+      {
+        "id": "supported-surfaces",
+        "requirement": "Supported surfaces are default, canvas, subtle, muted and raised. Inverse is unsupported for the full field.",
+        "verification": "Measure the full matrix; confirm inverse label 1.70:1, helper 2.29:1, error 2.13:1 and hover border 2.29:1 remain advisory and unsupported."
+      },
+      {
+        "id": "disabled-exemption",
+        "requirement": "Disabled value/placeholder is 2.02:1 and the disabled border matches its fill at 1.00:1. These are exempt because the control is inactive, not passing pairs.",
+        "verification": "Record them as exempt; do not claim WCAG conformance for disabled content."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Every field has a programmatic label association, normally <label for> or aria-labelledby. The label text is the accessible name.",
+        "verification": "Assert the computed accessible name and the label/control association."
+      },
+      {
+        "id": "visually-hidden-label",
+        "requirement": "When hideLabel is true, render the label visually hidden rather than removing it. Never use display:none or aria-hidden on the only label.",
+        "verification": "Inspect the accessibility tree and verify the accessible name remains."
+      },
+      {
+        "id": "placeholder-not-label",
+        "requirement": "Placeholder text must not be the only label and must not be used to convey essential instructions that disappear on entry.",
+        "verification": "Empty the value and confirm the label is still visible or programmatically present."
+      },
+      {
+        "id": "helper-association",
+        "requirement": "Connect helper text with aria-describedby. Connect the error with aria-describedby and/or aria-errormessage, and set aria-invalid=true when an error is present.",
+        "verification": "Inspect the accessibility tree for the description and invalid state."
+      },
+      {
+        "id": "error-announcement",
+        "requirement": "Announce new validation errors without announcing every keystroke. Use a live region or an alert pattern appropriate to the form; avoid duplicate announcements.",
+        "verification": "Simulate a failed submit with a screen reader and confirm the error is announced once."
+      },
+      {
+        "id": "validation-timing",
+        "requirement": "Validate on blur or submit, never while typing. The component renders the result; the application decides when validation runs.",
+        "verification": "Type an invalid value and confirm no error appears until blur or submit."
+      },
+      {
+        "id": "input-type",
+        "requirement": "Use a supported native type (text, email, tel, number, url) and an appropriate inputMode. Do not fake a specialised input with type=text.",
+        "verification": "Inspect the DOM and mobile keyboard behaviour for each supported type."
+      },
+      {
+        "id": "autocomplete",
+        "requirement": "Supply the correct autocomplete token for known purposes such as email, tel, name, postal-code or off for a non-sensitive reference.",
+        "verification": "Inspect the attribute and test browser autofill where available."
+      },
+      {
+        "id": "keyboard",
+        "requirement": "The field is reachable by Tab in DOM order, accepts text entry natively, and submits its form on Enter where the form expects it. Disabled removes it from the tab order. Do not add custom key handlers, keyboard traps or a roving tabindex.",
+        "verification": "Keyboard-only test in Chromium, Firefox and Safari, including Enter submission, Shift+Tab and disabled tab order."
+      },
+      {
+        "id": "required",
+        "requirement": "Use the native required attribute when the field is required, and provide a visible indication that is not an asterisk alone.",
+        "verification": "Inspect required in the accessibility tree and confirm visible text explains it."
+      },
+      {
+        "id": "disabled-semantics",
+        "requirement": "Use the native disabled attribute. Do not use aria-disabled alone or readOnly as a substitute. A disabled field must not present an error or aria-invalid.",
+        "verification": "Assert disabled, absence from tab order, no validation presentation and no click/change events."
+      },
+      {
+        "id": "focus-visible",
+        "requirement": "Show the focus ring for keyboard focus; never set outline: none without an equivalent. Keep the ring unclipped by overflow.",
+        "verification": "Tab to the field on all supported surfaces and at 100% and 200% zoom."
+      },
+      {
+        "id": "text-resize",
+        "requirement": "Use min-height rather than a fixed height so the field grows at 200% text zoom and with text-spacing overrides. Do not clip the label, value or error.",
+        "verification": "Test 200% zoom and WCAG text-spacing overrides."
+      },
+      {
+        "id": "long-values",
+        "requirement": "Long values must remain accessible. Truncate visually with ellipsis or scroll horizontally; never silently change the stored value.",
+        "verification": "Enter a value longer than the control and inspect the DOM value plus the visual overflow."
+      },
+      {
+        "id": "forced-colors",
+        "requirement": "In forced-colors mode, preserve a visible boundary and focus indicator using system colours. The contract does not model forced colours with tokens.",
+        "verification": "Test Windows High Contrast / forced-colors emulation."
+      },
+      {
+        "id": "autofill",
+        "requirement": "Browser autofill styling is not modelled. The application must ensure autofilled text remains legible and the focus ring remains visible.",
+        "verification": "Test autofill in Chromium, Firefox and Safari."
+      },
+      {
+        "id": "no-validation-in-component",
+        "requirement": "The component must not contain validation rules, masking, currency formatting, async lookup or submit logic.",
+        "verification": "Code review and tests that pass invalid values without errorMessage and observe the Default state."
+      },
+      {
+        "id": "no-success-state",
+        "requirement": "Do not add a success, warning or info treatment. Only Default, Hover, Error and Disabled exist.",
+        "verification": "Search the implementation for success/warning/info styling and feedback tokens."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "Value on control",
+        "foreground": "input.text",
+        "background": "input.background",
+        "minimum": 4.5,
+        "ratios": {
+          "control": 17.72
+        },
+        "status": "pass",
+        "notes": "neutral.900 on white."
+      },
+      {
+        "role": "Placeholder on control",
+        "foreground": "input.placeholder",
+        "background": "input.background",
+        "minimum": 4.5,
+        "ratios": {
+          "control": 4.83
+        },
+        "status": "pass",
+        "notes": "neutral.500 on white; just above 4.5:1."
+      },
+      {
+        "role": "Label on page surface",
+        "foreground": "input.label.color",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 10.44,
+          "canvas": 10.01,
+          "subtle": 9.5,
+          "muted": 8.23,
+          "raised": 10.44
+        },
+        "status": "pass",
+        "notes": "All five supported surfaces pass. Inverse is 1.70:1 and unsupported."
+      },
+      {
+        "role": "Helper on page surface",
+        "foreground": "input.helper.color",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 7.73,
+          "canvas": 7.41,
+          "subtle": 7.03,
+          "muted": 6.09,
+          "raised": 7.73
+        },
+        "status": "pass",
+        "notes": "All five supported surfaces pass. Inverse is 2.29:1 and unsupported."
+      },
+      {
+        "role": "Error text on page surface",
+        "foreground": "input.text-error",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 8.31,
+          "canvas": 7.96,
+          "subtle": 7.56,
+          "muted": 6.55,
+          "raised": 8.31
+        },
+        "status": "pass",
+        "notes": "All five supported surfaces pass. Inverse is 2.13:1 and unsupported."
+      },
+      {
+        "role": "Control border on page surface",
+        "foreground": "input.border",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 4.83,
+          "canvas": 4.63,
+          "subtle": 4.4,
+          "muted": 3.81,
+          "raised": 4.83
+        },
+        "status": "pass",
+        "notes": "All five supported surfaces pass. Inverse is 3.67:1 but the full field is unsupported."
+      },
+      {
+        "role": "Hover border on page surface",
+        "foreground": "input.border-hover",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 7.73,
+          "canvas": 7.41,
+          "subtle": 7.03,
+          "muted": 6.09,
+          "raised": 7.73
+        },
+        "status": "pass",
+        "notes": "All five supported surfaces pass. Inverse is 2.29:1 and unsupported."
+      },
+      {
+        "role": "Error border on page surface",
+        "foreground": "input.border-error",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 4.83,
+          "canvas": 4.63,
+          "subtle": 4.39,
+          "muted": 3.81,
+          "raised": 4.83
+        },
+        "status": "pass",
+        "notes": "All five supported surfaces pass. Inverse is 3.67:1 but the full field is unsupported."
+      },
+      {
+        "role": "Focus ring on page surface",
+        "foreground": "input.focus.color",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 5.17,
+          "canvas": 4.95,
+          "subtle": 4.7,
+          "muted": 4.07,
+          "raised": 5.17
+        },
+        "status": "pass",
+        "notes": "All five supported surfaces pass. Inverse is 3.43:1 but the full field is unsupported."
+      },
+      {
+        "role": "Border on control fill",
+        "foreground": "input.border",
+        "background": "input.background",
+        "minimum": 3,
+        "ratios": {
+          "control": 4.83
+        },
+        "status": "pass",
+        "notes": "Boundary against the control's own white fill."
+      },
+      {
+        "role": "Hover border on control fill",
+        "foreground": "input.border-hover",
+        "background": "input.background",
+        "minimum": 3,
+        "ratios": {
+          "control": 7.73
+        },
+        "status": "pass",
+        "notes": "Boundary against the control's own white fill."
+      },
+      {
+        "role": "Error border on control fill",
+        "foreground": "input.border-error",
+        "background": "input.background",
+        "minimum": 3,
+        "ratios": {
+          "control": 4.83
+        },
+        "status": "pass",
+        "notes": "Boundary against the control's own white fill."
+      },
+      {
+        "role": "Focus ring on control fill",
+        "foreground": "input.focus.color",
+        "background": "input.background",
+        "minimum": 3,
+        "ratios": {
+          "control": 5.17
+        },
+        "status": "pass",
+        "notes": "Focus ring against the control's own white fill."
+      },
+      {
+        "role": "Disabled text on disabled fill",
+        "foreground": "input.text-disabled",
+        "background": "input.background-disabled",
+        "minimum": 4.5,
+        "ratios": {
+          "control": 2.02
+        },
+        "status": "exempt",
+        "notes": "Inactive control; WCAG 1.4.3 and 1.4.11 exclude disabled controls."
+      },
+      {
+        "role": "Disabled border on disabled fill",
+        "foreground": "input.border-disabled",
+        "background": "input.background-disabled",
+        "minimum": 3,
+        "ratios": {
+          "control": 1
+        },
+        "status": "exempt",
+        "notes": "The border matches the fill, so there is no visible boundary. Exempt because the control is inactive."
+      },
+      {
+        "role": "Disabled fill on page surface",
+        "foreground": "input.background-disabled",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 1.27
+        },
+        "status": "advisory",
+        "notes": "Visual treatment only, not a WCAG boundary pair. Visually weak by design."
+      },
+      {
+        "role": "Inverse label",
+        "foreground": "input.label.color",
+        "background": "color.surface.inverse",
+        "minimum": 4.5,
+        "ratios": {
+          "inverse": 1.7
+        },
+        "status": "advisory",
+        "notes": "Unsupported surface. Do not place the full field on inverse."
+      },
+      {
+        "role": "Inverse helper",
+        "foreground": "input.helper.color",
+        "background": "color.surface.inverse",
+        "minimum": 4.5,
+        "ratios": {
+          "inverse": 2.29
+        },
+        "status": "advisory",
+        "notes": "Unsupported surface."
+      },
+      {
+        "role": "Inverse error text",
+        "foreground": "input.text-error",
+        "background": "color.surface.inverse",
+        "minimum": 4.5,
+        "ratios": {
+          "inverse": 2.13
+        },
+        "status": "advisory",
+        "notes": "Unsupported surface."
+      },
+      {
+        "role": "Inverse border",
+        "foreground": "input.border",
+        "background": "color.surface.inverse",
+        "minimum": 3,
+        "ratios": {
+          "inverse": 3.67
+        },
+        "status": "advisory",
+        "notes": "The boundary passes, but the full field does not. Unsupported surface."
+      },
+      {
+        "role": "Inverse hover border",
+        "foreground": "input.border-hover",
+        "background": "color.surface.inverse",
+        "minimum": 3,
+        "ratios": {
+          "inverse": 2.29
+        },
+        "status": "advisory",
+        "notes": "Unsupported surface."
+      },
+      {
+        "role": "Inverse error border",
+        "foreground": "input.border-error",
+        "background": "color.surface.inverse",
+        "minimum": 3,
+        "ratios": {
+          "inverse": 3.67
+        },
+        "status": "advisory",
+        "notes": "The boundary passes, but the full field does not. Unsupported surface."
+      },
+      {
+        "role": "Inverse focus ring",
+        "foreground": "input.focus.color",
+        "background": "color.surface.inverse",
+        "minimum": 3,
+        "ratios": {
+          "inverse": 3.43
+        },
+        "status": "advisory",
+        "notes": "The ring passes, but the full field does not. Unsupported surface."
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Change label, value, placeholder, helper and error copy; all are application-owned.",
+      "Control field width and responsive behaviour through the surrounding layout; 320px is not a production width.",
+      "Use text, email, tel, number or url types with the matching inputMode and autoComplete.",
+      "Set required, name, id, maxLength, pattern and other native constraints that belong to the field's purpose.",
+      "Set hideLabel when the visual design needs no label, provided the label remains visually hidden and programmatically associated.",
+      "Supply helperText, errorMessage, onBlur validation and form-level validation from the application.",
+      "Override input.* component token values at the theme layer, preserving the alias chain and revalidating all 41 gated contrast pairs.",
+      "Use className for layout only."
+    ],
+    "forbidden": [
+      "Hardcoding colours, radii, heights, padding, gaps, font sizes or weights.",
+      "Changing the 40px height, 6px radius, 1px border, 12px horizontal padding, 8px label gap or 4px helper gap.",
+      "Using the placeholder as the label or hiding the label without an accessible name.",
+      "Hiding the error message, stacking helper and error copy, or signalling error with colour alone.",
+      "Adding a success, warning, info, readOnly, loading or clearable state.",
+      "Adding icons, password reveal, search clear, character counters or inline actions.",
+      "Using Input for password, search, textarea, select, OTP, currency or PIN.",
+      "Placing the full field on inverse or dark surfaces.",
+      "Exposing Focused, Filled, ShowPlaceholder or ShowHelper as public props.",
+      "Running validation, formatting or masking inside the component.",
+      "Setting aria-invalid on a disabled field or presenting an error on a disabled field.",
+      "Using disabled as a validation strategy.",
+      "Fixing the width at 320px or otherwise preventing responsive growth.",
+      "Using readOnly as a substitute for disabled.",
+      "Reusing another field's id or label association."
+    ],
+    "themeOverrides": [
+      "Consumers may remap semantic roles so input.background, input.border, input.text, input.placeholder, input.border-error, input.text-error and input.focus.color resolve to a brand palette.",
+      "Every override must preserve the component-token alias chain and be revalidated for the 41 gated contrast pairs, including hover, error, focus, label, helper and placeholder.",
+      "Do not add new input.* names in a theme; a missing role requires a token-source change and a new contract version.",
+      "Light theme is the only implemented theme. Dark mode is not available and must not be simulated by inverting values.",
+      "Disabled pairs remain exempt under WCAG, but a theme should still be reviewed for legibility."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "Render the full field: label above the control, helper or error below it.",
+      "Use one label per field and one field per value. Keep the label visible unless the design explicitly requires a visually hidden label.",
+      "Let the error replace the helper copy in the same row; never stack them.",
+      "Pair fields with Button for form submission and a secondary cancel action.",
+      "Validate on blur or submit, then move focus to the first invalid field so Error+Focused is reachable and announced.",
+      "Use helper text for format guidance and constraints before an error occurs.",
+      "Group related fields with application-level structure such as fieldset/legend where the form semantics require it.",
+      "Keep a stable id for each field so label, helper and error references remain valid."
+    ],
+    "forbidden": [
+      "Placeholder-only fields.",
+      "A label hidden with display:none or aria-hidden.",
+      "Helper and error messages shown at the same time.",
+      "A red border without an error message.",
+      "An Input with an embedded Button, icon, clear action or password reveal.",
+      "Two fields sharing an id.",
+      "An inverse or dark surface.",
+      "A success or warning treatment.",
+      "Validation on every keystroke.",
+      "A fixed 320px width that cannot respond to its container."
+    ],
+    "example": "components/examples/financial-form.md"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "placeholder-only",
+      "configuration": "<Input id=\"email\" placeholder=\"Email address\" value={email} onChange={setEmail} />",
+      "why": "The placeholder is not a label. The field has no visible or programmatic name and the hint disappears on entry.",
+      "correct": "Add label='Email address' and keep a separate placeholder such as 'you@example.com'."
+    },
+    {
+      "id": "helper-error-stacked",
+      "configuration": "helperText='We never share this.' errorMessage='Enter a valid email.' rendered as two rows.",
+      "why": "Error replaces helper copy in the same slot. Stacking creates conflicting guidance and breaks the anatomy.",
+      "correct": "Render only the error message when errorMessage is present; restore helperText when the error clears."
+    },
+    {
+      "id": "focused-prop",
+      "configuration": "<Input focused={true} />",
+      "why": "Focused is a design-time overlay, not a runtime prop. A caller-supplied focus state can lie about the real focus.",
+      "correct": "Derive focus from :focus-visible; suppress it when disabled."
+    },
+    {
+      "id": "filled-and-placeholder",
+      "configuration": "<Input filled={true} showPlaceholder={true} value=\"ada@fincore.dev\" />",
+      "why": "Value and placeholder would overlap in the same text area. The booleans are complementary, not independent.",
+      "correct": "Derive both from the value: filled when non-empty, placeholder when empty."
+    },
+    {
+      "id": "error-hover",
+      "configuration": "State=Error plus a hover border override.",
+      "why": "Error+Hover has no independent visual treatment. The error border must persist; adding a hover border creates an unapproved combination.",
+      "correct": "Keep input.border-error in Error; do not apply input.border-hover."
+    },
+    {
+      "id": "disabled-error",
+      "configuration": "State=Disabled with errorMessage set and a red border.",
+      "why": "Disabled takes precedence over Error. A disabled field must not present as editable-invalid.",
+      "correct": "Disabled wins: muted fill, matching border, muted text, no error message and no aria-invalid."
+    },
+    {
+      "id": "disabled-focus",
+      "configuration": "State=Disabled with Focused=true showing the ring.",
+      "why": "Disabled suppresses the focus ring. A disabled control is not focusable.",
+      "correct": "Ignore Focused when disabled; render no ring."
+    },
+    {
+      "id": "showhelper-error",
+      "configuration": "State=Error with ShowHelper=false hiding the message.",
+      "why": "The error message is the non-colour signal. Hiding it leaves only the red border and fails the contract.",
+      "correct": "Always render the error message in Error, regardless of helper visibility."
+    },
+    {
+      "id": "inverse-surface",
+      "configuration": "<Input ... /> inside a container using color.surface.inverse.",
+      "why": "Label 1.70:1, helper 2.29:1, error 2.13:1 and hover border 2.29:1 fail on inverse. Inverse is unsupported.",
+      "correct": "Use default, canvas, subtle, muted or raised. A future inverse contract must add tokens."
+    },
+    {
+      "id": "password-input",
+      "configuration": "<Input type=\"password\" label=\"Password\" />",
+      "why": "Password needs a reveal affordance and masking; there is no icon system or password contract.",
+      "correct": "Wait for a Password Input component."
+    },
+    {
+      "id": "readonly-state",
+      "configuration": "<Input readOnly label=\"Account number\" />",
+      "why": "ReadOnly has no visual treatment, token set, focus rule or contract. It is not the same as Disabled.",
+      "correct": "Use Disabled only when the field is genuinely unavailable, or wait for a ReadOnly contract."
+    },
+    {
+      "id": "validate-on-change",
+      "configuration": "onChange={(event) => { setValue(event.target.value); validateImmediately(event.target.value); }}",
+      "why": "Per-keystroke validation interrupts entry and announces errors before the user has finished.",
+      "correct": "Update the value on change; validate on blur or submit."
+    },
+    {
+      "id": "colour-only-error",
+      "configuration": "A red border with no errorMessage.",
+      "why": "Colour alone is not an accessible error signal and the Error state requires text.",
+      "correct": "Always supply errorMessage together with State=Error."
+    },
+    {
+      "id": "hidden-label-no-name",
+      "configuration": "hideLabel with no aria-label, aria-labelledby or visually hidden label.",
+      "why": "The field loses its accessible name.",
+      "correct": "Render the label visually hidden while keeping the association, or supply an equivalent programmatic name."
+    },
+    {
+      "id": "aria-invalid-disabled",
+      "configuration": "A disabled field with aria-invalid=true and an error message.",
+      "why": "Disabled fields are not editable and must not present validation state; Disabled wins over Error.",
+      "correct": "Clear or withhold the invalid presentation while disabled."
+    },
+    {
+      "id": "fixed-width",
+      "configuration": "A 320px fixed-width field on every viewport.",
+      "why": "320px is a Figma demo literal, not a width token or responsive rule.",
+      "correct": "Let the field fill its container and set width through layout."
+    },
+    {
+      "id": "success-state",
+      "configuration": "A green success border or success message inside Input.",
+      "why": "No success state or success token mapping exists for Input.",
+      "correct": "Use helper copy for neutral guidance; request a new state and tokens before adding one."
+    },
+    {
+      "id": "figma-booleans-as-props",
+      "configuration": "Exposing showPlaceholder, showHelper, filled or focused as public props.",
+      "why": "Those are design-time layer switches. They let applications desynchronise value, placeholder, focus and error visibility.",
+      "correct": "Derive them from value, focus and errorMessage; expose only hideLabel as the one visual-content exception."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "visual-four-states",
+        "given": "The Input component is rendered on a supported light surface.",
+        "when": "Default, Hover, Error and Disabled are captured.",
+        "then": "Each surface, border, text, placeholder, label and helper resolves to the stateMapping token; no hex or px literal appears in the render tree."
+      },
+      {
+        "id": "visual-focus",
+        "given": "Default, Hover and Error with Focused=true.",
+        "when": "The field is inspected.",
+        "then": "A 2px OUTSIDE ring at 2px offset with an 8px radius appears; the base border, text and helper remain unchanged."
+      },
+      {
+        "id": "visual-disabled-focus",
+        "given": "Disabled with Focused=true.",
+        "when": "The field is rendered.",
+        "then": "No ring appears; the disabled fill, border and text remain."
+      },
+      {
+        "id": "visual-error-focused",
+        "given": "Error with Focused=true.",
+        "when": "The field is rendered.",
+        "then": "The red border, red error message and blue ring coexist."
+      },
+      {
+        "id": "visual-geometry",
+        "given": "A field at the demo 320px width.",
+        "when": "The anatomy is measured.",
+        "then": "Control is 40px high, radius 6px, border 1px INSIDE, padding-x 12px, label gap 8px, helper gap 4px; ring is 324x44 at (-2,-2) with radius 8px."
+      },
+      {
+        "id": "visual-typography",
+        "given": "A field with label, value and helper.",
+        "when": "Text metrics are measured.",
+        "then": "Value is 14/20 weight 400; label is 14/20 weight 500; helper and error are 12/16 weight 400."
+      },
+      {
+        "id": "visual-filled-placeholder",
+        "given": "Filled=false + ShowPlaceholder=true and Filled=true + ShowPlaceholder=false.",
+        "when": "Each state is captured.",
+        "then": "The empty field shows placeholder only; the filled field shows value only; no overlap."
+      },
+      {
+        "id": "visual-label-helper-toggles",
+        "given": "ShowLabel=false and ShowHelper=false in Default, Hover, Error and Disabled.",
+        "when": "The field is measured.",
+        "then": "The relevant row collapses its gap; Error keeps the message visible even with ShowHelper=false."
+      },
+      {
+        "id": "visual-bindings",
+        "given": "All four variants.",
+        "when": "Every paint, stroke, radius, stroke weight, padding, gap, font size, line height and font weight is audited.",
+        "then": "44 bound fields per variant, 176/176 total, 0 missing, 0 unbound solid paints, 0 primitive or Semantic bypasses."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "behaviour-disabled-precedence",
+        "given": "A field with an error and hover/focus conditions.",
+        "when": "disabled is set.",
+        "then": "Disabled wins: no error border or message, no hover border, no ring, no change events."
+      },
+      {
+        "id": "behaviour-error-hover",
+        "given": "A field in Error.",
+        "when": "The pointer hovers the control.",
+        "then": "The error border persists; input.border-hover is not applied."
+      },
+      {
+        "id": "behaviour-showhelper-error",
+        "given": "A field in Error with ShowHelper=false.",
+        "when": "The field is rendered.",
+        "then": "The error message remains visible."
+      },
+      {
+        "id": "behaviour-filled",
+        "given": "An empty field and then a non-empty value.",
+        "when": "The value changes.",
+        "then": "The placeholder is shown only when empty; the value is shown only when non-empty; the two never overlap."
+      },
+      {
+        "id": "behaviour-showlabel",
+        "given": "ShowLabel=false.",
+        "when": "The field is rendered.",
+        "then": "The visual label row and its gap collapse; the accessible name remains in production."
+      },
+      {
+        "id": "behaviour-showhelper",
+        "given": "ShowHelper=false in Default, Hover and Disabled.",
+        "when": "The field is rendered.",
+        "then": "The helper row and its gap collapse."
+      },
+      {
+        "id": "behaviour-overrides",
+        "given": "An Input instance.",
+        "when": "Label, Value, Placeholder and Helper are overridden.",
+        "then": "The text updates without changing token bindings or the other layers."
+      },
+      {
+        "id": "behaviour-focus-persistence",
+        "given": "A focused field.",
+        "when": "State changes between Default, Hover and Error.",
+        "then": "The focus ring remains until focus leaves; when Disabled is set, the ring disappears."
+      },
+      {
+        "id": "behaviour-no-validation",
+        "given": "An invalid value without errorMessage.",
+        "when": "The user types and blurs.",
+        "then": "The component renders Default; it does not create or announce an error."
+      },
+      {
+        "id": "behaviour-controlled-value",
+        "given": "A controlled value.",
+        "when": "The parent updates or rejects the value.",
+        "then": "The rendered value follows the parent; the component does not keep a hidden second source of truth."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "a11y-label",
+        "given": "Any Input.",
+        "when": "The accessibility tree is inspected.",
+        "then": "The field has a programmatic label whose text matches the visible label, even when hideLabel is true."
+      },
+      {
+        "id": "a11y-error",
+        "given": "An Input with errorMessage.",
+        "when": "The accessibility tree is inspected.",
+        "then": "aria-invalid is true and the error text is connected through aria-describedby or aria-errormessage."
+      },
+      {
+        "id": "a11y-helper",
+        "given": "An Input with helperText and no error.",
+        "when": "The accessibility tree is inspected.",
+        "then": "The helper text is connected through aria-describedby."
+      },
+      {
+        "id": "a11y-announcement",
+        "given": "A failed submit.",
+        "when": "The error appears and focus moves to the first invalid field.",
+        "then": "The error is announced once, without per-keystroke announcements."
+      },
+      {
+        "id": "a11y-placeholder",
+        "given": "An empty field with a placeholder.",
+        "when": "The accessible name is computed.",
+        "then": "The name comes from the label, not the placeholder."
+      },
+      {
+        "id": "a11y-type-autocomplete",
+        "given": "Email, telephone, number and URL fields.",
+        "when": "The DOM is inspected and a mobile keyboard is used.",
+        "then": "The type, inputMode and autoComplete match the field's purpose."
+      },
+      {
+        "id": "a11y-required",
+        "given": "A required field.",
+        "when": "The accessibility tree and visible UI are inspected.",
+        "then": "required is exposed and a visible indication other than a bare asterisk explains it."
+      },
+      {
+        "id": "a11y-disabled",
+        "given": "A disabled field.",
+        "when": "The accessibility tree and tab order are inspected.",
+        "then": "The native disabled state is exposed, the field is not focusable, and no error or aria-invalid is presented."
+      },
+      {
+        "id": "a11y-focus",
+        "given": "Keyboard focus on each supported surface.",
+        "when": "The field is tabbed to.",
+        "then": "The 2px ring is visible, unclipped and at least 3:1 against the surface."
+      },
+      {
+        "id": "a11y-keyboard",
+        "given": "A form with several Inputs and a submit Button.",
+        "when": "A keyboard-only user tabs, types and presses Enter.",
+        "then": "Tab order follows DOM order, native entry works, Enter submits without a trap, and disabled fields are skipped."
+      },
+      {
+        "id": "a11y-contrast",
+        "given": "All supported surfaces and control states.",
+        "when": "Contrast is recomputed.",
+        "then": "41/41 gated pairs pass; disabled pairs are exempt and inverse pairs are advisory and unsupported."
+      },
+      {
+        "id": "a11y-zoom",
+        "given": "200% text zoom and text-spacing overrides.",
+        "when": "The field is rendered with a long label and error message.",
+        "then": "The field grows with min-height; no label, value or message is clipped."
+      },
+      {
+        "id": "a11y-forced-colors",
+        "given": "Forced-colors mode.",
+        "when": "The field is rendered in Default, Error, Disabled and Focused.",
+        "then": "A visible boundary and focus indicator remain."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "tokens-only-input-prefix",
+        "given": "The Input implementation and its resolved styles.",
+        "when": "Every colour, dimension and font-weight reference is audited.",
+        "then": "Every reference is an input.* component token; there are zero primitive or Semantic references and zero hardcoded values covered by a token."
+      },
+      {
+        "id": "tokens-count",
+        "given": "This contract.",
+        "when": "The dependency list is compared with tokens/tokens.json.",
+        "then": "All 28 input.* dependencies exist, resolve to the stated values, and map to the stated --fc-* CSS variables."
+      },
+      {
+        "id": "tokens-state-binding",
+        "given": "All four variants.",
+        "when": "Each fill, border, text, placeholder, label, helper and ring is checked against stateMapping.",
+        "then": "Every visual property resolves to the mapped token; no variant uses a token from the wrong state."
+      },
+      {
+        "id": "tokens-focus-radius",
+        "given": "Input focus geometry.",
+        "when": "The tokens are resolved.",
+        "then": "input.focus.radius equals input.radius plus input.focus.offset (6 + 2 = 8)."
+      },
+      {
+        "id": "tokens-no-invention",
+        "given": "The implementation.",
+        "when": "Searching for input.error.border, input.border.focus, input.success, input.warning, input.readonly or input.icon.",
+        "then": "No such token or API exists in the implementation."
+      }
+    ],
+    "regression": [
+      {
+        "id": "regression-visual",
+        "given": "A baseline snapshot of the four states and the focus overlays.",
+        "when": "The Input is changed.",
+        "then": "Every state is pixel-compared; any change to surface, border, text, helper, geometry or ring is reviewed and explained."
+      },
+      {
+        "id": "regression-token-hashes",
+        "given": "The protected token source, validator and generated CSS.",
+        "when": "The contract stage is validated.",
+        "then": "tokens/tokens.json, tokens/check.mjs and tokens/dist/tokens.css are byte-identical to the baseline hashes."
+      },
+      {
+        "id": "regression-figma",
+        "given": "Figma Input set 99:46.",
+        "when": "The contract is reviewed.",
+        "then": "The set still has 4 variants, 10 properties, the same variant IDs, 44 bound fields per variant and no duplicate or combined state."
+      },
+      {
+        "id": "regression-contrast",
+        "given": "The five supported surfaces.",
+        "when": "The contract stage is validated.",
+        "then": "41/41 gated pairs still pass; inverse remains advisory and unsupported; disabled remains exempt."
+      },
+      {
+        "id": "regression-preservation",
+        "given": "The Button set, variables and pages in Figma.",
+        "when": "The Input contract is reviewed.",
+        "then": "Button 87:37, all 195 foundation variables and every page remain unchanged."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "error-hover",
+      "limitation": "Error + Hover is not modelled. The error border persists and there is no independent hover border.",
+      "impact": "A hovered invalid field has no dedicated visual; the error signal remains dominant.",
+      "mitigation": "Keep input.border-error on hover. Do not invent a combined treatment."
+    },
+    {
+      "id": "disabled-error",
+      "limitation": "Disabled + Error is not modelled. Disabled wins.",
+      "impact": "A field disabled while invalid cannot present its error.",
+      "mitigation": "Clear or withhold error presentation when disabling; explain the field's unavailability separately."
+    },
+    {
+      "id": "disabled-focus",
+      "limitation": "Disabled + Focused is not a visible combination; the ring is suppressed.",
+      "impact": "A disabled field is not focusable and has no focus indicator.",
+      "mitigation": "Use native disabled correctly; do not try to force focus onto it."
+    },
+    {
+      "id": "flat-state-plus-focus",
+      "limitation": "State is a flat four-value axis; Focus is a separate boolean overlay.",
+      "impact": "There is no State=Focus variant and no combined Error+Hover or Disabled+Error variant.",
+      "mitigation": "Keep the boolean overlay model; do not add a fifth State."
+    },
+    {
+      "id": "shared-helper-copy",
+      "limitation": "Figma's Helper TEXT property carries both helper and error copy and cannot have variant-specific defaults.",
+      "impact": "Consumers must override Helper when State=Error.",
+      "mitigation": "Production exposes helperText and errorMessage separately and renders only one at a time."
+    },
+    {
+      "id": "figma-booleans",
+      "limitation": "Filled and ShowPlaceholder are separate booleans because Figma cannot negate a boolean.",
+      "impact": "The design-time API allows an invalid overlapping combination.",
+      "mitigation": "Production derives both from the value; never expose the booleans."
+    },
+    {
+      "id": "showhelper-error",
+      "limitation": "ShowHelper is ignored in Error by design.",
+      "impact": "The error row cannot be hidden, even intentionally.",
+      "mitigation": "This is required so error feedback is never colour-only. Do not add an override."
+    },
+    {
+      "id": "ring-position-literal",
+      "limitation": "The focus ring sits at a literal -2,-2 because Figma variables cannot bind x/y.",
+      "impact": "A theme change to input.focus.offset must also update the position literal.",
+      "mitigation": "Bind the ring padding to the offset token and assert the geometry in visual tests."
+    },
+    {
+      "id": "width-not-tokenised",
+      "limitation": "The 320px field width is a demo literal; no width or size token exists.",
+      "impact": "The Figma set cannot express responsive widths.",
+      "mitigation": "Own width in layout; do not copy 320px as a fixed production width."
+    },
+    {
+      "id": "font-family",
+      "limitation": "IBM Plex Sans is a Figma text property, not a token.",
+      "impact": "Production font loading and fallback are not governed by the token source.",
+      "mitigation": "The application owns font loading and verifies rendered metrics; a font-family token is future work."
+    },
+    {
+      "id": "no-icons",
+      "limitation": "There is no icon system, adornment slot, clear button or password reveal.",
+      "impact": "Search, password and clearable fields cannot be built from this component.",
+      "mitigation": "Use text-only supported types. Wait for an icon/adornment contract."
+    },
+    {
+      "id": "unsupported-types",
+      "limitation": "Password, search, textarea, select, OTP, currency and PIN are out of scope.",
+      "impact": "Those financial controls need visual and behavioural contracts that do not exist.",
+      "mitigation": "Use the future specialised components; do not fake them with type or CSS overrides."
+    },
+    {
+      "id": "app-owned-validation",
+      "limitation": "The component does not validate, format, mask, debounce or submit.",
+      "impact": "Consumers must build validation, error copy, announcement and focus management.",
+      "mitigation": "Follow the production accessibility requirements and the illustrative form example."
+    },
+    {
+      "id": "inverse-unsupported",
+      "limitation": "Inverse is not a supported surface. Label, helper, error text and hover border fail contrast.",
+      "impact": "The full field cannot be used on dark or inverse surfaces.",
+      "mitigation": "Stay on the five supported light surfaces; a future inverse contract must add tokens."
+    },
+    {
+      "id": "disabled-visual",
+      "limitation": "Disabled is a flat muted block with no visible boundary; text is 2.02:1 and exempt.",
+      "impact": "Disabled fields are visually weak and hard to read for low-vision users.",
+      "mitigation": "Explain why the field is unavailable and use disabled sparingly."
+    },
+    {
+      "id": "no-success",
+      "limitation": "There is no success, warning or info state.",
+      "impact": "Positive validation feedback cannot be expressed inside the component.",
+      "mitigation": "Use helper copy or application-level messaging; request a new state before adding one."
+    },
+    {
+      "id": "autofill-forced-colors",
+      "limitation": "Autofill styling and forced-colors behaviour are not modelled with tokens.",
+      "impact": "Browser-specific rendering may reduce contrast or hide the boundary.",
+      "mitigation": "Test autofill and forced-colors in supported browsers and add application-level fallbacks if needed."
+    },
+    {
+      "id": "dark-mode",
+      "limitation": "Dark mode is not implemented.",
+      "impact": "No dark values exist for any Input token, including focus, error and disabled.",
+      "mitigation": "Ship light theme only. Do not invert values to simulate dark mode."
+    },
+    {
+      "id": "no-readonly",
+      "limitation": "ReadOnly is not modelled.",
+      "impact": "There is no visual or semantic contract for a read-only field.",
+      "mitigation": "Use disabled only when the field is genuinely unavailable; wait for a ReadOnly contract if needed."
+    },
+    {
+      "id": "browser-baseline",
+      "limitation": "The Input focus overlay and disabled suppression require CSS :has(). The approved baseline is Chrome/Edge 105+, Safari 15.4+ and Firefox 121+; no transpilation or fallback is bundled.",
+      "impact": "In browsers older than the approved baseline, the focus ring and disabled-overlay suppression may not render.",
+      "mitigation": "Test the named baseline before release and record unrun browsers as UNVERIFIED. If older browsers must be supported, restructure the focus overlay or add a documented fallback in a separate change."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract.json completely before writing Input code.",
+      "Read components/input/README.md for the human explanation, state matrix, native HTML/CSS mapping and examples.",
+      "Read components/IMPLEMENTATION.md and components/input/input.css plus input.html for the actual native implementation. Contract-level props are not runtime exports.",
+      "Read tokens/tokens.json or tokens/dist/tokens.css for the canonical token names and resolved values.",
+      "Read docs/foundation/principles.md for accessibility and semantic-token rules.",
+      "Read components/examples/financial-form.md only after the Input contract is understood; it is illustrative, not a production feature."
+    ],
+    "rules": [
+      "Render the full field: label, single-line control, helper/error row. Do not reduce it to a bare input.",
+      "Use only the 28 input.* tokens listed in this contract. Never consume primitives or Semantic tokens directly.",
+      "Derive State from disabled and errorMessage. Precedence: Disabled > Error > Hover > Default.",
+      "Derive Focused from :focus-visible, except when disabled.",
+      "Derive Filled and placeholder visibility from the controlled value; never expose those booleans as props.",
+      "Error message always replaces helper copy and always remains visible.",
+      "Always provide a programmatic label association. hideLabel must render the label visually hidden, never absent.",
+      "Own no validation. The application validates on blur or submit and supplies errorMessage.",
+      "Set aria-invalid and the error association from errorMessage in the application; do not duplicate them inconsistently.",
+      "Use only text, email, tel, number and url. Do not fake password, search, textarea, select, OTP, currency or PIN.",
+      "Preserve native keyboard behaviour and Tab order, and supply the correct autoComplete token. Do not add custom key handlers, keyboard traps or a roving tabindex.",
+      "Treat the native class/attribute API as canonical: .fc-input structure, native input value, application-owned aria-invalid and error association, and native disabled/type/autocomplete/required/inputMode attributes. Do not require a JavaScript runtime or React adapter.",
+      "Target Chrome/Edge 105+, Safari 15.4+ and Firefox 121+. The focus overlay and disabled suppression require :has(); no fallback is bundled.",
+      "Never place the full field on inverse or dark surfaces.",
+      "Do not modify tokens/tokens.json, tokens/check.mjs or tokens/dist/tokens.css to make an implementation easier. If a role is missing, stop and report it."
+    ],
+    "uncertaintyPolicy": [
+      "If the requested field is password, search, textarea, select, OTP, currency or PIN, stop and report that the capability is not in the contract. Do not approximate it.",
+      "If the requested surface is inverse or dark, stop and report that the surface is unsupported.",
+      "If the requested treatment is success, warning, info or readOnly, stop and report that the state does not exist.",
+      "If a required token is missing, report the missing role and the token chain it would need; do not hardcode a value.",
+      "If the validation timing, error copy or required indication is unclear, ask rather than inventing rules.",
+      "If the requested design shows Error+Hover, Disabled+Error or a fifth State, flag it as an open question; do not create a combined state.",
+      "If the implementation target is not specified, ask before choosing a framework, package path or styling approach."
+    ],
+    "definitionOfDone": [
+      "The full field renders with label, control and helper/error row from input.* tokens with no primitive, Semantic or hardcoded values covered by a token.",
+      "Default, Hover, Error, Disabled, Default+Focused, Hover+Focused and Error+Focused render correctly; Disabled suppresses the ring.",
+      "Disabled takes precedence over Error and Hover; Error+Hover keeps the error border; ShowHelper is ignored in Error.",
+      "Filled and ShowPlaceholder are derived from the value and never overlap.",
+      "Label association, placeholder separation, aria-invalid, error/helper description and announcement pass an accessibility audit.",
+      "Type, inputMode, autoComplete, required and disabled semantics match the field's purpose.",
+      "Keyboard Tab order, native entry, Enter submission and disabled tab removal pass.",
+      "The 28 token dependencies resolve to the values in this contract and match the generated CSS variables.",
+      "The 41 gated contrast pairs pass on the five supported surfaces; inverse remains unsupported.",
+      "No unsupported type, state, icon, validation logic or fixed 320px width is present.",
+      "The illustrative composition example, if used, is adapted rather than copied as production code."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Email field with helper",
+        "language": "tsx",
+        "code": "<Input\n  id=\"recipient-email\"\n  label=\"Recipient email\"\n  type=\"email\"\n  autoComplete=\"email\"\n  value={email}\n  onChange={(event) => setEmail(event.target.value)}\n  helperText=\"We'll email a receipt to this address.\"\n  placeholder=\"you@example.com\"\n  required\n/>",
+        "explanation": "Visible label, separate placeholder, correct type and autocomplete, helper guidance and native required. Validation stays in the application."
+      },
+      {
+        "title": "Error field after failed validation",
+        "language": "tsx",
+        "code": "<Input\n  id=\"amount\"\n  label=\"Amount (USD)\"\n  inputMode=\"decimal\"\n  value={amount}\n  onChange={(event) => setAmount(event.target.value)}\n  helperText=\"Enter an amount between 10.00 and 5,000.00.\"\n  errorMessage=\"Enter an amount of at least 10.00.\"\n/>",
+        "explanation": "errorMessage sets State=Error and replaces the helper copy. The application sets aria-invalid and associates the message. If focus moves here after submit, the field renders Error+Focused with a red border and blue ring."
+      },
+      {
+        "title": "Required field with a visible requirement",
+        "language": "tsx",
+        "code": "<Input\n  id=\"account-holder\"\n  label=\"Account holder name\"\n  autoComplete=\"name\"\n  value={holder}\n  onChange={(event) => setHolder(event.target.value)}\n  required\n/>",
+        "explanation": "The application must also show a visible required indication in the form copy, not only a bare asterisk."
+      },
+      {
+        "title": "Genuinely unavailable field",
+        "language": "tsx",
+        "code": "<Input\n  id=\"account-number\"\n  label=\"Account number\"\n  value={accountNumber}\n  onChange={() => {}}\n  helperText=\"Selected from the account above.\"\n  disabled\n/>",
+        "explanation": "Disabled wins over hover, focus and error. The reason for unavailability is explained in helper copy, not implied by the muted fill."
+      },
+      {
+        "title": "Visually hidden but accessible label",
+        "language": "tsx",
+        "code": "<Input\n  id=\"transaction-filter\"\n  label=\"Filter transactions\"\n  hideLabel\n  value={query}\n  onChange={(event) => setQuery(event.target.value)}\n  placeholder=\"Filter by description\"\n/>",
+        "explanation": "hideLabel hides the visual row but keeps the label programmatically associated. The placeholder is still not the label."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Placeholder-only field",
+        "language": "tsx",
+        "code": "<Input id=\"email\" placeholder=\"Email address\" value={email} onChange={setEmail} />",
+        "explanation": "The placeholder is not a label; the field has no accessible name and the hint disappears on entry."
+      },
+      {
+        "title": "Helper and error stacked",
+        "language": "tsx",
+        "code": "<Input id=\"email\" label=\"Email\" helperText=\"We never share this.\" errorMessage=\"Enter a valid email.\" />",
+        "explanation": "The error must replace the helper in the same row, not add a second row of conflicting guidance."
+      },
+      {
+        "title": "Figma boolean exposed as a prop",
+        "language": "tsx",
+        "code": "<Input id=\"email\" label=\"Email\" focused filled showPlaceholder />",
+        "explanation": "Focus, filled and placeholder visibility are derived. Exposing them lets the UI lie about the value and focus."
+      },
+      {
+        "title": "Hiding the error",
+        "language": "tsx",
+        "code": "<Input id=\"email\" label=\"Email\" errorMessage=\"Enter a valid email.\" showHelper={false} />",
+        "explanation": "ShowHelper is ignored in Error. Do not add a public prop that can hide the error message."
+      },
+      {
+        "title": "Value and placeholder overlap",
+        "language": "tsx",
+        "code": "<Input id=\"email\" label=\"Email\" value=\"ada@fincore.dev\" filled showPlaceholder />",
+        "explanation": "Filled=true and ShowPlaceholder=true are invalid; both layers would occupy the same text area."
+      },
+      {
+        "title": "Inverse surface",
+        "language": "tsx",
+        "code": "<div style={{ background: \"var(--fc-color-surface-inverse)\" }}><Input id=\"email\" label=\"Email\" value={email} onChange={setEmail} helperText=\"We never share this.\" /></div>",
+        "explanation": "Label, helper, error text and hover border fail contrast on inverse. The full field is unsupported on dark surfaces."
+      },
+      {
+        "title": "Password input",
+        "language": "tsx",
+        "code": "<Input id=\"password\" label=\"Password\" type=\"password\" value={password} onChange={setPassword} />",
+        "explanation": "Password needs a reveal affordance and masking; there is no icon system or password contract."
+      },
+      {
+        "title": "Validation on every keystroke",
+        "language": "tsx",
+        "code": "onChange={(event) => { setValue(event.target.value); setError(validate(event.target.value)); }}",
+        "explanation": "Validation belongs on blur or submit. Per-keystroke errors interrupt entry and announce too early."
+      },
+      {
+        "title": "ReadOnly treated as disabled",
+        "language": "tsx",
+        "code": "<Input id=\"account\" label=\"Account number\" value={account} onChange={() => {}} readOnly />",
+        "explanation": "ReadOnly has no visual, token or accessibility contract. Use disabled only when the field is genuinely unavailable."
+      },
+      {
+        "title": "Error presented on a disabled field",
+        "language": "tsx",
+        "code": "<Input id=\"amount\" label=\"Amount\" value={amount} onChange={() => {}} errorMessage=\"Required\" disabled />",
+        "explanation": "Disabled wins over Error. A disabled field must not present an error or aria-invalid."
+      },
+      {
+        "title": "Fixed 320px width",
+        "language": "tsx",
+        "code": "<Input id=\"email\" label=\"Email\" className=\"w-[320px]\" value={email} onChange={setEmail} />",
+        "explanation": "320px is a Figma demo literal, not a production width. Width belongs to the responsive layout."
+      },
+      {
+        "title": "Invented success state",
+        "language": "tsx",
+        "code": "<Input id=\"email\" label=\"Email\" state=\"success\" value={email} onChange={setEmail} />",
+        "explanation": "There is no success state or success token mapping for Input. Do not add one."
+      }
+    ]
+  }
+}

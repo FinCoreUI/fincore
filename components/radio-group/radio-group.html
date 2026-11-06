@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore Radio Group — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./radio-group.css">
+</head>
+<body>
+  <main>
+    <h1>Radio Group reference markup</h1>
+    <p>
+      Mutually exclusive options: legend/label, native <code>&lt;input type="radio"&gt;</code> controls with shared <code>name</code>, and helper/error row.
+    </p>
+
+    <section aria-labelledby="radio-default">
+      <h2 id="radio-default">Default selection</h2>
+
+      <fieldset class="fc-radio-group">
+        <legend class="fc-radio-group__label">Billing cycle</legend>
+        <div class="fc-radio-group__items">
+          <label class="fc-radio-group__item" for="billing-monthly">
+            <span class="fc-radio-group__control">
+              <input
+                type="radio"
+                class="fc-radio-group__field"
+                id="billing-monthly"
+                name="billingCycle"
+                value="monthly"
+                checked
+              >
+              <span class="fc-radio-group__circle" aria-hidden="true">
+                <span class="fc-radio-group__dot"></span>
+              </span>
+            </span>
+            <span class="fc-radio-group__item-label">Monthly</span>
+          </label>
+          <label class="fc-radio-group__item" for="billing-annual">
+            <span class="fc-radio-group__control">
+              <input
+                type="radio"
+                class="fc-radio-group__field"
+                id="billing-annual"
+                name="billingCycle"
+                value="annual"
+              >
+              <span class="fc-radio-group__circle" aria-hidden="true">
+                <span class="fc-radio-group__dot"></span>
+              </span>
+            </span>
+            <span class="fc-radio-group__item-label">Annual (save 20%)</span>
+          </label>
+        </div>
+      </fieldset>
+    </section>
+
+    <section aria-labelledby="radio-error">
+      <h2 id="radio-error">Error after failed validation</h2>
+
+      <fieldset class="fc-radio-group" aria-describedby="shipping-error-msg">
+        <legend class="fc-radio-group__label">Shipping speed</legend>
+        <div class="fc-radio-group__items">
+          <label class="fc-radio-group__item" for="shipping-standard">
+            <span class="fc-radio-group__control">
+              <input
+                type="radio"
+                class="fc-radio-group__field"
+                id="shipping-standard"
+                name="shippingSpeed"
+                value="standard"
+                aria-invalid="true"
+              >
+              <span class="fc-radio-group__circle" aria-hidden="true">
+                <span class="fc-radio-group__dot"></span>
+              </span>
+            </span>
+            <span class="fc-radio-group__item-label">Standard (3–5 business days)</span>
+          </label>
+          <label class="fc-radio-group__item" for="shipping-express">
+            <span class="fc-radio-group__control">
+              <input
+                type="radio"
+                class="fc-radio-group__field"
+                id="shipping-express"
+                name="shippingSpeed"
+                value="express"
+                aria-invalid="true"
+              >
+              <span class="fc-radio-group__circle" aria-hidden="true">
+                <span class="fc-radio-group__dot"></span>
+              </span>
+            </span>
+            <span class="fc-radio-group__item-label">Express (1–2 business days)</span>
+          </label>
+        </div>
+        <p class="fc-radio-group__message fc-radio-group__message--error" id="shipping-error-msg">
+          Please select a shipping speed.
+        </p>
+      </fieldset>
+    </section>
+  </main>
+</body>
+</html>
+

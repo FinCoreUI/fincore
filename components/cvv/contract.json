@@ -1,0 +1,791 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.cvv",
+    "name": "CVV",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0-alpha.2",
+    "summary": "FinCore native CVV input: label + masked card security code input with short length restriction + optional visibility toggle + helper/error message, four states, independent focus ring and only cvv.* component tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring Input and PasswordInput canonical patterns for card security code (CVV/CVC) input.",
+        "The token block was added to tokens/tokens.json and generated into tokens/dist/tokens.css; node tokens/check.mjs passed with cvv.* component tokens.",
+        "The stylesheet consumes only variables generated from cvv.* component tokens.",
+        "No Figma component set exists for CVV in v0.1, so canonical.figma is null and no design-evidence claims are made."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the CVV field anatomy: label, control container with short-width masked input, optional toggle button, and helper/error row.",
+      "Apply only cvv.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay around the control wrapper when focused.",
+      "Support masked password-style security code entry with length restriction."
+    ],
+    "application": [
+      "Supply the label, value, and length limit (e.g. 3 or 4 digits).",
+      "Own validation: decide when an entered CVV is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Currency in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Card security code (CVV, CVC, CID) verification in checkout, payment and card management flows."
+    ],
+    "inappropriate": [
+      {
+        "use": "Standard multi-field password input or account passwords.",
+        "reason": "CVV is tailored specifically for short numeric security codes with restricted character length.",
+        "alternative": "Use PasswordInput."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Control wrapper: flex container housing the short masked input and optional toggle.",
+      "Field: 40px height, fixed-width numeric security code entry with letter-spacing.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [
+      {
+        "property": "control height",
+        "value": "40px",
+        "token": "cvv.height"
+      },
+      {
+        "property": "horizontal padding",
+        "value": "12px",
+        "token": "cvv.padding-x"
+      },
+      {
+        "property": "corner radius",
+        "value": "6px",
+        "token": "cvv.radius"
+      },
+      {
+        "property": "border width",
+        "value": "1px",
+        "token": "cvv.border-width"
+      },
+      {
+        "property": "letter spacing",
+        "value": "4px",
+        "token": "cvv.letter-spacing"
+      },
+      {
+        "property": "label gap",
+        "value": "8px",
+        "token": "cvv.label-gap"
+      },
+      {
+        "property": "helper gap",
+        "value": "4px",
+        "token": "cvv.helper-gap"
+      },
+      {
+        "property": "focus ring width",
+        "value": "2px",
+        "token": "cvv.focus.width"
+      },
+      {
+        "property": "focus ring offset",
+        "value": "2px",
+        "token": "cvv.focus.offset"
+      },
+      {
+        "property": "focus ring radius",
+        "value": "8px",
+        "token": "cvv.focus.radius"
+      }
+    ],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Label",
+      "figmaType": "TEXT",
+      "figmaDefault": "Security code",
+      "required": true,
+      "description": "Visible label for the CVV control.",
+      "translation": "direct",
+      "production": {
+        "prop": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "derived": false,
+        "notes": "Accessible name for the CVV input."
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "id",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Stable id used for the label association and message references.",
+      "notes": "Generated if omitted."
+    },
+    {
+      "prop": "prefix",
+      "type": "string",
+      "default": "\"$\"",
+      "required": false,
+      "description": "Currency prefix symbol.",
+      "notes": "Defaults to \"$\"."
+    },
+    {
+      "prop": "suffix",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Currency suffix code, e.g., \"USD\".",
+      "notes": "Optional currency ISO code."
+    },
+    {
+      "prop": "value",
+      "type": "string | number",
+      "default": null,
+      "required": false,
+      "description": "Controlled amount value.",
+      "notes": "Formatted or numeric amount."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and displays error message.",
+      "notes": "Application owns error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Replaced by error message."
+    },
+    {
+      "prop": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "required": false,
+      "description": "Controls the size variant (sm, md, lg).",
+      "notes": "Applies corresponding size modifier class."
+    },
+    {
+      "prop": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Applies loading state and sets aria-busy=\"true\".",
+      "notes": "Suppresses interactions while loading."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "cvv.height",
+        "cvv.padding-x",
+        "cvv.radius",
+        "cvv.border-width",
+        "cvv.font-size",
+        "cvv.line-height",
+        "cvv.font-weight",
+        "cvv.letter-spacing",
+        "cvv.label-gap",
+        "cvv.helper-gap",
+        "cvv.focus.color",
+        "cvv.focus.width",
+        "cvv.focus.offset",
+        "cvv.focus.radius",
+        "cvv.background",
+        "cvv.border",
+        "cvv.text",
+        "cvv.placeholder",
+        "cvv.border-hover",
+        "cvv.border-error",
+        "cvv.text-error",
+        "cvv.background-disabled",
+        "cvv.border-disabled",
+        "cvv.text-disabled",
+        "cvv.label.color",
+        "cvv.label.font-weight",
+        "cvv.helper.color",
+        "cvv.helper.font-size",
+        "cvv.helper.line-height"
+      ],
+      "notes": "Runtime token surface."
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "Component code consumes only currency.* component tokens.",
+    "dependencies": [
+      {
+        "name": "cvv.height",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-height",
+        "alias": "size.control.md",
+        "resolved": "40px",
+        "role": "CVV height",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-padding-x",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "CVV padding-x",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.radius",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-radius",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "CVV radius",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "CVV border-width",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "CVV font-size",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "CVV line-height",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-cvv-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "CVV font-weight",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.letter-spacing",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-letter-spacing",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "CVV letter-spacing",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.label-gap",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-label-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "CVV label-gap",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.helper-gap",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-helper-gap",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "CVV helper-gap",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.focus.color",
+        "type": "color",
+        "cssVar": "--fc-cvv-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "CVV focus.color",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.focus.width",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-focus-width",
+        "alias": "size.focus-ring.width",
+        "resolved": "2px",
+        "role": "CVV focus.width",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.focus.offset",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-focus-offset",
+        "alias": "size.focus-ring.offset",
+        "resolved": "2px",
+        "role": "CVV focus.offset",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.focus.radius",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-focus-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "CVV focus.radius",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.background",
+        "type": "color",
+        "cssVar": "--fc-cvv-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "CVV background",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.border",
+        "type": "color",
+        "cssVar": "--fc-cvv-border",
+        "alias": "color.border.control",
+        "resolved": "#71717A",
+        "role": "CVV border",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.text",
+        "type": "color",
+        "cssVar": "--fc-cvv-text",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "CVV text",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.placeholder",
+        "type": "color",
+        "cssVar": "--fc-cvv-placeholder",
+        "alias": "color.content.tertiary",
+        "resolved": "#71717A",
+        "role": "CVV placeholder",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.border-hover",
+        "type": "color",
+        "cssVar": "--fc-cvv-border-hover",
+        "alias": "color.border.control-hover",
+        "resolved": "#52525B",
+        "role": "CVV border-hover",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.border-error",
+        "type": "color",
+        "cssVar": "--fc-cvv-border-error",
+        "alias": "color.border.error",
+        "resolved": "#DC2626",
+        "role": "CVV border-error",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.text-error",
+        "type": "color",
+        "cssVar": "--fc-cvv-text-error",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "CVV text-error",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.background-disabled",
+        "type": "color",
+        "cssVar": "--fc-cvv-background-disabled",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "CVV background-disabled",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.border-disabled",
+        "type": "color",
+        "cssVar": "--fc-cvv-border-disabled",
+        "alias": "color.border.disabled",
+        "resolved": "#E4E4E7",
+        "role": "CVV border-disabled",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.text-disabled",
+        "type": "color",
+        "cssVar": "--fc-cvv-text-disabled",
+        "alias": "color.content.disabled",
+        "resolved": "#A1A1AA",
+        "role": "CVV text-disabled",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.label.color",
+        "type": "color",
+        "cssVar": "--fc-cvv-label-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "CVV label.color",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.label.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-cvv-label-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "CVV label.font-weight",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.helper.color",
+        "type": "color",
+        "cssVar": "--fc-cvv-helper-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "CVV helper.color",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.helper.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-helper-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "CVV helper.font-size",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "cvv.helper.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-cvv-helper-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "CVV helper.line-height",
+        "usedBy": [
+          "field"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "cvv.background",
+        "border": "cvv.border",
+        "foreground": "cvv.text",
+        "placeholder": "cvv.placeholder",
+        "label": "cvv.label.color",
+        "helper": "cvv.helper.color",
+        "ring": null
+      },
+      {
+        "state": "Hover",
+        "background": "cvv.background",
+        "border": "cvv.border-hover",
+        "foreground": "cvv.text",
+        "placeholder": "cvv.placeholder",
+        "label": "cvv.label.color",
+        "helper": "cvv.helper.color",
+        "ring": null
+      },
+      {
+        "state": "Error",
+        "background": "cvv.background",
+        "border": "cvv.border-error",
+        "foreground": "cvv.text-error",
+        "placeholder": "cvv.placeholder",
+        "label": "cvv.label.color",
+        "helper": "cvv.text-error",
+        "ring": null
+      },
+      {
+        "state": "Disabled",
+        "background": "cvv.background-disabled",
+        "border": "cvv.border-disabled",
+        "foreground": "cvv.text-disabled",
+        "placeholder": "cvv.placeholder",
+        "label": "cvv.label.color",
+        "helper": "cvv.helper.color",
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Do not consume color.* or space.* directly in Currency code."
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Control is 40px high, meeting target requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Input field has programmatic label association.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "cvv.text",
+        "background": "cvv.background",
+        "minimum": 4.5,
+        "ratios": {
+          "light": 16.12
+        },
+        "status": "pass",
+        "notes": "Primary text on default surface."
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-currency",
+      "configuration": "Currency input without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "amount-input",
+        "given": "an enabled currency input",
+        "when": "amount is typed",
+        "then": "value is formatted as currency."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled currency input",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "currency css",
+        "when": "inspected",
+        "then": "only currency.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible around control wrapper."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Currency in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/currency/currency.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only currency.* tokens in Currency code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native currency input",
+        "language": "html",
+        "code": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amount\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amount\" /><span class=\"fc-currency__suffix\">USD</span></div></div>",
+        "explanation": "Valid currency composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled currency input",
+        "language": "html",
+        "code": "<input class=\"fc-currency__field\" />",
+        "explanation": "Missing container, control wrapper, prefix and label."
+      }
+    ]
+  }
+}

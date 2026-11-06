@@ -1,0 +1,153 @@
+/*
+ * FinCore Textarea — production styles for native <textarea>.
+ * Contract: components/textarea/contract.json (1.0.0)
+ *
+ * Consumes only --fc-textarea-* component tokens from tokens/dist/tokens.css.
+ * State precedence: Disabled > Error > Hover > Default.
+ * Focus is an independent overlay, shown for keyboard/pointer focus and
+ * suppressed by the native disabled attribute.
+ */
+
+.fc-textarea {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+}
+
+.fc-textarea__label {
+  margin: 0;
+  margin-block-end: var(--fc-textarea-label-gap);
+  color: var(--fc-textarea-label-color);
+  font-size: var(--fc-textarea-font-size);
+  font-weight: var(--fc-textarea-label-font-weight);
+  line-height: var(--fc-textarea-line-height);
+}
+
+.fc-textarea__label--visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fc-textarea__control {
+  position: relative;
+  min-width: 0;
+}
+
+.fc-textarea__field {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--fc-textarea-min-height);
+  margin: 0;
+  padding-block: var(--fc-textarea-padding-y);
+  padding-inline: var(--fc-textarea-padding-x);
+  border: var(--fc-textarea-border-width) solid var(--fc-textarea-border);
+  border-radius: var(--fc-textarea-radius);
+  background-color: var(--fc-textarea-background);
+  color: var(--fc-textarea-text);
+  font-family: inherit;
+  font-size: var(--fc-textarea-font-size);
+  font-weight: var(--fc-textarea-font-weight);
+  line-height: var(--fc-textarea-line-height);
+  resize: vertical;
+}
+
+.fc-textarea__field::placeholder {
+  color: var(--fc-textarea-placeholder);
+  opacity: 1;
+}
+
+/* Hover below Error and Disabled */
+.fc-textarea__field:not(:disabled):hover {
+  border-color: var(--fc-textarea-border-hover);
+}
+
+/* Error state keyed to aria-invalid */
+.fc-textarea__field[aria-invalid="true"]:not(:disabled) {
+  border-color: var(--fc-textarea-border-error);
+}
+
+/* Disabled state */
+.fc-textarea__field:disabled {
+  border-color: var(--fc-textarea-border-disabled);
+  background-color: var(--fc-textarea-background-disabled);
+  color: var(--fc-textarea-text-disabled);
+  cursor: not-allowed;
+  resize: none;
+}
+
+.fc-textarea__message {
+  margin: 0;
+  margin-block-start: var(--fc-textarea-helper-gap);
+  color: var(--fc-textarea-helper-color);
+  font-size: var(--fc-textarea-helper-font-size);
+  font-weight: var(--fc-textarea-font-weight);
+  line-height: var(--fc-textarea-helper-line-height);
+}
+
+.fc-textarea__message--error {
+  color: var(--fc-textarea-text-error);
+}
+
+/* Focus ring overlay */
+.fc-textarea__control::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--fc-textarea-focus-offset));
+  border: var(--fc-textarea-focus-width) solid transparent;
+  border-radius: var(--fc-textarea-focus-radius);
+  pointer-events: none;
+}
+
+.fc-textarea__field:focus {
+  outline: none;
+}
+
+.fc-textarea__control:has(.fc-textarea__field:focus-visible)::after {
+  border-color: var(--fc-textarea-focus-color);
+}
+
+.fc-textarea__control:has(.fc-textarea__field:disabled)::after {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .fc-textarea__field {
+    border-color: ButtonText;
+  }
+
+  .fc-textarea__control::after {
+    display: none;
+  }
+
+  .fc-textarea__control:has(.fc-textarea__field:focus-visible)::after {
+    display: block;
+    border-color: Highlight;
+  }
+}
+
+
+/* Size variants */
+.fc-textarea--sm .fc-textarea__field {
+  min-height: calc(var(--fc-textarea-min-height) - var(--fc-textarea-padding-x));
+}
+
+.fc-textarea--lg .fc-textarea__field {
+  min-height: calc(var(--fc-textarea-min-height) + var(--fc-textarea-padding-x));
+}
+
+/* Loading state */
+.fc-textarea--loading,
+.fc-textarea[aria-busy="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}

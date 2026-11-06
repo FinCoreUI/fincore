@@ -1,0 +1,1867 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.button",
+    "name": "Button",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0-alpha.2",
+    "summary": "FinCore's action control: one text label, three visual variants and five mutually exclusive Figma states. Authored from the verified Figma Button set and the 195-token foundation. Implemented as framework-agnostic CSS with native HTML reference markup; no runtime package or adapter.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no runtime package",
+    "lastUpdated": "2026-10-26",
+    "canonical": {
+      "figma": {
+        "fileKey": "llp3APU7qaknEGJWq7vTI4",
+        "pageId": "1:3",
+        "pageName": "02 - Components",
+        "nodeId": "87:37",
+        "componentSet": "Button",
+        "variantCount": 15,
+        "width": 572,
+        "height": 268,
+        "x": 80,
+        "y": 120,
+        "propertyKeys": {
+          "Variant": "Variant",
+          "State": "State",
+          "Label": "Label#87:16"
+        }
+      },
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Figma file llp3APU7qaknEGJWq7vTI4, page 1:3, Button set 87:37: Stage B verification PASS, 15 variants, 204/204 bindings. 22 unique button.* tokens; 0 primitive or Semantic bypasses. The former Ghost/Focus drift (label 87:34 bound to color/content/link) was corrected to button/ghost/foreground (VariableID:82:160) and verified in the Stage 5C-1 post-write inspection.",
+        "Repository token source tokens/tokens.json sha256 68caea55e0bdf9f5cda067d7993eee91ad6cc277a7aca81a19ec566bd33c6379: 195 foundation tokens, 95 primitive / 50 semantic / 50 component.",
+        "Stage C Input verification used the same foundation and preserved Button 87:37 unchanged: 15 variant IDs, 572x268 at (80,120), 3 properties.",
+        "tokens/check.mjs: structure PASS, required contrast pairs PASS, generated CSS current at contract authoring."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the supplied label using the variant and resolved interaction state.",
+      "Apply only button.* component tokens for colour, geometry and typography.",
+      "Expose a native disabled state that removes the control from interaction and tab order.",
+      "Render a visible focus indicator for keyboard focus and preserve it at every supported surface.",
+      "Provide native button semantics: activation with Enter and Space, focusability, and form submission when type is submit.",
+      "Remain presentational: it does not decide business rules, validate forms, navigate, or manage async work."
+    ],
+    "application": [
+      "Choose the variant and write the label; only one primary action should lead a view or section.",
+      "Handle click and submit events, prevent duplicate submissions, and provide feedback outside the button when work is asynchronous.",
+      "Use a link, not Button, for navigation.",
+      "Use the native disabled attribute only when the action is genuinely unavailable, not as a substitute for validation or explanation.",
+      "Localise labels and allow them to grow without clipping.",
+      "Validate forms and move focus to the first invalid field; Button must not own validation.",
+      "Ensure a surrounding container does not clip the focus ring."
+    ],
+    "figmaOnly": [
+      "State is a Figma VARIANT axis with five values; it is design metadata, not a runtime prop or an ARIA value.",
+      "Label is a Figma TEXT property with the demo default 'Button'; production copy is supplied by the application.",
+      "The Focus variant wraps a nested Surface frame in the ring frame; this is a Figma construction detail, not a DOM requirement.",
+      "Variant and State names are capitalised in Figma and lowercase in the production API mapping."
+    ]
+  },
+  "use": {
+    "intended": [
+      "The single strongest action in a form, dialog, panel or review step, for example 'Review transfer' or 'Save changes'.",
+      "A secondary, non-destructive alternative in the same decision group, for example 'Cancel' next to a primary action.",
+      "A low-emphasis action in a dense toolbar, row or navigation-adjacent area where a filled surface would add noise.",
+      "A disabled action when the action is genuinely unavailable and the reason is explained in surrounding content.",
+      "Form submission when the application needs native submit semantics and keyboard activation."
+    ],
+    "inappropriate": [
+      {
+        "use": "Navigating to another page, route or external site.",
+        "reason": "Button is an action control; a button that changes location breaks expected browser and assistive-technology behaviour.",
+        "alternative": "Use a semantic link with the same visual treatment supplied by the application, or a future Link component."
+      },
+      {
+        "use": "An icon-only action with no visible text.",
+        "reason": "There is no icon system in v0.1 and no icon-only variant; an unlabelled icon would rely on an invented accessible-name pattern.",
+        "alternative": "Use a text label. Wait for an icon and icon-button contract."
+      },
+      {
+        "use": "Showing loading, progress or a spinner.",
+        "reason": "No loading state, spinner, progress token or async variant exists.",
+        "alternative": "Keep the action's label stable and expose async status in a separate live region; disable or guard duplicate submission in the application."
+      },
+      {
+        "use": "Destructive or dangerous actions such as deleting an account.",
+        "reason": "There is no danger, critical or destructive variant; a red override would break the token contract and contrast guarantees.",
+        "alternative": "Do not implement destructive styling in v0.1. Raise a design-system request for a destructive variant."
+      },
+      {
+        "use": "A toggle, pressed state or segmented selection.",
+        "reason": "No pressed, selected or toggle state exists and no aria-pressed contract is defined.",
+        "alternative": "Use a future Toggle, Switch or Segmented Control component."
+      },
+      {
+        "use": "Two equally weighted primary actions for the same decision.",
+        "reason": "Competing primary actions remove the visual hierarchy the variant exists to create.",
+        "alternative": "Choose one primary action and use Secondary or Ghost for the alternative."
+      },
+      {
+        "use": "A Ghost button on an inverse or dark surface.",
+        "reason": "Ghost text uses color.content.primary, which fails on color.surface.inverse (1.00:1); inverse surfaces are not supported in v0.1.",
+        "alternative": "Use Primary or Secondary only after design review of the surface, or stay on a supported light surface."
+      },
+      {
+        "use": "A disabled button as the only explanation that a form is incomplete.",
+        "reason": "A disabled control cannot receive focus or explain why it is unavailable, and it hides the validation message that would help the user proceed.",
+        "alternative": "Keep the action enabled and validate on submit or blur, moving focus to the first invalid field."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "One text label inside one button surface. No icons, badges, counters or nested interactive elements.",
+      "Non-focus variants: the component frame is the button surface; it hugs the label horizontally and is 40px high.",
+      "Focus variants: the component frame is the focus ring, with a nested 'Surface' frame carrying the variant surface and label. The ring is drawn OUTSIDE the surface.",
+      "The label is a single line of text at 14/20, weight 500, IBM Plex Sans Medium in Figma.",
+      "Horizontal padding is 16px; vertical padding is 10px, derived from the 40px height and 20px line height.",
+      "The button is borderless. State is communicated by surface fill and, for focus, by the ring."
+    ],
+    "geometry": [
+      {
+        "property": "control height",
+        "value": "40px",
+        "token": "button.height"
+      },
+      {
+        "property": "horizontal padding",
+        "value": "16px",
+        "token": "button.padding-x"
+      },
+      {
+        "property": "corner radius",
+        "value": "6px",
+        "token": "button.radius"
+      },
+      {
+        "property": "label font size",
+        "value": "14px",
+        "token": "button.font-size"
+      },
+      {
+        "property": "label line height",
+        "value": "20px",
+        "token": "button.line-height"
+      },
+      {
+        "property": "label font weight",
+        "value": "500",
+        "token": "button.font-weight"
+      },
+      {
+        "property": "focus ring width",
+        "value": "2px",
+        "token": "button.focus.width"
+      },
+      {
+        "property": "focus ring offset",
+        "value": "2px",
+        "token": "button.focus.offset"
+      },
+      {
+        "property": "focus ring outer radius",
+        "value": "8px (6px control radius + 2px offset)",
+        "token": null
+      },
+      {
+        "property": "vertical padding",
+        "value": "10px",
+        "token": null
+      },
+      {
+        "property": "border",
+        "value": "none",
+        "token": null
+      },
+      {
+        "property": "focus ring stroke alignment",
+        "value": "OUTSIDE",
+        "token": null
+      }
+    ],
+    "literals": [
+      {
+        "property": "vertical padding",
+        "value": "10px",
+        "reason": "No vertical padding token exists. It is derived from 40px height minus 20px line height, split evenly."
+      },
+      {
+        "property": "focus ring outer corner radius",
+        "value": "8px",
+        "reason": "No Button focus-radius token exists. The value is button.radius (6px) plus button.focus.offset (2px). Input has input.focus.radius; Button does not."
+      },
+      {
+        "property": "focus ring stroke alignment",
+        "value": "OUTSIDE",
+        "reason": "Figma stroke alignment is a geometry property, not a token. It is required so the ring does not reduce the 40px surface."
+      },
+      {
+        "property": "font family",
+        "value": "IBM Plex Sans Medium",
+        "reason": "Font family is a Figma text property; no font-family token exists in v0.1."
+      },
+      {
+        "property": "Ghost default background",
+        "value": "transparent",
+        "reason": "There is no button.ghost.background token. Ghost intentionally lets the page surface show through."
+      },
+      {
+        "property": "button width",
+        "value": "content width at the demo label (76px for 'Button')",
+        "reason": "No width or min-width token exists. Production width may stretch through layout, but height and radius must not change."
+      }
+    ]
+  },
+  "properties": [
+    {
+      "name": "Variant",
+      "figmaType": "VARIANT",
+      "figmaValues": [
+        "Primary",
+        "Secondary",
+        "Ghost"
+      ],
+      "figmaDefault": "Primary",
+      "required": true,
+      "description": "Visual emphasis. Exactly one value per instance. Primary is the strongest action, Secondary is a quieter alternative, Ghost is the lowest-emphasis action.",
+      "translation": "renamed",
+      "production": {
+        "prop": "variant",
+        "type": "\"primary\" | \"secondary\" | \"ghost\"",
+        "default": "\"primary\"",
+        "required": false,
+        "derived": false,
+        "notes": "Lowercase mapping only. There is no danger, success, link, outline or ghost-inverse value."
+      }
+    },
+    {
+      "name": "State",
+      "figmaType": "VARIANT",
+      "figmaValues": [
+        "Default",
+        "Hover",
+        "Active",
+        "Focus",
+        "Disabled"
+      ],
+      "figmaDefault": "Default",
+      "required": true,
+      "description": "One of five mutually exclusive design states. The state is selected by interaction in production, not supplied by the caller.",
+      "translation": "derived",
+      "production": {
+        "prop": null,
+        "type": "derived",
+        "default": null,
+        "required": false,
+        "derived": true,
+        "notes": "Do not expose a state prop. Surface state is disabled > active > hover > default; the focus ring is an additive keyboard-focus overlay unless disabled. State=Focus in Figma shows the variant's Default surface plus the ring."
+      }
+    },
+    {
+      "name": "Label",
+      "figmaType": "TEXT",
+      "figmaKey": "Label#87:16",
+      "figmaDefault": "Button",
+      "required": true,
+      "description": "The visible action text. The Figma default 'Button' is demo content, not production copy.",
+      "translation": "direct",
+      "production": {
+        "prop": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "derived": false,
+        "notes": "Must be non-empty. Use a verb-led, specific label. The label is the accessible name; do not add an icon-only mode."
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "disabled",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Maps to State=Disabled. Renders the native disabled attribute, removes the button from tab order and suppresses hover, active and focus treatments.",
+      "notes": "Do not use aria-disabled alone. Do not use disabled as a validation strategy."
+    },
+    {
+      "prop": "type",
+      "type": "\"button\" | \"submit\" | \"reset\"",
+      "default": "\"button\"",
+      "required": false,
+      "description": "Native button type. Default to 'button' so a button placed inside a form does not submit accidentally; set 'submit' explicitly for form submission.",
+      "notes": "The HTML default is 'submit'; the contract requires an explicit safe default."
+    },
+    {
+      "prop": "onClick",
+      "type": "(event: React.MouseEvent<HTMLButtonElement>) => void",
+      "default": null,
+      "required": false,
+      "description": "Click handler supplied by the application. It must not fire when disabled.",
+      "notes": "Prefer form onSubmit for submit actions so keyboard and assistive-technology activation follow native form behaviour."
+    },
+    {
+      "prop": "className",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Layout-only escape hatch for external spacing, flex alignment and width.",
+      "notes": "Must not be used to change colour, typography, radius, height, border or focus treatment."
+    },
+    {
+      "prop": "native button attributes",
+      "type": "ButtonHTMLAttributes<HTMLButtonElement> excluding children, disabled and type",
+      "default": null,
+      "required": false,
+      "description": "Standard attributes such as id, name, value, form, autoFocus and aria-* pass through.",
+      "notes": "aria-pressed, aria-expanded and other toggle semantics are not supported because no toggle contract exists."
+    },
+    {
+      "prop": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "required": false,
+      "description": "Controls the size variant (sm, md, lg) in component adapter.",
+      "notes": "Applies corresponding size modifier class."
+    },
+    {
+      "prop": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Applies loading state and sets aria-busy=\"true\".",
+      "notes": "Suppresses interactions while loading."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Primary/Default",
+      "figmaNodeId": "87:4",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.primary.background",
+        "button.primary.foreground"
+      ],
+      "notes": "76x40 at the demo label 'Button'. The strongest enabled resting action."
+    },
+    {
+      "name": "Primary/Hover",
+      "figmaNodeId": "87:6",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.primary.background-hover",
+        "button.primary.foreground"
+      ],
+      "notes": "Pointer-over surface. The label contrast remains 6.70:1."
+    },
+    {
+      "name": "Primary/Active",
+      "figmaNodeId": "87:8",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.primary.background-active",
+        "button.primary.foreground"
+      ],
+      "notes": "Pointer-down surface. The label contrast remains 8.72:1."
+    },
+    {
+      "name": "Primary/Focus",
+      "figmaNodeId": "87:10",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.primary.background",
+        "button.primary.foreground",
+        "button.focus.color",
+        "button.focus.width",
+        "button.focus.offset"
+      ],
+      "notes": "80x44: the Default surface wrapped by a 2px ring at 2px offset. This is keyboard focus, not a persistent state."
+    },
+    {
+      "name": "Primary/Disabled",
+      "figmaNodeId": "87:13",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.disabled.background",
+        "button.disabled.foreground"
+      ],
+      "notes": "Flat muted fill and muted text. Contrast is exempt because the control is inactive."
+    },
+    {
+      "name": "Secondary/Default",
+      "figmaNodeId": "87:15",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.secondary.background",
+        "button.secondary.foreground"
+      ],
+      "notes": "Quiet filled alternative to Primary. No border is used."
+    },
+    {
+      "name": "Secondary/Hover",
+      "figmaNodeId": "87:17",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.secondary.background-hover",
+        "button.secondary.foreground"
+      ],
+      "notes": "One neutral step darker than Secondary/Default."
+    },
+    {
+      "name": "Secondary/Active",
+      "figmaNodeId": "87:19",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.secondary.background-active",
+        "button.secondary.foreground"
+      ],
+      "notes": "Pointer-down surface, one further neutral step darker."
+    },
+    {
+      "name": "Secondary/Focus",
+      "figmaNodeId": "87:21",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.secondary.background",
+        "button.secondary.foreground",
+        "button.focus.color",
+        "button.focus.width",
+        "button.focus.offset"
+      ],
+      "notes": "80x44: Secondary/Default surface plus the focus ring."
+    },
+    {
+      "name": "Secondary/Disabled",
+      "figmaNodeId": "87:24",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.disabled.background",
+        "button.disabled.foreground"
+      ],
+      "notes": "Shares the disabled fill and text with Primary/Disabled."
+    },
+    {
+      "name": "Ghost/Default",
+      "figmaNodeId": "87:26",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.ghost.foreground"
+      ],
+      "notes": "Transparent background; the page surface shows through. Contrast is measured against color.surface.default."
+    },
+    {
+      "name": "Ghost/Hover",
+      "figmaNodeId": "87:28",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.ghost.background-hover",
+        "button.ghost.foreground"
+      ],
+      "notes": "A subtle neutral fill appears on hover."
+    },
+    {
+      "name": "Ghost/Active",
+      "figmaNodeId": "87:30",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.ghost.background-active",
+        "button.ghost.foreground"
+      ],
+      "notes": "A stronger neutral fill appears while pressed."
+    },
+    {
+      "name": "Ghost/Focus",
+      "figmaNodeId": "87:32",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.ghost.foreground",
+        "button.focus.color",
+        "button.focus.width",
+        "button.focus.offset"
+      ],
+      "notes": "80x44: transparent surface plus the focus ring. No default Ghost background token exists."
+    },
+    {
+      "name": "Ghost/Disabled",
+      "figmaNodeId": "87:35",
+      "tokens": [
+        "button.height",
+        "button.padding-x",
+        "button.radius",
+        "button.font-size",
+        "button.font-weight",
+        "button.line-height",
+        "button.disabled.foreground"
+      ],
+      "notes": "Transparent background with disabled text. Contrast is 2.56:1 on white and is exempt because the control is inactive."
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "Variant",
+        "kind": "variant",
+        "values": [
+          "Primary",
+          "Secondary",
+          "Ghost"
+        ]
+      },
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Active",
+          "Focus",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Primary x Default",
+        "supported": true,
+        "result": "Primary default surface and foreground."
+      },
+      {
+        "combination": "Primary x Hover",
+        "supported": true,
+        "result": "Primary hover surface and foreground."
+      },
+      {
+        "combination": "Primary x Active",
+        "supported": true,
+        "result": "Primary active surface and foreground."
+      },
+      {
+        "combination": "Primary x Focus",
+        "supported": true,
+        "result": "Primary default surface, foreground and focus ring."
+      },
+      {
+        "combination": "Primary x Disabled",
+        "supported": true,
+        "result": "Shared disabled surface and foreground; no interaction."
+      },
+      {
+        "combination": "Secondary x Default",
+        "supported": true,
+        "result": "Secondary default surface and foreground."
+      },
+      {
+        "combination": "Secondary x Hover",
+        "supported": true,
+        "result": "Secondary hover surface and foreground."
+      },
+      {
+        "combination": "Secondary x Active",
+        "supported": true,
+        "result": "Secondary active surface and foreground."
+      },
+      {
+        "combination": "Secondary x Focus",
+        "supported": true,
+        "result": "Secondary default surface, foreground and focus ring."
+      },
+      {
+        "combination": "Secondary x Disabled",
+        "supported": true,
+        "result": "Shared disabled surface and foreground; no interaction."
+      },
+      {
+        "combination": "Ghost x Default",
+        "supported": true,
+        "result": "Transparent surface and ghost foreground."
+      },
+      {
+        "combination": "Ghost x Hover",
+        "supported": true,
+        "result": "Ghost hover surface and ghost foreground."
+      },
+      {
+        "combination": "Ghost x Active",
+        "supported": true,
+        "result": "Ghost active surface and ghost foreground."
+      },
+      {
+        "combination": "Ghost x Focus",
+        "supported": true,
+        "result": "Transparent surface, ghost foreground and focus ring."
+      },
+      {
+        "combination": "Ghost x Disabled",
+        "supported": true,
+        "result": "Transparent surface and disabled foreground; no interaction."
+      },
+      {
+        "combination": "Focus + Hover (combined)",
+        "supported": false,
+        "result": "Not modelled in Figma. The flat State axis allows only one State value; do not create a combined variant."
+      },
+      {
+        "combination": "Focus + Active (combined)",
+        "supported": false,
+        "result": "Not modelled in Figma. The flat State axis allows only one State value; do not create a combined variant."
+      },
+      {
+        "combination": "Disabled + Hover, Active or Focus",
+        "supported": false,
+        "result": "Disabled is a single State; disabled wins and suppresses hover, active and focus treatments."
+      }
+    ],
+    "precedence": [
+      "Figma: exactly one Variant and exactly one State per instance. The 15 variants are the complete design matrix.",
+      "Figma: State values are mutually exclusive. Focus is a State, not a boolean, because the Button focus variant wraps the surface in a ring frame.",
+      "Figma: State=Focus renders the variant's Default surface plus the ring. It does not represent a hovered or pressed surface.",
+      "Production surface: disabled > active > hover > default.",
+      "Production focus: the ring is an additive keyboard-focus overlay, suppressed when disabled. This is a design-to-code translation for CSS pseudo-classes, not an additional Figma variant.",
+      "Production: keyboard focus must remain visible even when the pointer is also over the control; never suppress the ring to preserve a hover visual."
+    ],
+    "conflicts": [
+      "Focus + Hover is not modelled in Figma. Do not claim a Hover+Focus variant exists and do not create one in this contract version.",
+      "Focus + Active is not modelled in Figma. Do not claim an Active+Focus variant exists.",
+      "Disabled overrides hover, active and focus. A disabled control must not show a ring or respond to pointer states.",
+      "Do not use the Focus variant to represent a button that is permanently highlighted; focus is an interaction state.",
+      "Do not approximate Hover+Focus by stacking two Figma variants; the set has no such combination."
+    ],
+    "notes": [
+      "State names are design metadata. They do not map to ARIA attributes; native button behaviour and the disabled attribute carry the semantics.",
+      "Hover and Focus are not independent axes. There is no combined Hover+Focus state and no way to select one; the ring is an indicator, not a second state axis.",
+      "Adding a sixth State or a combined state requires a new Figma build and a new contract version.",
+      "Button has one size. There is no small, large, compact or icon-only axis.",
+      "The focus ring must remain visible at every supported surface; it is not decorative."
+    ]
+  },
+  "tokens": {
+    "rule": "Component code and Figma instances consume only button.* component tokens. Colour tokens alias Semantic roles; geometry and typography tokens alias Primitives because no semantic geometry layer exists. Never consume a primitive or Semantic token directly, and never hardcode a hex or px value that a token already covers.",
+    "dependencies": [
+      {
+        "name": "button.height",
+        "type": "dimension",
+        "cssVar": "--fc-button-height",
+        "alias": "size.control.md",
+        "resolved": "40px",
+        "role": "Control height",
+        "usedBy": [
+          "Primary",
+          "Secondary",
+          "Ghost",
+          "Default",
+          "Hover",
+          "Active",
+          "Focus",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "button.padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-button-padding-x",
+        "alias": "space.4",
+        "resolved": "16px",
+        "role": "Horizontal padding",
+        "usedBy": [
+          "Primary",
+          "Secondary",
+          "Ghost",
+          "Default",
+          "Hover",
+          "Active",
+          "Focus",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "button.radius",
+        "type": "dimension",
+        "cssVar": "--fc-button-radius",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Corner radius",
+        "usedBy": [
+          "Primary",
+          "Secondary",
+          "Ghost",
+          "Default",
+          "Hover",
+          "Active",
+          "Focus",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "button.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-button-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Label font size",
+        "usedBy": [
+          "Primary",
+          "Secondary",
+          "Ghost",
+          "Default",
+          "Hover",
+          "Active",
+          "Focus",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "button.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-button-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Label font weight",
+        "usedBy": [
+          "Primary",
+          "Secondary",
+          "Ghost",
+          "Default",
+          "Hover",
+          "Active",
+          "Focus",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "button.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-button-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Label line height",
+        "usedBy": [
+          "Primary",
+          "Secondary",
+          "Ghost",
+          "Default",
+          "Hover",
+          "Active",
+          "Focus",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "button.focus.color",
+        "type": "color",
+        "cssVar": "--fc-button-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "Focus ring colour",
+        "usedBy": [
+          "Primary/Focus",
+          "Secondary/Focus",
+          "Ghost/Focus"
+        ]
+      },
+      {
+        "name": "button.focus.width",
+        "type": "dimension",
+        "cssVar": "--fc-button-focus-width",
+        "alias": "size.focus-ring.width",
+        "resolved": "2px",
+        "role": "Focus ring stroke width",
+        "usedBy": [
+          "Primary/Focus",
+          "Secondary/Focus",
+          "Ghost/Focus"
+        ]
+      },
+      {
+        "name": "button.focus.offset",
+        "type": "dimension",
+        "cssVar": "--fc-button-focus-offset",
+        "alias": "size.focus-ring.offset",
+        "resolved": "2px",
+        "role": "Focus ring offset and padding",
+        "usedBy": [
+          "Primary/Focus",
+          "Secondary/Focus",
+          "Ghost/Focus"
+        ]
+      },
+      {
+        "name": "button.primary.background",
+        "type": "color",
+        "cssVar": "--fc-button-primary-background",
+        "alias": "color.action.primary",
+        "resolved": "#2563EB",
+        "role": "Primary default and focus surface",
+        "usedBy": [
+          "Primary/Default",
+          "Primary/Focus"
+        ]
+      },
+      {
+        "name": "button.primary.background-hover",
+        "type": "color",
+        "cssVar": "--fc-button-primary-background-hover",
+        "alias": "color.action.primary-hover",
+        "resolved": "#1D4ED8",
+        "role": "Primary hover surface",
+        "usedBy": [
+          "Primary/Hover"
+        ]
+      },
+      {
+        "name": "button.primary.background-active",
+        "type": "color",
+        "cssVar": "--fc-button-primary-background-active",
+        "alias": "color.action.primary-active",
+        "resolved": "#1E40AF",
+        "role": "Primary active surface",
+        "usedBy": [
+          "Primary/Active"
+        ]
+      },
+      {
+        "name": "button.primary.foreground",
+        "type": "color",
+        "cssVar": "--fc-button-primary-foreground",
+        "alias": "color.action.primary-foreground",
+        "resolved": "#FFFFFF",
+        "role": "Primary label",
+        "usedBy": [
+          "Primary/Default",
+          "Primary/Hover",
+          "Primary/Active",
+          "Primary/Focus"
+        ]
+      },
+      {
+        "name": "button.secondary.background",
+        "type": "color",
+        "cssVar": "--fc-button-secondary-background",
+        "alias": "color.action.secondary",
+        "resolved": "#F4F4F5",
+        "role": "Secondary default and focus surface",
+        "usedBy": [
+          "Secondary/Default",
+          "Secondary/Focus"
+        ]
+      },
+      {
+        "name": "button.secondary.background-hover",
+        "type": "color",
+        "cssVar": "--fc-button-secondary-background-hover",
+        "alias": "color.action.secondary-hover",
+        "resolved": "#E4E4E7",
+        "role": "Secondary hover surface",
+        "usedBy": [
+          "Secondary/Hover"
+        ]
+      },
+      {
+        "name": "button.secondary.background-active",
+        "type": "color",
+        "cssVar": "--fc-button-secondary-background-active",
+        "alias": "color.action.secondary-active",
+        "resolved": "#D4D4D8",
+        "role": "Secondary active surface",
+        "usedBy": [
+          "Secondary/Active"
+        ]
+      },
+      {
+        "name": "button.secondary.foreground",
+        "type": "color",
+        "cssVar": "--fc-button-secondary-foreground",
+        "alias": "color.action.secondary-foreground",
+        "resolved": "#18181B",
+        "role": "Secondary label",
+        "usedBy": [
+          "Secondary/Default",
+          "Secondary/Hover",
+          "Secondary/Active",
+          "Secondary/Focus"
+        ]
+      },
+      {
+        "name": "button.ghost.foreground",
+        "type": "color",
+        "cssVar": "--fc-button-ghost-foreground",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Ghost label",
+        "usedBy": [
+          "Ghost/Default",
+          "Ghost/Hover",
+          "Ghost/Active",
+          "Ghost/Focus"
+        ]
+      },
+      {
+        "name": "button.ghost.background-hover",
+        "type": "color",
+        "cssVar": "--fc-button-ghost-background-hover",
+        "alias": "color.action.ghost-hover",
+        "resolved": "#F4F4F5",
+        "role": "Ghost hover surface",
+        "usedBy": [
+          "Ghost/Hover"
+        ]
+      },
+      {
+        "name": "button.ghost.background-active",
+        "type": "color",
+        "cssVar": "--fc-button-ghost-background-active",
+        "alias": "color.action.ghost-active",
+        "resolved": "#E4E4E7",
+        "role": "Ghost active surface",
+        "usedBy": [
+          "Ghost/Active"
+        ]
+      },
+      {
+        "name": "button.disabled.background",
+        "type": "color",
+        "cssVar": "--fc-button-disabled-background",
+        "alias": "color.action.disabled",
+        "resolved": "#E4E4E7",
+        "role": "Disabled surface for Primary and Secondary",
+        "usedBy": [
+          "Primary/Disabled",
+          "Secondary/Disabled"
+        ]
+      },
+      {
+        "name": "button.disabled.foreground",
+        "type": "color",
+        "cssVar": "--fc-button-disabled-foreground",
+        "alias": "color.action.disabled-foreground",
+        "resolved": "#A1A1AA",
+        "role": "Disabled label for all variants",
+        "usedBy": [
+          "Primary/Disabled",
+          "Secondary/Disabled",
+          "Ghost/Disabled"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Primary/Default",
+        "background": "button.primary.background",
+        "foreground": "button.primary.foreground",
+        "ring": null
+      },
+      {
+        "state": "Primary/Hover",
+        "background": "button.primary.background-hover",
+        "foreground": "button.primary.foreground",
+        "ring": null
+      },
+      {
+        "state": "Primary/Active",
+        "background": "button.primary.background-active",
+        "foreground": "button.primary.foreground",
+        "ring": null
+      },
+      {
+        "state": "Primary/Focus",
+        "background": "button.primary.background",
+        "foreground": "button.primary.foreground",
+        "ring": "button.focus.color",
+        "notes": "Ring width and offset come from button.focus.width and button.focus.offset."
+      },
+      {
+        "state": "Primary/Disabled",
+        "background": "button.disabled.background",
+        "foreground": "button.disabled.foreground",
+        "ring": null
+      },
+      {
+        "state": "Secondary/Default",
+        "background": "button.secondary.background",
+        "foreground": "button.secondary.foreground",
+        "ring": null
+      },
+      {
+        "state": "Secondary/Hover",
+        "background": "button.secondary.background-hover",
+        "foreground": "button.secondary.foreground",
+        "ring": null
+      },
+      {
+        "state": "Secondary/Active",
+        "background": "button.secondary.background-active",
+        "foreground": "button.secondary.foreground",
+        "ring": null
+      },
+      {
+        "state": "Secondary/Focus",
+        "background": "button.secondary.background",
+        "foreground": "button.secondary.foreground",
+        "ring": "button.focus.color",
+        "notes": "Ring width and offset come from button.focus.width and button.focus.offset."
+      },
+      {
+        "state": "Secondary/Disabled",
+        "background": "button.disabled.background",
+        "foreground": "button.disabled.foreground",
+        "ring": null
+      },
+      {
+        "state": "Ghost/Default",
+        "background": null,
+        "foreground": "button.ghost.foreground",
+        "ring": null,
+        "notes": "Transparent; no button.ghost.background token exists."
+      },
+      {
+        "state": "Ghost/Hover",
+        "background": "button.ghost.background-hover",
+        "foreground": "button.ghost.foreground",
+        "ring": null
+      },
+      {
+        "state": "Ghost/Active",
+        "background": "button.ghost.background-active",
+        "foreground": "button.ghost.foreground",
+        "ring": null
+      },
+      {
+        "state": "Ghost/Focus",
+        "background": null,
+        "foreground": "button.ghost.foreground",
+        "ring": "button.focus.color",
+        "notes": "Transparent surface; ring width and offset come from button.focus.width and button.focus.offset."
+      },
+      {
+        "state": "Ghost/Disabled",
+        "background": null,
+        "foreground": "button.disabled.foreground",
+        "ring": null,
+        "notes": "Transparent surface; the disabled label is the only visual change."
+      }
+    ],
+    "forbidden": [
+      "Do not consume color.action.*, color.content.*, color.border.*, blue.*, neutral.* or any other primitive or Semantic token directly in Button code.",
+      "Do not hardcode #2563EB, #1D4ED8, #1E40AF, #FFFFFF, #F4F4F5, #E4E4E7, #D4D4D8, #18181B or #A1A1AA when a button.* token exists.",
+      "Do not introduce a button.danger.*, button.success.*, button.ghost.background or button.focus.radius token without a token-source change and contract version.",
+      "Do not override tokens per instance; theme overrides belong at the token layer and require contrast revalidation.",
+      "Do not use the Input focus tokens for Button; Button has its own button.focus.* tokens."
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Every variant is 40px high, above the 24px minimum target, and remains comfortably wider than 40px at its default label.",
+        "verification": "Measure the rendered height and bounding box for all 15 variants at 100% zoom."
+      },
+      {
+        "id": "focus-indicator",
+        "requirement": "Focus is a 2px ring at a 2px offset, drawn OUTSIDE, with a 3:1 minimum against the adjacent surface.",
+        "verification": "Inspect the Focus variant geometry and measure button.focus.color against default, canvas, subtle, muted and inverse."
+      },
+      {
+        "id": "text-contrast",
+        "requirement": "Enabled label text meets 4.5:1 against its own surface in Default, Hover, Active and Focus.",
+        "verification": "Use the contrast matrix in this contract or recompute from resolved token values."
+      },
+      {
+        "id": "disabled-exemption",
+        "requirement": "Disabled text is deliberately low contrast (2.02:1 for Primary/Secondary, 2.56:1 for Ghost on white) and is exempt under WCAG 1.4.3 and 1.4.11 because the control is inactive.",
+        "verification": "Confirm the disabled treatment is recorded as exempt, not reported as a passing contrast pair."
+      },
+      {
+        "id": "not-colour-only",
+        "requirement": "Hover, active and focus are not signalled by colour alone: surface fill changes for hover/active and a ring appears for focus. Disabled changes fill and text and removes interaction.",
+        "verification": "Compare grayscale renders and confirm the focus ring remains visible without colour perception."
+      },
+      {
+        "id": "state-labels-are-not-aria",
+        "requirement": "Variant and State names are design metadata. They must not be emitted as ARIA attributes or accessible names.",
+        "verification": "Inspect the accessibility tree: the only name is the label; the only state is native disabled/focus."
+      }
+    ],
+    "production": [
+      {
+        "id": "native-button",
+        "requirement": "Render a native <button> element. Do not use a div or span with role='button'.",
+        "verification": "DOM assertion and accessibility-tree inspection."
+      },
+      {
+        "id": "accessible-name",
+        "requirement": "The visible label is the accessible name and must be non-empty. There is no icon-only mode and no aria-label-only mode.",
+        "verification": "Assert the computed accessible name equals the label text."
+      },
+      {
+        "id": "keyboard",
+        "requirement": "Enter and Space activate the button through native behaviour. The button is reachable by Tab in DOM order. Disabled removes it from the tab order.",
+        "verification": "Keyboard-only test in Chromium, Firefox and Safari."
+      },
+      {
+        "id": "focus-visible",
+        "requirement": "Show the 2px ring for :focus-visible. Never set outline: none without an equivalent visible replacement. The ring must not be clipped by overflow or a parent container.",
+        "verification": "Tab to every variant and inspect the ring at 100% and 200% zoom."
+      },
+      {
+        "id": "disabled-semantics",
+        "requirement": "Use the native disabled attribute. Do not use aria-disabled alone; do not leave a disabled-looking button focusable and clickable.",
+        "verification": "Assert disabled is present, the button is not focusable, and click/submit handlers do not fire."
+      },
+      {
+        "id": "target-size",
+        "requirement": "Keep the rendered height at 40px. Do not compress the button below 24px in dense layouts.",
+        "verification": "Measure the bounding box after layout in every composition."
+      },
+      {
+        "id": "async-feedback",
+        "requirement": "There is no loading state. When work is asynchronous, announce status in a separate live region and guard duplicate submission; do not silently disable the button as the only feedback.",
+        "verification": "Simulate a slow submit and confirm an assistive-technology announcement plus duplicate-submit protection."
+      },
+      {
+        "id": "forced-colors",
+        "requirement": "In forced-colors mode, the button must retain a visible boundary or focus indicator using system colours. The contract does not model forced colours with tokens.",
+        "verification": "Test Windows High Contrast / forced-colors emulation in Chromium and Firefox."
+      },
+      {
+        "id": "localisation",
+        "requirement": "Labels may grow or wrap in translation. Do not fix the width or truncate the only accessible name.",
+        "verification": "Test a long translated label and 200% text zoom without clipping the label or ring."
+      },
+      {
+        "id": "no-navigation",
+        "requirement": "A button must not change the current location. Navigation belongs to a link.",
+        "verification": "Code review and DOM assertion that the control is a button, not an anchor."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "Primary/Default label",
+        "foreground": "button.primary.foreground",
+        "background": "button.primary.background",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 5.17
+        },
+        "status": "pass",
+        "notes": "White on blue.600."
+      },
+      {
+        "role": "Primary/Hover label",
+        "foreground": "button.primary.foreground",
+        "background": "button.primary.background-hover",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 6.7
+        },
+        "status": "pass",
+        "notes": "White on blue.700."
+      },
+      {
+        "role": "Primary/Active label",
+        "foreground": "button.primary.foreground",
+        "background": "button.primary.background-active",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 8.72
+        },
+        "status": "pass",
+        "notes": "White on blue.800."
+      },
+      {
+        "role": "Secondary/Default label",
+        "foreground": "button.secondary.foreground",
+        "background": "button.secondary.background",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 16.12
+        },
+        "status": "pass",
+        "notes": "neutral.900 on neutral.100."
+      },
+      {
+        "role": "Secondary/Hover label",
+        "foreground": "button.secondary.foreground",
+        "background": "button.secondary.background-hover",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 13.96
+        },
+        "status": "pass",
+        "notes": "neutral.900 on neutral.200."
+      },
+      {
+        "role": "Secondary/Active label",
+        "foreground": "button.secondary.foreground",
+        "background": "button.secondary.background-active",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 11.99
+        },
+        "status": "pass",
+        "notes": "neutral.900 on neutral.300."
+      },
+      {
+        "role": "Ghost/Default label",
+        "foreground": "button.ghost.foreground",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 17.72
+        },
+        "status": "pass",
+        "notes": "neutral.900 on white; Ghost is transparent."
+      },
+      {
+        "role": "Ghost/Hover label",
+        "foreground": "button.ghost.foreground",
+        "background": "button.ghost.background-hover",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 16.12
+        },
+        "status": "pass",
+        "notes": "neutral.900 on neutral.100."
+      },
+      {
+        "role": "Ghost/Active label",
+        "foreground": "button.ghost.foreground",
+        "background": "button.ghost.background-active",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 13.96
+        },
+        "status": "pass",
+        "notes": "neutral.900 on neutral.200."
+      },
+      {
+        "role": "Primary/Disabled label",
+        "foreground": "button.disabled.foreground",
+        "background": "button.disabled.background",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 2.02
+        },
+        "status": "exempt",
+        "notes": "Inactive control; WCAG 1.4.3 and 1.4.11 exclude disabled controls."
+      },
+      {
+        "role": "Secondary/Disabled label",
+        "foreground": "button.disabled.foreground",
+        "background": "button.disabled.background",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 2.02
+        },
+        "status": "exempt",
+        "notes": "Inactive control; exempt."
+      },
+      {
+        "role": "Ghost/Disabled label",
+        "foreground": "button.disabled.foreground",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "surface": 2.56
+        },
+        "status": "exempt",
+        "notes": "Inactive control; transparent Ghost on white. Exempt."
+      },
+      {
+        "role": "Focus ring",
+        "foreground": "button.focus.color",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 5.17,
+          "canvas": 4.95,
+          "subtle": 4.7,
+          "muted": 4.07,
+          "inverse": 3.43
+        },
+        "status": "pass",
+        "notes": "2px ring at 2px offset. All measured surfaces meet the 3:1 non-text minimum, including inverse."
+      },
+      {
+        "role": "Ghost on inverse",
+        "foreground": "button.ghost.foreground",
+        "background": "color.surface.inverse",
+        "minimum": 4.5,
+        "ratios": {
+          "inverse": 1
+        },
+        "status": "advisory",
+        "notes": "Unsupported. Ghost is transparent, so neutral.900 text sits on neutral.900. Do not place Ghost on inverse."
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Change the label copy and localise it; keep it verb-led and specific.",
+      "Choose Primary, Secondary or Ghost according to action hierarchy.",
+      "Stretch the button through its container for layout; keep height, radius, padding and typography unchanged.",
+      "Pass standard native button attributes such as id, name, value, form and aria-*.",
+      "Supply an onClick handler for actions and type='submit' for form submission.",
+      "Override component token values at the theme layer, provided the three-layer alias chain is preserved and every contrast pair is revalidated.",
+      "Wrap the button in application layout that does not clip its focus ring."
+    ],
+    "forbidden": [
+      "Hardcoding colours, radii, heights, padding, font sizes or weights.",
+      "Adding a danger, success, link, outline, loading, icon-only or full-width variant.",
+      "Changing the 40px height, 6px radius, 16px horizontal padding, 14/20 label or 500 weight.",
+      "Removing or restyling the focus ring.",
+      "Using aria-disabled without the native disabled attribute, or leaving a disabled-looking control interactive.",
+      "Using role='button' on a non-button element.",
+      "Placing two Primary buttons in the same decision group.",
+      "Using aria-pressed, aria-expanded or other toggle semantics without a toggle contract.",
+      "Placing Ghost on an inverse surface.",
+      "Applying a one-off visual override to an instance instead of correcting the token or contract."
+    ],
+    "themeOverrides": [
+      "Consumers may remap semantic action and focus roles so button.primary.background, button.secondary.background and button.focus.color resolve to a brand palette.",
+      "Every override must preserve the component-token alias chain and be revalidated for text contrast, disabled exemption, focus-ring contrast and hover/active differentiation.",
+      "Do not add new component-token names in a theme; a missing role requires a token-source change and a new contract version.",
+      "Light theme is the only implemented theme. Dark mode is not available and must not be simulated by inverting values."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "Use one Primary action per form, dialog or decision group and place it last in the reading order when it advances the task.",
+      "Pair Primary with Secondary for a cancel or back action; keep the secondary action visually quieter.",
+      "Use Ghost for low-emphasis actions in toolbars, rows and dense panels where a filled surface would compete with content.",
+      "Keep the label verb-led and specific: 'Review transfer', 'Save changes', 'Cancel'.",
+      "Preserve DOM order that matches the visual order; do not use CSS order to reverse a primary and secondary action.",
+      "Give the button a stable width or allow it to grow with translated copy; never clip the label or ring."
+    ],
+    "forbidden": [
+      "Two Primary buttons for the same decision.",
+      "A button nested inside another button or inside a link.",
+      "Using Button for navigation; use a link.",
+      "Using Button as an input adornment, clear button or password reveal; there is no icon system.",
+      "A destructive action rendered by overriding Primary with red.",
+      "A disabled submit button used instead of showing validation errors.",
+      "Placing Ghost on inverse or dark surfaces."
+    ],
+    "example": "components/examples/financial-form.md"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "state-prop",
+      "configuration": "<Button state=\"hover\" />",
+      "why": "State is derived from interaction in production. A caller-supplied state lets an application fake hover, active or focus and breaks the single source of truth.",
+      "correct": "Render <Button variant=\"primary\" label=\"Continue\" /> and let :hover, :active, :focus-visible and disabled drive the visual state."
+    },
+    {
+      "id": "combined-state",
+      "configuration": "A Figma variant named 'State=Hover+Focus'.",
+      "why": "The Button component has a flat five-value State axis. No combined state exists and none is approved.",
+      "correct": "Keep the 15-variant matrix. In production, the focus ring overlays the current surface; do not create a combined Figma variant."
+    },
+    {
+      "id": "danger-variant",
+      "configuration": "<Button variant=\"danger\" label=\"Delete account\" />",
+      "why": "There is no danger variant, danger token or destructive contrast guarantee.",
+      "correct": "Do not implement destructive styling in v0.1. Request a destructive variant through the design-system process."
+    },
+    {
+      "id": "loading-variant",
+      "configuration": "<Button loading label=\"Saving\" /> with an inline spinner.",
+      "why": "No loading state, spinner, progress token or async contract exists.",
+      "correct": "Keep the label stable, guard duplicate submission, and announce async status in a separate live region."
+    },
+    {
+      "id": "icon-only",
+      "configuration": "A square button containing only a trash icon with aria-label.",
+      "why": "There is no icon system or icon-only contract, and the visible label is the required accessible name.",
+      "correct": "Use a text label such as 'Delete'. Wait for an icon-button contract before adding icons."
+    },
+    {
+      "id": "hardcoded-colour",
+      "configuration": "style={{ background: '#2563EB', color: '#fff' }}",
+      "why": "Hardcoded values bypass the button.* token chain and will not follow theme overrides.",
+      "correct": "Use variant='primary' and the button.primary.* component tokens."
+    },
+    {
+      "id": "ghost-inverse",
+      "configuration": "<Button variant=\"ghost\" /> on color.surface.inverse.",
+      "why": "Ghost text is neutral.900 on a neutral.900 surface in the default theme: 1.00:1.",
+      "correct": "Do not place Ghost on inverse. Use a supported light surface or obtain a new inverse-surface contract."
+    },
+    {
+      "id": "button-as-link",
+      "configuration": "<Button onClick={() => router.push('/accounts')} label=\"Accounts\" />",
+      "why": "A button that navigates breaks link semantics, middle-click, open-in-new-tab and expected assistive-technology behaviour.",
+      "correct": "Render a semantic link styled consistently, or wait for a Link component."
+    },
+    {
+      "id": "aria-disabled-only",
+      "configuration": "<Button aria-disabled=\"true\" onClick={save} label=\"Save\" />",
+      "why": "The control remains focusable and clickable unless the handler is guarded; the visual state is not the native disabled state.",
+      "correct": "Use disabled; if a focusable disabled control is ever required, that needs a separate contract."
+    },
+    {
+      "id": "focus-ring-removed",
+      "configuration": "button:focus { outline: none; }",
+      "why": "Keyboard users lose the only focus indicator. The design requires a 2px ring at 2px offset.",
+      "correct": "Render :focus-visible with button.focus.color, button.focus.width and button.focus.offset; never remove the indicator without an equivalent."
+    },
+    {
+      "id": "geometry-override",
+      "configuration": "A 32px-high button with a 4px radius and 8px horizontal padding.",
+      "why": "Only one size exists: 40px high, 6px radius, 16px horizontal padding. A smaller button would also risk the 24px target minimum.",
+      "correct": "Keep the token geometry. If a compact size is required, add a size contract and tokens first."
+    },
+    {
+      "id": "multiple-primaries",
+      "configuration": "Two Primary buttons side by side: 'Save' and 'Save and close'.",
+      "why": "Competing primary actions remove hierarchy and increase decision error in financial flows.",
+      "correct": "Choose one Primary action and express the alternative as Secondary or Ghost, or combine the actions into one clear flow."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "visual-all-variants",
+        "given": "The Button component is rendered at 100% zoom on a supported light surface.",
+        "when": "Each of the 15 Variant x State combinations is captured.",
+        "then": "Every surface, foreground and ring resolves to the token values in this contract; no hex or px literal appears in the render tree."
+      },
+      {
+        "id": "visual-geometry",
+        "given": "A Button with the demo label 'Button'.",
+        "when": "Its bounding box is measured.",
+        "then": "Height is 40px, radius is 6px, horizontal padding is 16px, label is 14/20 at weight 500, and the Focus state is 44px high including the 2px ring at 2px offset."
+      },
+      {
+        "id": "visual-focus-ring",
+        "given": "Each variant in the Focus state.",
+        "when": "The ring is inspected.",
+        "then": "The ring is 2px wide, offset 2px, drawn OUTSIDE, has an 8px outer radius, and the inner surface remains 40px high."
+      },
+      {
+        "id": "visual-disabled",
+        "given": "Each variant in the Disabled state.",
+        "when": "The surface and label are compared with the enabled states.",
+        "then": "Primary and Secondary use the shared muted fill and muted label; Ghost stays transparent and uses the muted label; no hover, active or ring treatment is visible."
+      },
+      {
+        "id": "visual-ghost-transparent",
+        "given": "Ghost/Default and Ghost/Focus on color.surface.default.",
+        "when": "The background is sampled.",
+        "then": "The button has no fill of its own; the page surface shows through and only the label (and ring, for focus) is visible."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "behaviour-click",
+        "given": "An enabled Button with an onClick handler.",
+        "when": "The pointer clicks once.",
+        "then": "The handler fires exactly once."
+      },
+      {
+        "id": "behaviour-keyboard",
+        "given": "An enabled Button reached by Tab.",
+        "when": "Enter or Space is pressed.",
+        "then": "The button activates exactly as a native button and the focus ring is visible."
+      },
+      {
+        "id": "behaviour-disabled",
+        "given": "A disabled Button.",
+        "when": "The user clicks, presses Enter or presses Space, and tabs through the page.",
+        "then": "No handler fires, the button is skipped in the tab order, and no hover, active or ring treatment appears."
+      },
+      {
+        "id": "behaviour-submit",
+        "given": "A Button with type='submit' inside a form.",
+        "when": "The button is activated by pointer or keyboard.",
+        "then": "The form submits once. A Button with type='button' does not submit."
+      },
+      {
+        "id": "behaviour-label",
+        "given": "A Button rendered with a label.",
+        "when": "The label is changed through the supported prop.",
+        "then": "The visible text updates, the accessible name updates, and the variant tokens remain bound."
+      },
+      {
+        "id": "behaviour-hover-active",
+        "given": "An enabled Button.",
+        "when": "The pointer enters and then presses.",
+        "then": "The surface changes from default to hover to active using the matching button.* tokens, and returns to default on leave or release."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "a11y-name",
+        "given": "Any Button variant.",
+        "when": "The accessibility tree is inspected.",
+        "then": "The role is button, the accessible name equals the visible label, and no State or Variant text is announced."
+      },
+      {
+        "id": "a11y-contrast",
+        "given": "All enabled variants and the focus ring.",
+        "when": "Contrast is measured from resolved values.",
+        "then": "Every enabled text pair is at least 4.5:1 and the focus ring is at least 3:1 on every supported surface."
+      },
+      {
+        "id": "a11y-focus",
+        "given": "A keyboard user tabbing through a page.",
+        "when": "Focus reaches each variant.",
+        "then": "The 2px ring is visible, not clipped, and persists while the pointer also hovers."
+      },
+      {
+        "id": "a11y-disabled",
+        "given": "A disabled Button.",
+        "when": "The accessibility tree and tab order are inspected.",
+        "then": "The native disabled state is exposed and the control is not focusable or activatable."
+      },
+      {
+        "id": "a11y-forced-colors",
+        "given": "Forced-colors mode.",
+        "when": "The button is rendered in default, focus and disabled states.",
+        "then": "A visible boundary or focus indicator remains; the control does not disappear into the background."
+      },
+      {
+        "id": "a11y-zoom",
+        "given": "200% text zoom and a long translated label.",
+        "when": "The button is rendered.",
+        "then": "The label remains readable and is not clipped; the height may grow rather than cutting text."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "tokens-only-button-prefix",
+        "given": "The Button implementation and its resolved styles.",
+        "when": "Every colour, dimension and font-weight reference is audited.",
+        "then": "Every reference is a button.* component token; there are zero primitive or Semantic references and zero hardcoded values covered by a token."
+      },
+      {
+        "id": "tokens-count",
+        "given": "This contract.",
+        "when": "The dependency list is compared with tokens/tokens.json.",
+        "then": "All 22 button.* dependencies exist, resolve to the stated values, and map to the stated --fc-* CSS variables."
+      },
+      {
+        "id": "tokens-state-binding",
+        "given": "All 15 variants.",
+        "when": "Each surface, foreground and ring is checked against stateMapping.",
+        "then": "Every visual property resolves to the mapped token and no variant uses a token from the wrong state."
+      },
+      {
+        "id": "tokens-no-invention",
+        "given": "The implementation.",
+        "when": "Searching for button.danger, button.success, button.loading, button.ghost.background, button.focus.radius or a size variant.",
+        "then": "No such token or API exists in the implementation."
+      }
+    ],
+    "regression": [
+      {
+        "id": "regression-visual",
+        "given": "A baseline snapshot of all 15 variants.",
+        "when": "The Button is changed.",
+        "then": "Every variant is pixel-compared; any change to surface, text, geometry or ring is reviewed and explained."
+      },
+      {
+        "id": "regression-token-hashes",
+        "given": "The protected token source, validator and generated CSS.",
+        "when": "The contract stage is validated.",
+        "then": "tokens/tokens.json, tokens/check.mjs and tokens/dist/tokens.css are byte-identical to the baseline hashes."
+      },
+      {
+        "id": "regression-figma",
+        "given": "Figma Button set 87:37.",
+        "when": "The contract is reviewed.",
+        "then": "The set still has 15 variants, 3 properties, the same variant IDs, and no duplicate or combined state."
+      },
+      {
+        "id": "regression-navigation",
+        "given": "A page containing Button components.",
+        "when": "The browser back/forward and open-in-new-tab behaviour is tested.",
+        "then": "Buttons do not create history entries or new tabs; only links do."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "flat-state-axis",
+      "limitation": "Button uses a flat five-value State axis. Focus cannot be combined with Hover or Active in Figma.",
+      "impact": "There is no approved combined visual reference for a focused button that is also hovered or pressed.",
+      "mitigation": "Production keeps the ring as an additive keyboard-focus overlay. Do not create combined Figma variants; request a new design if the combined visual matters."
+    },
+    {
+      "id": "focus-surface",
+      "limitation": "State=Focus renders the variant's Default surface, not the Hover or Active surface.",
+      "impact": "A focused-and-hovered button has no single Figma reference.",
+      "mitigation": "Treat the ring as the required focus signal and let the surface follow the pointer state; record any visual decision in the implementation tests."
+    },
+    {
+      "id": "focus-radius-literal",
+      "limitation": "There is no button.focus.radius token. The 8px outer ring radius is a literal derived from 6px + 2px.",
+      "impact": "A theme that changes button.radius or button.focus.offset must also update the literal.",
+      "mitigation": "Add a dedicated Button focus-radius token in a future token change; until then, assert the 8px arithmetic in visual tests."
+    },
+    {
+      "id": "vertical-padding-literal",
+      "limitation": "There is no vertical padding token; 10px is derived from the 40px height and 20px line height.",
+      "impact": "Changing the line height or height without recalculating padding can break vertical centring.",
+      "mitigation": "Keep the height and line height token-bound and assert vertical centring in visual tests."
+    },
+    {
+      "id": "font-family",
+      "limitation": "IBM Plex Sans is a Figma text property, not a token.",
+      "impact": "Production font loading and fallback are not governed by the token source.",
+      "mitigation": "The application owns font loading and must verify the rendered metrics; a font-family token is future work."
+    },
+    {
+      "id": "no-icons",
+      "limitation": "There is no icon system, icon slot or icon-only variant.",
+      "impact": "Buttons cannot carry leading/trailing icons or stand alone as icon actions.",
+      "mitigation": "Use text-only labels. Wait for an icon and icon-button contract."
+    },
+    {
+      "id": "no-loading",
+      "limitation": "There is no loading, spinner or progress state.",
+      "impact": "Async actions have no built-in busy visual.",
+      "mitigation": "Keep the label stable, guard duplicate submission, and announce status in a separate live region."
+    },
+    {
+      "id": "no-destructive-variant",
+      "limitation": "There is no danger, critical or destructive variant.",
+      "impact": "Destructive actions cannot be styled within the contract.",
+      "mitigation": "Do not override Primary with red. Request a destructive variant through the design-system process."
+    },
+    {
+      "id": "no-toggle",
+      "limitation": "There is no pressed, selected or toggle state.",
+      "impact": "Button cannot represent on/off or selected controls.",
+      "mitigation": "Use a future Toggle, Switch or Segmented Control component."
+    },
+    {
+      "id": "inverse-unsupported",
+      "limitation": "Inverse surfaces are not a supported Button context. Ghost fails at 1.00:1; Primary and Secondary have no inverse-specific tokens.",
+      "impact": "The component cannot be declared safe on dark or inverse surfaces.",
+      "mitigation": "Stay on supported light surfaces. A future inverse contract must add surface-specific tokens and revalidate every state."
+    },
+    {
+      "id": "disabled-contrast",
+      "limitation": "Disabled text is 2.02:1 for Primary/Secondary and 2.56:1 for Ghost on white. It is exempt, not accessible.",
+      "impact": "Disabled controls are difficult to read for low-vision users.",
+      "mitigation": "Use disabled sparingly and always explain why the action is unavailable in surrounding text. The exemption is recorded, not hidden."
+    },
+    {
+      "id": "width-not-tokenised",
+      "limitation": "Width is content-driven; the demo label is 76px wide and no width or min-width token exists.",
+      "impact": "Translated labels change width and can disrupt dense layouts.",
+      "mitigation": "Allow growth and test long labels; use layout constraints rather than fixed widths."
+    },
+    {
+      "id": "one-size",
+      "limitation": "There is only one size: 40px high with 14/20 text.",
+      "impact": "Compact and large contexts cannot be served by a size variant.",
+      "mitigation": "Do not compress the button below 24px. A size contract is future work."
+    },
+    {
+      "id": "figma-state-is-not-runtime",
+      "limitation": "Figma State is a design axis; it is not a runtime prop, DOM attribute or ARIA state.",
+      "impact": "Copying the Figma property directly into an API would let callers fake interaction states.",
+      "mitigation": "Derive state from :hover, :active, :focus-visible and disabled; do not expose a state prop."
+    },
+    {
+      "id": "dark-mode",
+      "limitation": "Dark mode is not implemented.",
+      "impact": "No dark values exist for any Button token, including focus and disabled.",
+      "mitigation": "Ship light theme only. Do not invert values to simulate dark mode."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract.json completely before writing Button code.",
+      "Read components/button/README.md for the human explanation, native HTML/CSS mapping and examples.",
+      "Read components/IMPLEMENTATION.md and components/button/button.css plus button.html for the actual native implementation. Contract-level props are not runtime exports.",
+      "Read tokens/tokens.json or tokens/dist/tokens.css for the canonical token names and resolved values.",
+      "Read docs/foundation/principles.md for accessibility and semantic-token rules.",
+      "Read components/examples/financial-form.md only after the Button contract is understood; it is illustrative, not a production feature."
+    ],
+    "rules": [
+      "Use only variant='primary' | 'secondary' | 'ghost'. Do not invent danger, success, link, outline, loading, icon-only, full-width or size variants.",
+      "Use only the length, width, radius, padding, typography and focus tokens listed in this contract.",
+      "Render a native button. Derive state from interaction; do not accept a state prop.",
+      "Use the native disabled attribute. Do not substitute aria-disabled alone.",
+      "Keep the visible label as the accessible name. Do not add an icon-only mode.",
+      "Never remove the focus ring. Use :focus-visible and keep the ring unclipped.",
+      "Do not use a button for navigation. Use a link.",
+      "Do not implement loading, progress or async feedback inside the button.",
+      "Do not place Ghost on inverse or dark surfaces.",
+      "Treat the native class/attribute API as canonical: .fc-button plus the variant class, text content as the label, native disabled, explicit type, and browser pseudo-classes for interaction states. Do not require a JavaScript runtime or React adapter.",
+      "Use button.ghost.foreground for every Ghost label, including Ghost/Focus. The previous color/content/link binding was corrected in Stage 5C-1 and verified.",
+      "Do not modify tokens/tokens.json, tokens/check.mjs or tokens/dist/tokens.css to make an implementation easier. If a role is missing, stop and report it."
+    ],
+    "uncertaintyPolicy": [
+      "If the requested action is destructive, loading, toggle-like, icon-only or navigation, stop and report that the capability is not in the contract. Do not approximate it with Primary.",
+      "If the requested surface is inverse or dark, stop and report that the surface is unsupported.",
+      "If a required token is missing, report the missing role and the token chain it would need; do not hardcode a value.",
+      "If the desired label or action hierarchy is unclear, ask for the action's intent rather than choosing a variant silently.",
+      "If a design shows a Hover+Focus or Active+Focus combined state, flag it as an open question; do not create a combined variant.",
+      "If the implementation target is not specified, ask before choosing a framework, package path or styling approach."
+    ],
+    "definitionOfDone": [
+      "All 15 visual combinations render from button.* tokens with no primitive, Semantic or hardcoded values covered by a token.",
+      "Click, keyboard activation, form submission, disabled behaviour and label updates pass.",
+      "The focus ring is visible and unclipped at 100% and 200% zoom, including while hovered.",
+      "Accessible name, role, disabled semantics and target size pass an accessibility audit.",
+      "The 22 token dependencies resolve to the values in this contract and match the generated CSS variables.",
+      "No unsupported variant, state, icon, loading behaviour, navigation or inverse usage is present.",
+      "The illustrative composition example, if used, is adapted rather than copied as production code."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Primary form submission",
+        "language": "tsx",
+        "code": "<Button variant=\"primary\" type=\"submit\" label=\"Review transfer\" />",
+        "explanation": "One primary action, explicit submit type, visible verb-led label. The application owns validation and submission."
+      },
+      {
+        "title": "Secondary cancel action",
+        "language": "tsx",
+        "code": "<Button variant=\"secondary\" type=\"button\" label=\"Cancel\" onClick={cancelTransfer} />",
+        "explanation": "A quieter alternative next to the primary action. type='button' prevents accidental form submission."
+      },
+      {
+        "title": "Ghost toolbar action",
+        "language": "tsx",
+        "code": "<Button variant=\"ghost\" label=\"View details\" onClick={openDetails} />",
+        "explanation": "Low emphasis on a supported light surface. Ghost is not used on inverse or dark backgrounds."
+      },
+      {
+        "title": "Genuinely unavailable action",
+        "language": "tsx",
+        "code": "<Button variant=\"secondary\" label=\"Download receipt\" disabled />",
+        "explanation": "Disabled is used only when the action is truly unavailable, with the reason explained outside the button."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Invented danger variant",
+        "language": "tsx",
+        "code": "<Button variant=\"danger\" label=\"Delete account\" />",
+        "explanation": "No danger variant or danger token exists. This also implies destructive styling without a contrast contract."
+      },
+      {
+        "title": "Caller-supplied interaction state",
+        "language": "tsx",
+        "code": "<Button state=\"hover\" label=\"Continue\" />",
+        "explanation": "State is derived from the interaction. Exposing it lets an application fake hover, active or focus."
+      },
+      {
+        "title": "Icon-only button",
+        "language": "tsx",
+        "code": "<Button aria-label=\"Delete\" icon={<TrashIcon />} />",
+        "explanation": "There is no icon system or icon-only variant, and the visible label is the required accessible name."
+      },
+      {
+        "title": "Hardcoded visual override",
+        "language": "tsx",
+        "code": "<Button style={{ background: \"#2563EB\", color: \"#fff\", height: 32 }} label=\"Save\" />",
+        "explanation": "Bypasses the button.* token chain, changes the approved height and breaks themeability."
+      },
+      {
+        "title": "Ghost on inverse",
+        "language": "tsx",
+        "code": "<div style={{ background: \"var(--fc-color-surface-inverse)\" }}><Button variant=\"ghost\" label=\"Close\" /></div>",
+        "explanation": "Ghost text is neutral.900 on a neutral.900 surface in the default theme: 1.00:1. Inverse is unsupported."
+      },
+      {
+        "title": "Button used for navigation",
+        "language": "tsx",
+        "code": "<Button label=\"Accounts\" onClick={() => navigate(\"/accounts\")} />",
+        "explanation": "Navigation must use a link so history, open-in-new-tab and assistive-technology expectations are preserved."
+      },
+      {
+        "title": "Fake loading state",
+        "language": "tsx",
+        "code": "<Button label=\"Saving...\" disabled />",
+        "explanation": "There is no loading contract. A changed label and disabled state are not sufficient async feedback."
+      },
+      {
+        "title": "aria-disabled only",
+        "language": "tsx",
+        "code": "<Button aria-disabled=\"true\" onClick={save} label=\"Save\" />",
+        "explanation": "The control remains focusable and clickable. Use the native disabled attribute."
+      }
+    ]
+  }
+}

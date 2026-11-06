@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore Currency — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./currency.css">
+</head>
+<body>
+  <main>
+    <h1>Currency Input reference markup</h1>
+    <p>
+      Formatted monetary value: label, control wrapper with prefix symbol/suffix code, native input with decimal formatting, and helper/error row.
+    </p>
+
+    <section aria-labelledby="currency-default">
+      <h2 id="currency-default">Default with prefix and helper</h2>
+
+      <div class="fc-currency">
+        <label class="fc-currency__label" for="transfer-amount">Transfer amount (required)</label>
+        <div class="fc-currency__control">
+          <span class="fc-currency__prefix" aria-hidden="true">$</span>
+          <input
+            type="text"
+            inputmode="decimal"
+            class="fc-currency__field"
+            id="transfer-amount"
+            name="transferAmount"
+            placeholder="0.00"
+            aria-describedby="transfer-amount-helper"
+            required
+          >
+          <span class="fc-currency__suffix" aria-hidden="true">USD</span>
+        </div>
+        <p class="fc-currency__message" id="transfer-amount-helper">
+          Minimum deposit is $10.00 USD.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="currency-error">
+      <h2 id="currency-error">Error after failed validation</h2>
+
+      <div class="fc-currency">
+        <label class="fc-currency__label" for="loan-amount">Requested amount</label>
+        <div class="fc-currency__control">
+          <span class="fc-currency__prefix" aria-hidden="true">€</span>
+          <input
+            type="text"
+            inputmode="decimal"
+            class="fc-currency__field"
+            id="loan-amount"
+            name="loanAmount"
+            aria-invalid="true"
+            aria-describedby="loan-error-msg"
+            value="150,000.00"
+          >
+          <span class="fc-currency__suffix" aria-hidden="true">EUR</span>
+        </div>
+        <p class="fc-currency__message fc-currency__message--error" id="loan-error-msg">
+          Amount exceeds maximum allowable loan limit of €100,000.00.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="currency-disabled">
+      <h2 id="currency-disabled">Disabled</h2>
+
+      <div class="fc-currency">
+        <label class="fc-currency__label" for="balance-readonly">Available balance</label>
+        <div class="fc-currency__control">
+          <span class="fc-currency__prefix" aria-hidden="true">$</span>
+          <input
+            type="text"
+            class="fc-currency__field"
+            id="balance-readonly"
+            name="balanceReadonly"
+            value="12,450.50"
+            disabled
+          >
+          <span class="fc-currency__suffix" aria-hidden="true">USD</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+

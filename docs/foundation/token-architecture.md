@@ -10,6 +10,10 @@ Semantic Tokens
 ↓
 Component Tokens
 
+## Relationship to Principles
+
+This architecture supports the principles defined in [FinCore Principles](principles.md).
+
 ---
 
 ## 1. Primitive Tokens

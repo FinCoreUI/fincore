@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore DatePicker — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./date-picker.css">
+</head>
+<body>
+  <main>
+    <h1>DatePicker reference markup</h1>
+    <p>
+      Native date input control with calendar affordance: label, control wrapper, accessible date formatting, and helper/error row.
+    </p>
+
+    <section aria-labelledby="date-picker-default">
+      <h2 id="date-picker-default">Default with helper</h2>
+
+      <div class="fc-date-picker">
+        <label class="fc-date-picker__label" for="scheduled-date">Scheduled date</label>
+        <div class="fc-date-picker__control">
+          <input
+            type="date"
+            class="fc-date-picker__field"
+            id="scheduled-date"
+            name="scheduledDate"
+            aria-describedby="scheduled-date-helper"
+          >
+        </div>
+        <p class="fc-date-picker__message" id="scheduled-date-helper">
+          Transfers scheduled for weekends process the next business day.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="date-picker-error">
+      <h2 id="date-picker-error">Error state</h2>
+
+      <div class="fc-date-picker">
+        <label class="fc-date-picker__label" for="expiry-date">Statement period start</label>
+        <div class="fc-date-picker__control">
+          <input
+            type="date"
+            class="fc-date-picker__field"
+            id="expiry-date"
+            name="expiryDate"
+            aria-invalid="true"
+            aria-describedby="expiry-date-error"
+          >
+        </div>
+        <p class="fc-date-picker__message fc-date-picker__message--error" id="expiry-date-error">
+          Date cannot be in the future.
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+

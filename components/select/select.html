@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore Select — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./select.css">
+</head>
+<body>
+  <main>
+    <h1>Select reference markup</h1>
+    <p>
+      A full field: label, native <code>&lt;select&gt;</code> and helper/error row.
+      The application owns validation, error copy, <code>aria-invalid</code>, the
+      error association and announcement.
+    </p>
+
+    <section aria-labelledby="select-default">
+      <h2 id="select-default">Default with helper</h2>
+
+      <div class="fc-select">
+        <label class="fc-select__label" for="account-type">Account type (required)</label>
+        <div class="fc-select__control">
+          <select
+            class="fc-select__field"
+            id="account-type"
+            name="accountType"
+            aria-describedby="account-type-helper"
+            required
+          >
+            <option value="">Select an account</option>
+            <option value="checking">Checking</option>
+            <option value="savings">Savings</option>
+          </select>
+        </div>
+        <p class="fc-select__message" id="account-type-helper">
+          Choose the primary funding account.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="select-error">
+      <h2 id="select-error">Error after failed validation</h2>
+      <div class="fc-select">
+        <label class="fc-select__label" for="account-type-error">Account type (required)</label>
+        <div class="fc-select__control">
+          <select
+            class="fc-select__field"
+            id="account-type-error"
+            name="accountTypeError"
+            aria-describedby="account-type-error-message"
+            aria-invalid="true"
+            required
+          >
+            <option value="">Select an account</option>
+            <option value="checking">Checking</option>
+          </select>
+        </div>
+        <p class="fc-select__message fc-select__message--error" id="account-type-error-message">
+          Please select an account type.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="select-disabled">
+      <h2 id="select-disabled">Disabled</h2>
+      <div class="fc-select">
+        <label class="fc-select__label" for="account-type-disabled">Account type</label>
+        <div class="fc-select__control">
+          <select
+            class="fc-select__field"
+            id="account-type-disabled"
+            name="accountTypeDisabled"
+            disabled
+          >
+            <option value="checking">Checking</option>
+          </select>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+

@@ -1,0 +1,22 @@
+{
+  "name": "@weft-ui/cli",
+  "version": "0.1.0-alpha.2",
+  "description": "Source-distribution CLI for Weft components",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "weft": "./bin/weft.mjs",
+    "fincore": "./bin/fincore.mjs"
+  },
+  "scripts": {
+    "prepare": "node scripts/copy-templates.mjs",
+    "prepack": "node scripts/copy-templates.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "templates",
+    "README.md"
+  ]
+}

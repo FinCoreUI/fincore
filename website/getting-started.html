@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Getting started — Sorleed</title>
+  <meta name="description" content="Install Sorleed from the React package, the source-distribution CLI, or plain CSS.">
+  <link rel="stylesheet" href="../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/input/input.css">
+  <link rel="stylesheet" href="../components/password-input/password-input.css">
+  <link rel="stylesheet" href="../components/phone-input/phone-input.css">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="start">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="index.html" data-page="overview">Overview</a></li>
+          <li><a href="getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="components.html" data-page="components">Components</a></li>
+          <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="cli.html" data-page="cli">CLI</a></li>
+          <li><a href="customisation.html" data-page="customisation">Customisation</a></li>
+          <li><a href="accessibility.html" data-page="accessibility">Accessibility</a></li>
+          <li><a href="ai.html" data-page="ai">AI</a></li>
+          <li><a href="limitations.html" data-page="limits">Limits</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="On this page">
+        <h2>On this page</h2>
+        <ul>
+          <li><a href="#react">React package</a></li>
+          <li><a href="#cli">CLI</a></li>
+          <li><a href="#html">Plain HTML and CSS</a></li>
+          <li><a href="#css-order">CSS order</a></li>
+          <li><a href="#requirements">Requirements</a></li>
+          <li><a href="#verify">Verify the install</a></li>
+        </ul>
+      </aside>
+
+      <div class="content">
+        <h1>Getting started</h1>
+        <p class="lede">Three supported ways to consume Sorleed. Choose the one that matches how much source you want to own.</p>
+
+        <h2 id="react">React package</h2>
+        <p>The package is private alpha and unpublished. When it is available to your environment:</p>
+        <pre><code>npm install @sorleed/react react react-dom
+# optional, only for PhoneInput
+npm install libphonenumber-js</code></pre>
+        <p>Import components and the generated CSS:</p>
+        <pre><code>import { Button, Input, PasswordInput } from "@sorleed/react";
+import { PhoneInput } from "@sorleed/react/phone-input";
+import "@sorleed/react/styles/tokens.css";
+import "@sorleed/react/styles/button.css";
+import "@sorleed/react/styles/input.css";
+import "@sorleed/react/styles/password-input.css";
+import "@sorleed/react/styles/phone-input.css";</code></pre>
+        <p>All five stylesheets are exported by the package. The package is ESM and ships TypeScript declarations.</p>
+
+        <h2 id="cli">CLI source distribution</h2>
+        <p>The CLI copies canonical source into your project so you can edit it:</p>
+        <pre><code>npx sorleed list
+npx sorleed add button --dir ./my-app
+npx sorleed add input --dir ./my-app
+npx sorleed add password-input --dir ./my-app
+npx sorleed add phone-input --dir ./my-app</code></pre>
+        <p>Each install copies:</p>
+        <pre><code>components/sorleed/&lt;component&gt;/index.tsx
+components/sorleed/types/index.ts      (shared)
+styles/sorleed/&lt;component&gt;.css
+styles/sorleed/tokens.css              (shared)</code></pre>
+        <p>Existing files are never overwritten. Use <code>--dry-run</code> to preview an install.</p>
+
+        <h2 id="html">Plain HTML and CSS</h2>
+        <p>No build step and no package manager are required for the core implementation:</p>
+        <pre><code>&lt;link rel="stylesheet" href="tokens/dist/tokens.css"&gt;
+&lt;link rel="stylesheet" href="components/button/button.css"&gt;
+
+&lt;button class="sl-button sl-button--primary" type="button"&gt;Continue&lt;/button&gt;</code></pre>
+        <p>Use the canonical markup from <code>components/&lt;component&gt;/&lt;component&gt;.html</code> as the starting point.</p>
+
+        <h2 id="css-order">CSS order</h2>
+        <ol>
+          <li><code>tokens.css</code></li>
+          <li>component stylesheets</li>
+        </ol>
+        <p>Component stylesheets do not import tokens automatically. Loading a component sheet without the token sheet leaves its variables undefined.</p>
+
+        <h2 id="requirements">Requirements</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable table">
+          <table>
+            <thead><tr><th>Surface</th><th>Requirement</th></tr></thead>
+            <tbody>
+              <tr><td>Core HTML/CSS</td><td>Any modern browser. No runtime or build step.</td></tr>
+              <tr><td><code>@sorleed/react</code></td><td>React 18+ and React DOM 18+. ESM tooling; Node 18+ for build tooling.</td></tr>
+              <tr><td><code>@sorleed/cli</code></td><td>Node 18+ with ESM support. CSS imports need a bundler.</td></tr>
+              <tr><td>PhoneInput</td><td><code>libphonenumber-js</code> for parsing and format validation.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="verify">Verify the install</h2>
+        <p>Render a Button and an Input. Confirm that the button has a visible focus ring and that the input label is associated. If the styles are missing, check that <code>tokens.css</code> loads first.</p>
+        <div class="demo">
+          <div class="demo__row">
+            <div class="demo__surface">
+              <button class="sl-button sl-button--primary" type="button">It works</button>
+            </div>
+            <div class="demo__surface">
+              <div class="sl-input">
+                <label class="sl-input__label" for="verify-input">Label</label>
+                <div class="sl-input__control">
+                  <input class="sl-input__field" id="verify-input" type="text" placeholder="Type here">
+                </div>
+                <p class="sl-input__message">Helper text is connected to the field.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout--warning">
+          <p><strong>Unpublished packages.</strong> Do not add <code>@sorleed/react</code> or <code>@sorleed/cli</code> to a public dependency list until they are published. The repository and CI validate packed artifacts, but publication is a separate, owner-authorised step.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed — UI Infrastructure. MIT licensed. Copyright (c) 2026 Sorleed.</p>
+      <p><a href="../README.md">Repository README</a> · <a href="../PRODUCT.md">Product</a> · <a href="../SECURITY.md">Security</a></p>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>

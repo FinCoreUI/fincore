@@ -1,0 +1,1089 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.select",
+    "name": "Select",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0-alpha.2",
+    "summary": "FinCore's native single-value select: label + control + helper/error, four mutually exclusive states, an independent focus ring and only select.* component tokens. Implemented as framework-agnostic CSS with native HTML semantics; no Figma source exists yet.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local reconstruction from the feat/select branch reference; the branch contract was minimal and not schema-complete, so this file follows the Input contract shape instead.",
+        "The token block was added to tokens/tokens.json and generated into tokens/dist/tokens.css; node tokens/check.mjs --write passed with 27 select.* component tokens.",
+        "The stylesheet consumes only variables generated from select.* component tokens.",
+        "No Figma component set exists for Select in v0.1, so canonical.figma is null and no design-evidence claims are made."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the full field anatomy: label, native select control, and a helper/error row.",
+      "Apply only select.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay when keyboard focus is present, except when disabled.",
+      "Expose native select semantics, the native disabled state and the options supplied by the application."
+    ],
+    "application": [
+      "Choose the options, write the label and provide the selected value.",
+      "Own validation: decide when a value is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby.",
+      "Use native disabled only when the control is genuinely unavailable.",
+      "Own layout width and ensure no surrounding container clips the focus ring.",
+      "Never use Select for multi-value, searchable or free-text entry."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Select in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Choosing one value from a known, short set of options such as account type, currency or country.",
+      "Form fields where a native select is the most predictable control for assistive technology."
+    ],
+    "inappropriate": [
+      {
+        "use": "Multi-select or free-text entry.",
+        "reason": "This contract covers a single-value native select only.",
+        "alternative": "Use a future multi-select or combobox component."
+      },
+      {
+        "use": "Searchable, grouped or virtualised long lists.",
+        "reason": "Native select does not support search and gives limited control over long option lists.",
+        "alternative": "Use a future combobox component."
+      },
+      {
+        "use": "Communicating an error with a red border only.",
+        "reason": "Colour alone is not an accessible error signal.",
+        "alternative": "Render an error message in the helper slot alongside aria-invalid."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Label: 14/20, weight 500, select.label.color. Associated with the select via for/id.",
+      "Control: 40px high, 1px inside border, 6px radius, 12px horizontal padding, white fill by default.",
+      "Focus Ring: absolute sibling overlay, 2px outside stroke, 8px concentric radius, shown on :focus-visible.",
+      "Message: 12/16, weight 400, select.helper.color; the error variant uses select.text-error."
+    ],
+    "geometry": [
+      {
+        "property": "control height",
+        "value": "40px",
+        "token": "select.height"
+      },
+      {
+        "property": "horizontal padding",
+        "value": "12px",
+        "token": "select.padding-x"
+      },
+      {
+        "property": "control corner radius",
+        "value": "6px",
+        "token": "select.radius"
+      },
+      {
+        "property": "border width",
+        "value": "1px (INSIDE)",
+        "token": "select.border-width"
+      },
+      {
+        "property": "label-to-control gap",
+        "value": "8px",
+        "token": "select.label-gap"
+      },
+      {
+        "property": "control-to-helper gap",
+        "value": "4px",
+        "token": "select.helper-gap"
+      },
+      {
+        "property": "focus ring width",
+        "value": "2px",
+        "token": "select.focus.width"
+      },
+      {
+        "property": "focus ring offset",
+        "value": "2px",
+        "token": "select.focus.offset"
+      },
+      {
+        "property": "focus ring radius",
+        "value": "8px",
+        "token": "select.focus.radius"
+      }
+    ],
+    "literals": [
+      {
+        "property": "control width",
+        "value": "100%",
+        "reason": "Width belongs to layout; no width token exists in v0.1."
+      },
+      {
+        "property": "font family",
+        "value": "inherit",
+        "reason": "No font-family token exists in v0.1; the control inherits the page font."
+      },
+      {
+        "property": "native appearance",
+        "value": "none",
+        "reason": "Removes the platform control chrome so the token-driven border, radius and fill apply."
+      }
+    ]
+  },
+  "properties": [
+    {
+      "name": "Label",
+      "figmaType": "TEXT",
+      "figmaDefault": "Select",
+      "required": true,
+      "description": "Visible label for the control. The default is placeholder copy, not production copy.",
+      "translation": "direct",
+      "production": {
+        "prop": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "derived": false,
+        "notes": "Must be non-empty. Provide a programmatic label association."
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "id",
+      "type": "string",
+      "default": null,
+      "required": true,
+      "description": "Stable id used for the label association and message references.",
+      "notes": "Must be unique in the document."
+    },
+    {
+      "prop": "value",
+      "type": "string",
+      "default": "\"\"",
+      "required": true,
+      "description": "Controlled selected value.",
+      "notes": "The component does not infer a value from the first option."
+    },
+    {
+      "prop": "disabled",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Maps to the native disabled attribute.",
+      "notes": "Do not use disabled as a validation strategy."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and replaces helper copy in the message row.",
+      "notes": "The application owns the error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Helper and error copy are never stacked."
+    },
+    {
+      "prop": "onChange",
+      "type": "(event: React.ChangeEvent<HTMLSelectElement>) => void",
+      "default": null,
+      "required": true,
+      "description": "Controlled change handler.",
+      "notes": "Validation belongs to onBlur or form submit, not every change."
+    },
+    {
+      "prop": "name",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Native form field name used during submission.",
+      "notes": "Must be unique within the form."
+    },
+    {
+      "prop": "required",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Sets the native required attribute.",
+      "notes": "Add a visible required indication in the application."
+    },
+    {
+      "prop": "className",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Layout-only escape hatch for width and placement.",
+      "notes": "Must not change colour, typography, radius, height, border, gaps or focus treatment."
+    },
+    {
+      "prop": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "required": false,
+      "description": "Controls the size variant (sm, md, lg).",
+      "notes": "Applies corresponding size modifier class."
+    },
+    {
+      "prop": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Applies loading state and sets aria-busy=\"true\".",
+      "notes": "Suppresses interactions while loading."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "select.height",
+        "select.padding-x",
+        "select.radius",
+        "select.border-width",
+        "select.font-size",
+        "select.line-height",
+        "select.font-weight",
+        "select.label-gap",
+        "select.helper-gap",
+        "select.focus.color",
+        "select.focus.width",
+        "select.focus.offset",
+        "select.focus.radius",
+        "select.background",
+        "select.border",
+        "select.text",
+        "select.border-hover",
+        "select.border-error",
+        "select.text-error",
+        "select.background-disabled",
+        "select.border-disabled",
+        "select.text-disabled",
+        "select.label.color",
+        "select.label.font-weight",
+        "select.helper.color",
+        "select.helper.font-size",
+        "select.helper.line-height"
+      ],
+      "notes": "There is no Figma variant set; this single entry records the complete runtime token surface. State is derived in production."
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, select.border boundary, primary value and normal label/helper; no ring."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "select.border-hover boundary; all other Default properties unchanged."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "select.border-error boundary and select.text-error message; the message stays visible."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, matching disabled border, muted value; label and helper stay legible; no interaction."
+      },
+      {
+        "combination": "Default + Focused",
+        "supported": true,
+        "result": "Default boundary plus the 2px focus ring at a 2px offset."
+      },
+      {
+        "combination": "Hover + Focused",
+        "supported": true,
+        "result": "Hover boundary plus the focus ring."
+      },
+      {
+        "combination": "Error + Focused",
+        "supported": true,
+        "result": "Error boundary, error message and focus ring coexist."
+      },
+      {
+        "combination": "Disabled + Focused",
+        "supported": false,
+        "result": "Focused is ignored; Disabled wins and no ring appears."
+      },
+      {
+        "combination": "Error + Hover",
+        "supported": false,
+        "result": "Not modelled. The error border persists with no independent hover border."
+      },
+      {
+        "combination": "Disabled + Error",
+        "supported": false,
+        "result": "Not modelled. Disabled wins; no error border or error-coloured message."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error. Disabled suppresses focus entirely.",
+      "Error suppresses the hover border.",
+      "Disabled suppresses error treatment and the focus ring."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Do not add a hover border on top of the error border.",
+      "Disabled + Error is not modelled. Do not show a red border or red message on a disabled control.",
+      "Disabled + Focused is not modelled as a visible combination; the ring must be suppressed.",
+      "Focus is not a fifth State."
+    ],
+    "notes": [
+      "The component has no Figma variant set; the state model is derived from native interaction and the application-owned aria-invalid flag.",
+      "The focus ring is an overlay, not a variant.",
+      "Validation is owned by the application, not by the component state machine."
+    ]
+  },
+  "tokens": {
+    "rule": "Component code consumes only select.* component tokens. Colour tokens alias Semantic roles; geometry and typography tokens alias Primitives because no semantic geometry layer exists. Never consume a primitive or Semantic token directly, and never hardcode a hex or px value that a token already covers.",
+    "dependencies": [
+      {
+        "name": "select.height",
+        "type": "dimension",
+        "cssVar": "--fc-select-height",
+        "alias": "size.control.md",
+        "resolved": "40px",
+        "role": "Control height",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-select-padding-x",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Control horizontal padding",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.radius",
+        "type": "dimension",
+        "cssVar": "--fc-select-radius",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Control corner radius",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-select-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Control border width, inside",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-select-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Value and label font size",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-select-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Value and label line height",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-select-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "Value and helper font weight",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.label-gap",
+        "type": "dimension",
+        "cssVar": "--fc-select-label-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Label-to-control gap",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.helper-gap",
+        "type": "dimension",
+        "cssVar": "--fc-select-helper-gap",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Control-to-helper gap",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.focus.color",
+        "type": "color",
+        "cssVar": "--fc-select-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "Focus ring colour",
+        "usedBy": [
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "select.focus.width",
+        "type": "dimension",
+        "cssVar": "--fc-select-focus-width",
+        "alias": "size.focus-ring.width",
+        "resolved": "2px",
+        "role": "Focus ring stroke width",
+        "usedBy": [
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "select.focus.offset",
+        "type": "dimension",
+        "cssVar": "--fc-select-focus-offset",
+        "alias": "size.focus-ring.offset",
+        "resolved": "2px",
+        "role": "Focus ring offset",
+        "usedBy": [
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "select.focus.radius",
+        "type": "dimension",
+        "cssVar": "--fc-select-focus-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Concentric focus ring radius",
+        "usedBy": [
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "select.background",
+        "type": "color",
+        "cssVar": "--fc-select-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "Control fill in Default, Hover and Error",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "select.border",
+        "type": "color",
+        "cssVar": "--fc-select-border",
+        "alias": "color.border.control",
+        "resolved": "#71717A",
+        "role": "Default control boundary",
+        "usedBy": [
+          "Default",
+          "Default+Focused"
+        ]
+      },
+      {
+        "name": "select.text",
+        "type": "color",
+        "cssVar": "--fc-select-text",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Selected value",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Default+Focused",
+          "Hover+Focused",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "select.border-hover",
+        "type": "color",
+        "cssVar": "--fc-select-border-hover",
+        "alias": "color.border.control-hover",
+        "resolved": "#52525B",
+        "role": "Hovered control boundary",
+        "usedBy": [
+          "Hover",
+          "Hover+Focused"
+        ]
+      },
+      {
+        "name": "select.border-error",
+        "type": "color",
+        "cssVar": "--fc-select-border-error",
+        "alias": "color.border.error",
+        "resolved": "#DC2626",
+        "role": "Invalid control boundary",
+        "usedBy": [
+          "Error",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "select.text-error",
+        "type": "color",
+        "cssVar": "--fc-select-text-error",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "Error message text",
+        "usedBy": [
+          "Error",
+          "Error+Focused"
+        ]
+      },
+      {
+        "name": "select.background-disabled",
+        "type": "color",
+        "cssVar": "--fc-select-background-disabled",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "Disabled control fill",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.border-disabled",
+        "type": "color",
+        "cssVar": "--fc-select-border-disabled",
+        "alias": "color.border.disabled",
+        "resolved": "#E4E4E7",
+        "role": "Disabled control boundary",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.text-disabled",
+        "type": "color",
+        "cssVar": "--fc-select-text-disabled",
+        "alias": "color.content.disabled",
+        "resolved": "#A1A1AA",
+        "role": "Disabled value",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.label.color",
+        "type": "color",
+        "cssVar": "--fc-select-label-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "Label text, including disabled",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.label.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-select-label-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Label weight",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.helper.color",
+        "type": "color",
+        "cssVar": "--fc-select-helper-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "Helper text",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.helper.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-select-helper-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Helper and error message font size",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      },
+      {
+        "name": "select.helper.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-select-helper-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Helper and error message line height",
+        "usedBy": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "select.background",
+        "foreground": "select.text",
+        "border": "select.border",
+        "label": "select.label.color",
+        "helper": "select.helper.color",
+        "ring": null
+      },
+      {
+        "state": "Hover",
+        "background": "select.background",
+        "foreground": "select.text",
+        "border": "select.border-hover",
+        "label": "select.label.color",
+        "helper": "select.helper.color",
+        "ring": null
+      },
+      {
+        "state": "Error",
+        "background": "select.background",
+        "foreground": "select.text",
+        "border": "select.border-error",
+        "label": "select.label.color",
+        "helper": "select.text-error",
+        "ring": null,
+        "notes": "The message row carries the error copy and remains visible."
+      },
+      {
+        "state": "Disabled",
+        "background": "select.background-disabled",
+        "foreground": "select.text-disabled",
+        "border": "select.border-disabled",
+        "label": "select.label.color",
+        "helper": "select.helper.color",
+        "ring": null,
+        "notes": "Disabled wins over Error, Hover and Focused."
+      },
+      {
+        "state": "Default+Focused",
+        "background": "select.background",
+        "foreground": "select.text",
+        "border": "select.border",
+        "label": "select.label.color",
+        "helper": "select.helper.color",
+        "ring": "select.focus.color"
+      },
+      {
+        "state": "Hover+Focused",
+        "background": "select.background",
+        "foreground": "select.text",
+        "border": "select.border-hover",
+        "label": "select.label.color",
+        "helper": "select.helper.color",
+        "ring": "select.focus.color"
+      },
+      {
+        "state": "Error+Focused",
+        "background": "select.background",
+        "foreground": "select.text",
+        "border": "select.border-error",
+        "label": "select.label.color",
+        "helper": "select.text-error",
+        "ring": "select.focus.color"
+      },
+      {
+        "state": "Disabled+Focused",
+        "background": "select.background-disabled",
+        "foreground": "select.text-disabled",
+        "border": "select.border-disabled",
+        "label": "select.label.color",
+        "helper": "select.helper.color",
+        "ring": null,
+        "notes": "Focused is ignored; no ring is rendered."
+      }
+    ],
+    "forbidden": [
+      "Do not consume color.*, space.*, radius.*, font.* or size.* directly in Select code.",
+      "Do not hardcode #FFFFFF, #71717A, #52525B, #DC2626, #991B1B, #E4E4E7, #A1A1AA, #3F3F46, #18181B, 40px, 12px, 6px, 8px, 4px, 1px or 2px when a select.* token exists.",
+      "Do not introduce select.success.*, select.warning.*, select.readonly.* or select.icon.* tokens.",
+      "Do not reuse input.* or button.* tokens for Select; Select has its own select.* set.",
+      "Do not override tokens per instance; theme overrides belong at the token layer."
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "The control is 40px high, above the 24px minimum target.",
+        "verification": "Measure the rendered control height at 100% zoom."
+      },
+      {
+        "id": "focus-indicator",
+        "requirement": "Focus is a 2px ring at a 2px offset with an 8px concentric radius and at least 3:1 against the adjacent surface.",
+        "verification": "Inspect the overlay geometry and measure select.focus.color on supported surfaces."
+      },
+      {
+        "id": "text-contrast",
+        "requirement": "Value, label, helper and error text meet 4.5:1 on supported surfaces.",
+        "verification": "Recompute the contrast matrix from resolved token values."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Every select has a programmatic label association, normally <label for> or aria-labelledby. The label text is the accessible name.",
+        "verification": "Assert the computed accessible name and the label/control association."
+      },
+      {
+        "id": "error-not-colour-only",
+        "requirement": "Error combines aria-invalid, a distinct border and a text message referenced by aria-describedby.",
+        "verification": "Inspect the accessibility tree and grayscale rendering."
+      },
+      {
+        "id": "native-disabled",
+        "requirement": "Use native disabled rather than aria-disabled so the control leaves the tab order and interaction.",
+        "verification": "Confirm the control cannot be focused or changed while disabled."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "select.text",
+        "background": "select.background",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 17.72
+        },
+        "status": "pass",
+        "notes": "Selected value on the control fill."
+      },
+      {
+        "role": "text",
+        "foreground": "select.label.color",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 10.44
+        },
+        "status": "pass",
+        "notes": "Label on the page surface."
+      },
+      {
+        "role": "text",
+        "foreground": "select.helper.color",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 7.73
+        },
+        "status": "pass",
+        "notes": "Helper copy on the page surface."
+      },
+      {
+        "role": "text",
+        "foreground": "select.text-error",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 8.31
+        },
+        "status": "pass",
+        "notes": "Error copy on the page surface."
+      },
+      {
+        "role": "non-text",
+        "foreground": "select.border",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 4.83
+        },
+        "status": "pass",
+        "notes": "Control boundary on the page surface."
+      },
+      {
+        "role": "non-text",
+        "foreground": "select.border-hover",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 7.73
+        },
+        "status": "pass",
+        "notes": "Hovered boundary on the page surface."
+      },
+      {
+        "role": "non-text",
+        "foreground": "select.border-error",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 4.83
+        },
+        "status": "pass",
+        "notes": "Invalid boundary on the page surface."
+      },
+      {
+        "role": "non-text",
+        "foreground": "select.focus.color",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 5.17
+        },
+        "status": "pass",
+        "notes": "Focus ring on the page surface."
+      },
+      {
+        "role": "text",
+        "foreground": "select.text-disabled",
+        "background": "select.background-disabled",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 2.02
+        },
+        "status": "exempt",
+        "notes": "Inactive control; WCAG 1.4.3 and 1.4.11 exclude disabled controls."
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout-only wrappers for width, grid placement and external spacing.",
+      "Additional native attributes such as name, required and aria-* through the application."
+    ],
+    "forbidden": [
+      "Overriding select.* colours, typography, radius, height, border or focus treatment per instance.",
+      "Replacing the native select with a custom listbox while claiming this contract."
+    ],
+    "themeOverrides": [
+      "Theme overrides belong at the token layer and require contrast revalidation.",
+      "Any dark or inverse theme must add surface-specific select.* tokens first."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<label class=\"fc-select__label\" for=\"account-type\">Account type</label> inside .fc-select, with .fc-select__control wrapping the native select."
+    ],
+    "forbidden": [
+      "Do not nest a select inside a button or a link.",
+      "Do not use Select as a menu or navigation control."
+    ],
+    "example": "<div class=\"fc-select\"><label class=\"fc-select__label\" for=\"account-type\">Account type</label><div class=\"fc-select__control\"><select class=\"fc-select__field\" id=\"account-type\"><option>Checking</option><option>Savings</option></select></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "missing-label",
+      "configuration": "A select with no label or programmatic name.",
+      "why": "The control has no accessible name.",
+      "correct": "Always render a label associated by for/id, or an equivalent aria-labelledby."
+    },
+    {
+      "id": "colour-only-error",
+      "configuration": "An error shown only as a red border.",
+      "why": "Colour alone is not an accessible error signal.",
+      "correct": "Set aria-invalid and render the error message in the message row."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled renders",
+        "when": "the stylesheet is applied",
+        "then": "each state uses the matching select.* tokens and no literals."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "native-change",
+        "given": "an enabled select",
+        "when": "the user chooses an option",
+        "then": "the native change event fires and the selected value updates."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled select",
+        "when": "the accessibility tree is inspected",
+        "then": "the label text is the accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "the select stylesheet",
+        "when": "it is scanned for variables",
+        "then": "every custom property resolves to a select.* component token."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-ring",
+        "given": "keyboard focus on an enabled select",
+        "when": "focus-visible applies",
+        "then": "the ring renders and it is suppressed when disabled."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Select in v0.1.",
+      "impact": "There is no design-side verification evidence.",
+      "mitigation": "Treat the token block and CSS as the canonical source until a Figma set is published."
+    },
+    {
+      "id": "native-only",
+      "limitation": "Only the native single-value select is supported.",
+      "impact": "Search, multi-select and rich option rendering are unavailable.",
+      "mitigation": "Use a future combobox or multi-select component."
+    },
+    {
+      "id": "inverse-unsupported",
+      "limitation": "Select is not specified for inverse or dark surfaces.",
+      "impact": "Placing it on an inverse surface may fail contrast.",
+      "mitigation": "Stay on default, canvas, subtle, muted or raised; add surface tokens before supporting inverse."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/select/select.css, then the select tokens in tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only select.* component tokens in Select code.",
+      "Keep the native select and the associated label.",
+      "Never communicate an error with colour alone."
+    ],
+    "uncertaintyPolicy": [
+      "If a required state or token is missing, stop and request a contract update rather than hardcoding a value."
+    ],
+    "definitionOfDone": [
+      "The select renders all four states from select.* tokens.",
+      "The label association and error message association are present.",
+      "The focus ring is visible for keyboard focus and suppressed when disabled."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native select",
+        "language": "html",
+        "code": "<div class=\"fc-select\"><label class=\"fc-select__label\" for=\"currency\">Currency</label><div class=\"fc-select__control\"><select class=\"fc-select__field\" id=\"currency\"><option>USD</option><option>EUR</option></select></div></div>",
+        "explanation": "Uses the canonical classes, a programmatic label and a native select."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Select without a label",
+        "language": "html",
+        "code": "<select class=\"fc-select__field\"><option>USD</option></select>",
+        "explanation": "The control has no accessible name and is missing the control wrapper."
+      }
+    ]
+  }
+}

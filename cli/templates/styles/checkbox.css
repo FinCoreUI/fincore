@@ -1,0 +1,181 @@
+/*
+ * FinCore Checkbox — production styles for a native <input type="checkbox">.
+ * Contract: components/checkbox/contract.json (1.0.0)
+ *
+ * Consumes only --fc-checkbox-* component tokens from tokens/dist/tokens.css.
+ * State precedence: Disabled > Error > Hover > Default.
+ * Focus is an independent overlay, shown for keyboard/pointer focus and
+ * suppressed by the native disabled attribute.
+ */
+
+.fc-checkbox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+}
+
+.fc-checkbox__body {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--fc-checkbox-label-gap);
+  cursor: pointer;
+}
+
+.fc-checkbox__body--disabled {
+  cursor: not-allowed;
+}
+
+.fc-checkbox__control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--fc-checkbox-size);
+  height: var(--fc-checkbox-size);
+  flex-shrink: 0;
+  margin-block-start: calc((var(--fc-checkbox-line-height) - var(--fc-checkbox-size)) / 2);
+}
+
+.fc-checkbox__field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+  z-index: 1;
+}
+
+.fc-checkbox__box {
+  box-sizing: border-box;
+  width: var(--fc-checkbox-size);
+  height: var(--fc-checkbox-size);
+  border: var(--fc-checkbox-border-width) solid var(--fc-checkbox-border);
+  border-radius: var(--fc-checkbox-radius);
+  background-color: var(--fc-checkbox-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 120ms ease, border-color 120ms ease;
+  pointer-events: none;
+}
+
+.fc-checkbox__icon {
+  display: none;
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: var(--fc-checkbox-foreground-checked);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fc-checkbox__field:checked ~ .fc-checkbox__box {
+  background-color: var(--fc-checkbox-background-checked);
+  border-color: var(--fc-checkbox-background-checked);
+}
+
+.fc-checkbox__field:checked ~ .fc-checkbox__box .fc-checkbox__icon {
+  display: block;
+}
+
+/* Hover is below Error and Disabled in the precedence chain. */
+.fc-checkbox__field:not(:disabled):hover ~ .fc-checkbox__box {
+  border-color: var(--fc-checkbox-border-hover);
+}
+
+.fc-checkbox__field:checked:not(:disabled):hover ~ .fc-checkbox__box {
+  border-color: var(--fc-checkbox-background-checked);
+}
+
+/* Error state keyed to aria-invalid */
+.fc-checkbox__field[aria-invalid="true"]:not(:disabled) ~ .fc-checkbox__box {
+  border-color: var(--fc-checkbox-border-error);
+}
+
+/* Disabled wins over Hover, Error and Focus */
+.fc-checkbox__field:disabled ~ .fc-checkbox__box {
+  border-color: var(--fc-checkbox-border-disabled);
+  background-color: var(--fc-checkbox-background-disabled);
+}
+
+.fc-checkbox__field:disabled ~ .fc-checkbox__box .fc-checkbox__icon {
+  stroke: var(--fc-checkbox-text-disabled);
+}
+
+.fc-checkbox__label {
+  margin: 0;
+  color: var(--fc-checkbox-label-color);
+  font-size: var(--fc-checkbox-font-size);
+  font-weight: var(--fc-checkbox-label-font-weight);
+  line-height: var(--fc-checkbox-line-height);
+  user-select: none;
+}
+
+.fc-checkbox__label--disabled {
+  color: var(--fc-checkbox-text-disabled);
+}
+
+.fc-checkbox__label--visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fc-checkbox__message {
+  margin: 0;
+  margin-block-start: var(--fc-checkbox-helper-gap);
+  color: var(--fc-checkbox-helper-color);
+  font-size: var(--fc-checkbox-helper-font-size);
+  font-weight: var(--fc-checkbox-font-weight);
+  line-height: var(--fc-checkbox-helper-line-height);
+  padding-inline-start: calc(var(--fc-checkbox-size) + var(--fc-checkbox-label-gap));
+}
+
+.fc-checkbox__message--error {
+  color: var(--fc-checkbox-text-error);
+}
+
+/* Focus ring overlay */
+.fc-checkbox__control::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--fc-checkbox-focus-offset));
+  border: var(--fc-checkbox-focus-width) solid transparent;
+  border-radius: var(--fc-checkbox-focus-radius);
+  pointer-events: none;
+}
+
+.fc-checkbox__control:has(.fc-checkbox__field:focus-visible)::after {
+  border-color: var(--fc-checkbox-focus-color);
+}
+
+.fc-checkbox__control:has(.fc-checkbox__field:disabled)::after {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .fc-checkbox__box {
+    border-color: ButtonText;
+  }
+
+  .fc-checkbox__control::after {
+    display: none;
+  }
+
+  .fc-checkbox__control:has(.fc-checkbox__field:focus-visible)::after {
+    display: block;
+    border-color: Highlight;
+  }
+}
+

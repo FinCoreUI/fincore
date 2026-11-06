@@ -1,0 +1,803 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.date-picker",
+    "name": "DatePicker",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0-alpha.2",
+    "summary": "FinCore native DatePicker input: label + date control wrapper + native calendar picker/segment affordances + helper/error message, four states, independent focus ring and only date-picker.* component tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring Input canonical patterns for date-picker input.",
+        "The token block was added to tokens/tokens.json and generated into tokens/dist/tokens.css; node tokens/check.mjs passed with date-picker.* component tokens.",
+        "The stylesheet consumes only variables generated from date-picker.* component tokens.",
+        "No Figma component set exists for DatePicker in v0.1, so canonical.figma is null and no design-evidence claims are made."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the DatePicker field anatomy: label, control container with native date input, calendar trigger styling, and helper/error row.",
+      "Apply only date-picker.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay around the control wrapper when focused.",
+      "Support native date picker interaction and min/max date limits."
+    ],
+    "application": [
+      "Supply the label, selected date value, and optional min/max range constraints.",
+      "Own validation: decide when an entered date is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Currency in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Date of birth, transaction date filters, payment scheduled dates, statement periods, and maturity dates."
+    ],
+    "inappropriate": [
+      {
+        "use": "Free-form text input or non-date numeric values.",
+        "reason": "DatePicker is tailored specifically for standardized ISO date formats (YYYY-MM-DD).",
+        "alternative": "Use Input."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Control wrapper: flex container housing the native date field and calendar indicator.",
+      "Field: 40px height, formatted date entry.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [
+      {
+        "property": "control height",
+        "value": "40px",
+        "token": "date-picker.height"
+      },
+      {
+        "property": "horizontal padding",
+        "value": "12px",
+        "token": "date-picker.padding-x"
+      },
+      {
+        "property": "corner radius",
+        "value": "6px",
+        "token": "date-picker.radius"
+      },
+      {
+        "property": "border width",
+        "value": "1px",
+        "token": "date-picker.border-width"
+      },
+      {
+        "property": "icon size",
+        "value": "16px",
+        "token": "date-picker.icon-size"
+      },
+      {
+        "property": "label gap",
+        "value": "8px",
+        "token": "date-picker.label-gap"
+      },
+      {
+        "property": "helper gap",
+        "value": "4px",
+        "token": "date-picker.helper-gap"
+      },
+      {
+        "property": "focus ring width",
+        "value": "2px",
+        "token": "date-picker.focus.width"
+      },
+      {
+        "property": "focus ring offset",
+        "value": "2px",
+        "token": "date-picker.focus.offset"
+      },
+      {
+        "property": "focus ring radius",
+        "value": "8px",
+        "token": "date-picker.focus.radius"
+      }
+    ],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Label",
+      "figmaType": "TEXT",
+      "figmaDefault": "Date",
+      "required": true,
+      "description": "Visible label for the DatePicker control.",
+      "translation": "direct",
+      "production": {
+        "prop": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "derived": false,
+        "notes": "Accessible name for the DatePicker input."
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "id",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Stable id used for the label association and message references.",
+      "notes": "Generated if omitted."
+    },
+    {
+      "prop": "prefix",
+      "type": "string",
+      "default": "\"$\"",
+      "required": false,
+      "description": "Currency prefix symbol.",
+      "notes": "Defaults to \"$\"."
+    },
+    {
+      "prop": "suffix",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Currency suffix code, e.g., \"USD\".",
+      "notes": "Optional currency ISO code."
+    },
+    {
+      "prop": "value",
+      "type": "string | number",
+      "default": null,
+      "required": false,
+      "description": "Controlled amount value.",
+      "notes": "Formatted or numeric amount."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and displays error message.",
+      "notes": "Application owns error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Replaced by error message."
+    },
+    {
+      "prop": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "required": false,
+      "description": "Controls the size variant (sm, md, lg).",
+      "notes": "Applies corresponding size modifier class."
+    },
+    {
+      "prop": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Applies loading state and sets aria-busy=\"true\".",
+      "notes": "Suppresses interactions while loading."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "date-picker.height",
+        "date-picker.padding-x",
+        "date-picker.radius",
+        "date-picker.border-width",
+        "date-picker.font-size",
+        "date-picker.line-height",
+        "date-picker.font-weight",
+        "date-picker.label-gap",
+        "date-picker.helper-gap",
+        "date-picker.icon-size",
+        "date-picker.focus.color",
+        "date-picker.focus.width",
+        "date-picker.focus.offset",
+        "date-picker.focus.radius",
+        "date-picker.background",
+        "date-picker.border",
+        "date-picker.text",
+        "date-picker.placeholder",
+        "date-picker.icon-color",
+        "date-picker.border-hover",
+        "date-picker.border-error",
+        "date-picker.text-error",
+        "date-picker.background-disabled",
+        "date-picker.border-disabled",
+        "date-picker.text-disabled",
+        "date-picker.label.color",
+        "date-picker.label.font-weight",
+        "date-picker.helper.color",
+        "date-picker.helper.font-size",
+        "date-picker.helper.line-height"
+      ],
+      "notes": "Runtime token surface."
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "Component code consumes only currency.* component tokens.",
+    "dependencies": [
+      {
+        "name": "date-picker.height",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-height",
+        "alias": "size.control.md",
+        "resolved": "40px",
+        "role": "DatePicker height",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-padding-x",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "DatePicker padding-x",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.radius",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-radius",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "DatePicker radius",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "DatePicker border-width",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "DatePicker font-size",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "DatePicker line-height",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-date-picker-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "DatePicker font-weight",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.label-gap",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-label-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "DatePicker label-gap",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.helper-gap",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-helper-gap",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "DatePicker helper-gap",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.icon-size",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-icon-size",
+        "alias": "space.4",
+        "resolved": "16px",
+        "role": "DatePicker icon-size",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.focus.color",
+        "type": "color",
+        "cssVar": "--fc-date-picker-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "DatePicker focus.color",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.focus.width",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-focus-width",
+        "alias": "size.focus-ring.width",
+        "resolved": "2px",
+        "role": "DatePicker focus.width",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.focus.offset",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-focus-offset",
+        "alias": "size.focus-ring.offset",
+        "resolved": "2px",
+        "role": "DatePicker focus.offset",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.focus.radius",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-focus-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "DatePicker focus.radius",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.background",
+        "type": "color",
+        "cssVar": "--fc-date-picker-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "DatePicker background",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.border",
+        "type": "color",
+        "cssVar": "--fc-date-picker-border",
+        "alias": "color.border.control",
+        "resolved": "#71717A",
+        "role": "DatePicker border",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.text",
+        "type": "color",
+        "cssVar": "--fc-date-picker-text",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "DatePicker text",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.placeholder",
+        "type": "color",
+        "cssVar": "--fc-date-picker-placeholder",
+        "alias": "color.content.tertiary",
+        "resolved": "#71717A",
+        "role": "DatePicker placeholder",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.icon-color",
+        "type": "color",
+        "cssVar": "--fc-date-picker-icon-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "DatePicker icon-color",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.border-hover",
+        "type": "color",
+        "cssVar": "--fc-date-picker-border-hover",
+        "alias": "color.border.control-hover",
+        "resolved": "#52525B",
+        "role": "DatePicker border-hover",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.border-error",
+        "type": "color",
+        "cssVar": "--fc-date-picker-border-error",
+        "alias": "color.border.error",
+        "resolved": "#DC2626",
+        "role": "DatePicker border-error",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.text-error",
+        "type": "color",
+        "cssVar": "--fc-date-picker-text-error",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "DatePicker text-error",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.background-disabled",
+        "type": "color",
+        "cssVar": "--fc-date-picker-background-disabled",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "DatePicker background-disabled",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.border-disabled",
+        "type": "color",
+        "cssVar": "--fc-date-picker-border-disabled",
+        "alias": "color.border.disabled",
+        "resolved": "#E4E4E7",
+        "role": "DatePicker border-disabled",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.text-disabled",
+        "type": "color",
+        "cssVar": "--fc-date-picker-text-disabled",
+        "alias": "color.content.disabled",
+        "resolved": "#A1A1AA",
+        "role": "DatePicker text-disabled",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.label.color",
+        "type": "color",
+        "cssVar": "--fc-date-picker-label-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "DatePicker label.color",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.label.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-date-picker-label-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "DatePicker label.font-weight",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.helper.color",
+        "type": "color",
+        "cssVar": "--fc-date-picker-helper-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "DatePicker helper.color",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.helper.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-helper-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "DatePicker helper.font-size",
+        "usedBy": [
+          "field"
+        ]
+      },
+      {
+        "name": "date-picker.helper.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-date-picker-helper-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "DatePicker helper.line-height",
+        "usedBy": [
+          "field"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "date-picker.background",
+        "border": "date-picker.border",
+        "foreground": "date-picker.text",
+        "placeholder": "date-picker.placeholder",
+        "label": "date-picker.label.color",
+        "helper": "date-picker.helper.color",
+        "ring": null
+      },
+      {
+        "state": "Hover",
+        "background": "date-picker.background",
+        "border": "date-picker.border-hover",
+        "foreground": "date-picker.text",
+        "placeholder": "date-picker.placeholder",
+        "label": "date-picker.label.color",
+        "helper": "date-picker.helper.color",
+        "ring": null
+      },
+      {
+        "state": "Error",
+        "background": "date-picker.background",
+        "border": "date-picker.border-error",
+        "foreground": "date-picker.text-error",
+        "placeholder": "date-picker.placeholder",
+        "label": "date-picker.label.color",
+        "helper": "date-picker.text-error",
+        "ring": null
+      },
+      {
+        "state": "Disabled",
+        "background": "date-picker.background-disabled",
+        "border": "date-picker.border-disabled",
+        "foreground": "date-picker.text-disabled",
+        "placeholder": "date-picker.placeholder",
+        "label": "date-picker.label.color",
+        "helper": "date-picker.helper.color",
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Do not consume color.* or space.* directly in Currency code."
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Control is 40px high, meeting target requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Input field has programmatic label association.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "date-picker.text",
+        "background": "date-picker.background",
+        "minimum": 4.5,
+        "ratios": {
+          "light": 16.12
+        },
+        "status": "pass",
+        "notes": "Primary text on default surface."
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-currency",
+      "configuration": "Currency input without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "amount-input",
+        "given": "an enabled currency input",
+        "when": "amount is typed",
+        "then": "value is formatted as currency."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled currency input",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "currency css",
+        "when": "inspected",
+        "then": "only currency.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible around control wrapper."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Currency in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/currency/currency.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only currency.* tokens in Currency code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native currency input",
+        "language": "html",
+        "code": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amount\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amount\" /><span class=\"fc-currency__suffix\">USD</span></div></div>",
+        "explanation": "Valid currency composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled currency input",
+        "language": "html",
+        "code": "<input class=\"fc-currency__field\" />",
+        "explanation": "Missing container, control wrapper, prefix and label."
+      }
+    ]
+  }
+}

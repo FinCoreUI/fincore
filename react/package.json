@@ -1,0 +1,55 @@
+{
+  "name": "@weft-ui/react",
+  "version": "0.1.0-alpha.2",
+  "description": "Weft React component library",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./phone-input": {
+      "types": "./dist/phone-input.d.ts",
+      "import": "./dist/phone-input.js"
+    },
+    "./styles/button.css": "./dist/styles/button.css",
+    "./styles/input.css": "./dist/styles/input.css",
+    "./styles/password-input.css": "./dist/styles/password-input.css",
+    "./styles/phone-input.css": "./dist/styles/phone-input.css",
+    "./styles/tokens.css": "./dist/styles/tokens.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "libphonenumber-js": ">=1.10.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "libphonenumber-js": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "jsdom": "^25.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsup": "^6.7.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.6.3"
+  },
+  "scripts": {
+    "build": "tsup && node scripts/copy-assets.mjs",
+    "test": "node --import tsx --test test/*.test.tsx",
+    "typecheck": "tsc --noEmit"
+  }
+}

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore CVV — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./cvv.css">
+</head>
+<body>
+  <main>
+    <h1>CVV Input reference markup</h1>
+    <p>
+      Masked card security code (CVV/CVC) input: label, control wrapper with short width, letter spacing, length restriction (3 or 4 digits), optional toggle, and helper/error row.
+    </p>
+
+    <section aria-labelledby="cvv-default">
+      <h2 id="cvv-default">Default with helper</h2>
+
+      <div class="fc-cvv">
+        <label class="fc-cvv__label" for="card-cvv">Security code (CVV)</label>
+        <div class="fc-cvv__control">
+          <input
+            type="password"
+            inputmode="numeric"
+            class="fc-cvv__field"
+            id="card-cvv"
+            name="cvv"
+            maxlength="4"
+            placeholder="•••"
+            autocomplete="cc-csc"
+            aria-describedby="card-cvv-helper"
+            required
+          >
+        </div>
+        <p class="fc-cvv__message" id="card-cvv-helper">
+          3 digits on back of card (4 digits on front for Amex).
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="cvv-toggle">
+      <h2 id="cvv-toggle">With visibility toggle</h2>
+
+      <div class="fc-cvv">
+        <label class="fc-cvv__label" for="card-cvv-toggle">CVV</label>
+        <div class="fc-cvv__control">
+          <input
+            type="password"
+            inputmode="numeric"
+            class="fc-cvv__field fc-cvv__field--with-toggle"
+            id="card-cvv-toggle"
+            name="cvv"
+            maxlength="4"
+            placeholder="•••"
+            autocomplete="cc-csc"
+          >
+          <button type="button" class="fc-cvv__toggle" aria-label="Show CVV">
+            Show
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="cvv-error">
+      <h2 id="cvv-error">Error state</h2>
+
+      <div class="fc-cvv">
+        <label class="fc-cvv__label" for="card-cvv-error">Security code</label>
+        <div class="fc-cvv__control">
+          <input
+            type="password"
+            inputmode="numeric"
+            class="fc-cvv__field"
+            id="card-cvv-error"
+            name="cvv"
+            maxlength="4"
+            aria-invalid="true"
+            aria-describedby="card-cvv-error-msg"
+            value="12"
+          >
+        </div>
+        <p class="fc-cvv__message fc-cvv__message--error" id="card-cvv-error-msg">
+          Security code must be 3 or 4 digits.
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+

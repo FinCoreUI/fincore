@@ -1,0 +1,163 @@
+/*
+ * FinCore Select — production styles for a native <select>.
+ * Contract: components/select/contract.json (1.0.0)
+ *
+ * Consumes only --fc-select-* component tokens from tokens/dist/tokens.css.
+ * State precedence: Disabled > Error > Hover > Default.
+ * Focus is an independent overlay, shown for keyboard/pointer focus and
+ * suppressed by the native disabled attribute.
+ *
+ * The application owns validation, error copy, aria-invalid, the error
+ * association and announcement. The visible error border is keyed to
+ * aria-invalid="true" so the visual and semantic error states cannot drift.
+ */
+
+.fc-select {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+}
+
+.fc-select__label {
+  margin: 0;
+  margin-block-end: var(--fc-select-label-gap);
+  color: var(--fc-select-label-color);
+  font-size: var(--fc-select-font-size);
+  font-weight: var(--fc-select-label-font-weight);
+  line-height: var(--fc-select-line-height);
+}
+
+/*
+ * Visually hidden, never removed. The label remains the accessible name and
+ * keeps its for/id association when hideLabel is requested.
+ */
+.fc-select__label--visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fc-select__control {
+  position: relative;
+  min-width: 0;
+}
+
+.fc-select__field {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--fc-select-height);
+  margin: 0;
+  padding-block: calc(
+    (var(--fc-select-height) - var(--fc-select-line-height) - (2 * var(--fc-select-border-width))) / 2
+  );
+  padding-inline: var(--fc-select-padding-x);
+  border: var(--fc-select-border-width) solid var(--fc-select-border);
+  border-radius: var(--fc-select-radius);
+  background-color: var(--fc-select-background);
+  color: var(--fc-select-text);
+  font-family: inherit;
+  font-size: var(--fc-select-font-size);
+  font-weight: var(--fc-select-font-weight);
+  line-height: var(--fc-select-line-height);
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Hover is below Error and Disabled in the precedence chain. */
+.fc-select__field:not(:disabled):hover {
+  border-color: var(--fc-select-border-hover);
+}
+
+/*
+ * Error is rendered only with the application-owned aria-invalid state.
+ * The application must also render the error message; never a red border alone.
+ */
+.fc-select__field[aria-invalid="true"]:not(:disabled) {
+  border-color: var(--fc-select-border-error);
+}
+
+/* Disabled wins over Hover, Error and Focus. */
+.fc-select__field:disabled {
+  border-color: var(--fc-select-border-disabled);
+  background-color: var(--fc-select-background-disabled);
+  color: var(--fc-select-text-disabled);
+  cursor: not-allowed;
+}
+
+.fc-select__message {
+  margin: 0;
+  margin-block-start: var(--fc-select-helper-gap);
+  color: var(--fc-select-helper-color);
+  font-size: var(--fc-select-helper-font-size);
+  font-weight: var(--fc-select-font-weight);
+  line-height: var(--fc-select-helper-line-height);
+}
+
+.fc-select__message--error {
+  color: var(--fc-select-text-error);
+}
+
+/* The ring is a sibling overlay around the control, not a fifth state. */
+.fc-select__control::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--fc-select-focus-offset));
+  border: var(--fc-select-focus-width) solid transparent;
+  border-radius: var(--fc-select-focus-radius);
+  pointer-events: none;
+}
+
+.fc-select__field:focus {
+  outline: none;
+}
+
+.fc-select__control:has(.fc-select__field:focus-visible)::after {
+  border-color: var(--fc-select-focus-color);
+}
+
+.fc-select__control:has(.fc-select__field:disabled)::after {
+  display: none;
+}
+
+/* Preserve a visible boundary and focus indicator with system colours. */
+@media (forced-colors: active) {
+  .fc-select__field {
+    border-color: ButtonText;
+  }
+
+  .fc-select__control::after {
+    display: none;
+  }
+
+  .fc-select__control:has(.fc-select__field:focus-visible)::after {
+    display: block;
+    border-color: Highlight;
+  }
+}
+
+/* Size variants */
+.fc-select--sm .fc-select__field {
+  min-height: calc(var(--fc-select-height) - var(--fc-select-label-gap));
+  padding-block: calc((var(--fc-select-height) - var(--fc-select-label-gap) - var(--fc-select-line-height)) / 2);
+}
+
+.fc-select--lg .fc-select__field {
+  min-height: calc(var(--fc-select-height) + var(--fc-select-label-gap));
+  padding-block: calc((var(--fc-select-height) + var(--fc-select-label-gap) - var(--fc-select-line-height)) / 2);
+}
+
+/* Loading state */
+.fc-select--loading,
+.fc-select[aria-busy="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}

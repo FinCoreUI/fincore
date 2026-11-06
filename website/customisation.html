@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Customisation — Sorleed</title>
+  <meta name="description" content="How to customise Sorleed tokens and source without breaking contracts, states or accessibility.">
+  <link rel="stylesheet" href="../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/input/input.css">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="customisation">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="index.html" data-page="overview">Overview</a></li>
+          <li><a href="getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="components.html" data-page="components">Components</a></li>
+          <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="cli.html" data-page="cli">CLI</a></li>
+          <li><a href="customisation.html" data-page="customisation">Customisation</a></li>
+          <li><a href="accessibility.html" data-page="accessibility">Accessibility</a></li>
+          <li><a href="ai.html" data-page="ai">AI</a></li>
+          <li><a href="limitations.html" data-page="limits">Limits</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="On this page">
+        <h2>On this page</h2>
+        <ul>
+          <li><a href="#principles">Principles</a></li>
+          <li><a href="#tokens">Token overrides</a></li>
+          <li><a href="#source">Source edits</a></li>
+          <li><a href="#brand">Brand palette</a></li>
+          <li><a href="#forbidden">What not to do</a></li>
+        </ul>
+      </aside>
+
+      <div class="content">
+        <h1>Customisation</h1>
+        <p class="lede">Sorleed is designed to be owned. Customise at the token layer or by editing copied source. Keep the contracts intact.</p>
+
+        <h2 id="principles">Principles</h2>
+        <ol>
+          <li><strong>Override semantic roles, not component internals.</strong> Component CSS should keep consuming <code>--sl-button-*</code>, <code>--sl-input-*</code> and <code>--sl-phone-input-*</code>.</li>
+          <li><strong>Keep the alias chain.</strong> A component token aliases a semantic role; a semantic role aliases a primitive.</li>
+          <li><strong>Revalidate contrast.</strong> Every colour change affects text, boundary, focus or error contrast.</li>
+          <li><strong>Edit your copy.</strong> With the CLI, the source is yours. Re-running the CLI will not overwrite it.</li>
+        </ol>
+
+        <h2 id="tokens">Token overrides</h2>
+        <pre><code>/* app-theme.css — load after tokens.css */
+:root {
+  --sl-color-content-primary: #111827;
+  --sl-color-border-focus: #0f766e;
+  --sl-color-surface-muted: #f3f4f6;
+}</code></pre>
+        <p>For a compiled package, import the Sorleed stylesheets first and the theme layer second:</p>
+        <pre><code>import "@sorleed/react/styles/tokens.css";
+import "@sorleed/react/styles/button.css";
+import "./app-theme.css";</code></pre>
+
+        <h2 id="source">Source edits</h2>
+        <p>With the CLI, the copied files are ordinary source:</p>
+        <pre><code>components/sorleed/button/index.tsx
+styles/sorleed/button.css
+styles/sorleed/tokens.css</code></pre>
+        <p>You can change layout, copy and composition. If you add a new visual state, record it in a new contract and test it. Do not add an undocumented state to an existing component.</p>
+
+        <h2 id="brand">Brand palette</h2>
+        <p>Sorleed does not force a brand palette. The shipped palette is a reference implementation. To use your own:</p>
+        <ol>
+          <li>Map your brand colours to the semantic roles you need.</li>
+          <li>Keep component tokens as aliases to those roles.</li>
+          <li>Run <code>node tokens/check.mjs</code> if you maintain a local token source.</li>
+          <li>Check focus, boundary, text and error contrast in the browser.</li>
+        </ol>
+        <div class="demo">
+          <div class="demo__surface">
+            <p style="margin-top:0;"><strong>Example override</strong></p>
+            <div style="padding: 1rem; border-radius: 8px; background: #0f766e; color: #ffffff;">A brand surface using a custom colour, not a Sorleed token claim.</div>
+          </div>
+        </div>
+
+        <h2 id="forbidden">What not to do</h2>
+        <ul>
+          <li>Do not consume primitive or semantic tokens from component CSS.</li>
+          <li>Do not add <code>success</code>, <code>warning</code>, <code>info</code> or <code>loading</code> states that the contract does not define.</li>
+          <li>Do not simulate dark mode by inverting values.</li>
+          <li>Do not force a default country or use IP geolocation.</li>
+          <li>Do not claim a phone number is reachable, active or owned.</li>
+          <li>Do not replace native controls with inaccessible custom widgets.</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed — UI Infrastructure. MIT licensed. Copyright (c) 2026 Sorleed.</p>
+      <p><a href="../README.md">Repository README</a> · <a href="../PRODUCT.md">Product</a> · <a href="../SECURITY.md">Security</a></p>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>

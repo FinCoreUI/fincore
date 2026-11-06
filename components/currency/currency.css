@@ -1,0 +1,185 @@
+/*
+ * FinCore Currency Input — production styles for formatted currency values.
+ * Contract: components/currency/contract.json (1.0.0)
+ *
+ * Consumes only --fc-currency-* component tokens from tokens/dist/tokens.css.
+ * State precedence: Disabled > Error > Hover > Default.
+ * Focus is an independent overlay, shown for keyboard/pointer focus and
+ * suppressed by the native disabled attribute.
+ */
+
+.fc-currency {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+}
+
+.fc-currency__label {
+  margin: 0;
+  margin-block-end: var(--fc-currency-label-gap);
+  color: var(--fc-currency-label-color);
+  font-size: var(--fc-currency-font-size);
+  font-weight: var(--fc-currency-label-font-weight);
+  line-height: var(--fc-currency-line-height);
+}
+
+.fc-currency__label--visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fc-currency__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--fc-currency-height);
+  padding-inline: var(--fc-currency-padding-x);
+  border: var(--fc-currency-border-width) solid var(--fc-currency-border);
+  border-radius: var(--fc-currency-radius);
+  background-color: var(--fc-currency-background);
+  transition: border-color 120ms ease;
+}
+
+.fc-currency__prefix,
+.fc-currency__suffix {
+  color: var(--fc-currency-affix-color);
+  font-size: var(--fc-currency-font-size);
+  font-weight: var(--fc-currency-font-weight);
+  line-height: var(--fc-currency-line-height);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.fc-currency__prefix {
+  margin-inline-end: var(--fc-currency-affix-gap);
+}
+
+.fc-currency__suffix {
+  margin-inline-start: var(--fc-currency-affix-gap);
+}
+
+.fc-currency__field {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: var(--fc-currency-text);
+  font-family: inherit;
+  font-size: var(--fc-currency-font-size);
+  font-weight: var(--fc-currency-font-weight);
+  line-height: var(--fc-currency-line-height);
+  text-align: right;
+  appearance: none;
+}
+
+.fc-currency__field::placeholder {
+  color: var(--fc-currency-placeholder);
+  opacity: 1;
+}
+
+.fc-currency__field:focus {
+  outline: none;
+}
+
+/* Hover below Error and Disabled */
+.fc-currency__control:not(:has(.fc-currency__field:disabled)):hover {
+  border-color: var(--fc-currency-border-hover);
+}
+
+/* Error state keyed to aria-invalid */
+.fc-currency__control:has(.fc-currency__field[aria-invalid="true"]):not(:has(.fc-currency__field:disabled)) {
+  border-color: var(--fc-currency-border-error);
+}
+
+/* Disabled state */
+.fc-currency__control:has(.fc-currency__field:disabled) {
+  border-color: var(--fc-currency-border-disabled);
+  background-color: var(--fc-currency-background-disabled);
+  cursor: not-allowed;
+}
+
+.fc-currency__control:has(.fc-currency__field:disabled) .fc-currency__field,
+.fc-currency__control:has(.fc-currency__field:disabled) .fc-currency__prefix,
+.fc-currency__control:has(.fc-currency__field:disabled) .fc-currency__suffix {
+  color: var(--fc-currency-text-disabled);
+  cursor: not-allowed;
+}
+
+.fc-currency__message {
+  margin: 0;
+  margin-block-start: var(--fc-currency-helper-gap);
+  color: var(--fc-currency-helper-color);
+  font-size: var(--fc-currency-helper-font-size);
+  font-weight: var(--fc-currency-font-weight);
+  line-height: var(--fc-currency-helper-line-height);
+}
+
+.fc-currency__message--error {
+  color: var(--fc-currency-text-error);
+}
+
+/* Focus ring overlay */
+.fc-currency__control::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--fc-currency-focus-offset));
+  border: var(--fc-currency-focus-width) solid transparent;
+  border-radius: var(--fc-currency-focus-radius);
+  pointer-events: none;
+}
+
+.fc-currency__control:has(.fc-currency__field:focus-visible)::after {
+  border-color: var(--fc-currency-focus-color);
+}
+
+.fc-currency__control:has(.fc-currency__field:disabled)::after {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .fc-currency__control {
+    border-color: ButtonText;
+  }
+
+  .fc-currency__control::after {
+    display: none;
+  }
+
+  .fc-currency__control:has(.fc-currency__field:focus-visible)::after {
+    display: block;
+    border-color: Highlight;
+  }
+}
+
+
+/* Size variants */
+.fc-currency--sm .fc-currency__field {
+  min-height: calc(var(--fc-currency-height) - var(--fc-currency-label-gap));
+  padding-block: calc((var(--fc-currency-height) - var(--fc-currency-label-gap) - var(--fc-currency-line-height)) / 2);
+}
+
+.fc-currency--lg .fc-currency__field {
+  min-height: calc(var(--fc-currency-height) + var(--fc-currency-label-gap));
+  padding-block: calc((var(--fc-currency-height) + var(--fc-currency-label-gap) - var(--fc-currency-line-height)) / 2);
+}
+
+/* Loading state */
+.fc-currency--loading,
+.fc-currency[aria-busy="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}

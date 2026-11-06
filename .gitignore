@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files (keep committed templates)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Build output
+# NOTE: tokens/dist/ is intentionally NOT ignored. It is the canonical
+# generated token CSS consumed by components, examples and the CLI.
+react/dist/
+packages/*/dist/
+
+# Test / tooling caches
+coverage/
+.cache/
+.turbo/
+*.tsbuildinfo
+
+# Local editor / OS artefacts
+.idea/
+
+fincore/

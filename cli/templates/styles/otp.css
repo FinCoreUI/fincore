@@ -1,0 +1,139 @@
+/*
+ * FinCore OTP Input — production styles for single-character digit cells.
+ * Contract: components/otp/contract.json (1.0.0)
+ *
+ * Consumes only --fc-otp-* component tokens from tokens/dist/tokens.css.
+ * State precedence: Disabled > Error > Hover > Default.
+ * Focus is an independent overlay, shown for keyboard/pointer focus and
+ * suppressed by the native disabled attribute.
+ */
+
+.fc-otp {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+}
+
+.fc-otp__label {
+  margin: 0;
+  margin-block-end: var(--fc-otp-label-gap);
+  color: var(--fc-otp-label-color);
+  font-size: var(--fc-otp-font-size);
+  font-weight: var(--fc-otp-label-font-weight);
+  line-height: var(--fc-otp-line-height);
+}
+
+.fc-otp__label--visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fc-otp__cells {
+  display: flex;
+  align-items: center;
+  gap: var(--fc-otp-cell-gap);
+}
+
+.fc-otp__cell-wrapper {
+  position: relative;
+  display: inline-flex;
+  width: var(--fc-otp-cell-size);
+  height: var(--fc-otp-cell-size);
+}
+
+.fc-otp__cell {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  border: var(--fc-otp-border-width) solid var(--fc-otp-border);
+  border-radius: var(--fc-otp-radius);
+  background-color: var(--fc-otp-background);
+  color: var(--fc-otp-text);
+  font-family: inherit;
+  font-size: var(--fc-otp-font-size);
+  font-weight: var(--fc-otp-font-weight);
+  line-height: var(--fc-otp-line-height);
+  appearance: none;
+}
+
+/* Hover is below Error and Disabled in precedence */
+.fc-otp__cell:not(:disabled):hover {
+  border-color: var(--fc-otp-border-hover);
+}
+
+/* Error state keyed to aria-invalid */
+.fc-otp__cell[aria-invalid="true"]:not(:disabled) {
+  border-color: var(--fc-otp-border-error);
+}
+
+/* Disabled state */
+.fc-otp__cell:disabled {
+  border-color: var(--fc-otp-border-disabled);
+  background-color: var(--fc-otp-background-disabled);
+  color: var(--fc-otp-text-disabled);
+  cursor: not-allowed;
+}
+
+.fc-otp__message {
+  margin: 0;
+  margin-block-start: var(--fc-otp-helper-gap);
+  color: var(--fc-otp-helper-color);
+  font-size: var(--fc-otp-helper-font-size);
+  font-weight: var(--fc-otp-font-weight);
+  line-height: var(--fc-otp-helper-line-height);
+}
+
+.fc-otp__message--error {
+  color: var(--fc-otp-text-error);
+}
+
+/* Focus ring overlay on each cell */
+.fc-otp__cell-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--fc-otp-focus-offset));
+  border: var(--fc-otp-focus-width) solid transparent;
+  border-radius: var(--fc-otp-focus-radius);
+  pointer-events: none;
+}
+
+.fc-otp__cell:focus {
+  outline: none;
+}
+
+.fc-otp__cell-wrapper:has(.fc-otp__cell:focus-visible)::after {
+  border-color: var(--fc-otp-focus-color);
+}
+
+.fc-otp__cell-wrapper:has(.fc-otp__cell:disabled)::after {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .fc-otp__cell {
+    border-color: ButtonText;
+  }
+
+  .fc-otp__cell-wrapper::after {
+    display: none;
+  }
+
+  .fc-otp__cell-wrapper:has(.fc-otp__cell:focus-visible)::after {
+    display: block;
+    border-color: Highlight;
+  }
+}
+

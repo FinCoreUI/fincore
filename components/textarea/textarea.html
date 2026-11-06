@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore Textarea — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./textarea.css">
+</head>
+<body>
+  <main>
+    <h1>Textarea reference markup</h1>
+    <p>
+      Multi-line input: label, native <code>&lt;textarea&gt;</code> and helper/error row.
+      The application owns validation, error copy, <code>aria-invalid</code>, and descriptions.
+    </p>
+
+    <section aria-labelledby="textarea-default">
+      <h2 id="textarea-default">Default with helper</h2>
+
+      <div class="fc-textarea">
+        <label class="fc-textarea__label" for="transfer-notes">Transfer notes</label>
+        <div class="fc-textarea__control">
+          <textarea
+            class="fc-textarea__field"
+            id="transfer-notes"
+            name="transferNotes"
+            placeholder="Add memo or wire instructions..."
+            aria-describedby="transfer-notes-helper"
+          ></textarea>
+        </div>
+        <p class="fc-textarea__message" id="transfer-notes-helper">
+          Maximum 500 characters.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="textarea-error">
+      <h2 id="textarea-error">Error after failed validation</h2>
+
+      <div class="fc-textarea">
+        <label class="fc-textarea__label" for="dispute-reason">Reason for dispute (required)</label>
+        <div class="fc-textarea__control">
+          <textarea
+            class="fc-textarea__field"
+            id="dispute-reason"
+            name="disputeReason"
+            aria-invalid="true"
+            aria-describedby="dispute-error-msg"
+            required
+          ></textarea>
+        </div>
+        <p class="fc-textarea__message fc-textarea__message--error" id="dispute-error-msg">
+          Please provide details regarding the disputed transaction.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="textarea-disabled">
+      <h2 id="textarea-disabled">Disabled</h2>
+
+      <div class="fc-textarea">
+        <label class="fc-textarea__label" for="system-audit">Audit trail</label>
+        <div class="fc-textarea__control">
+          <textarea
+            class="fc-textarea__field"
+            id="system-audit"
+            name="systemAudit"
+            disabled
+          >Transaction settled on 2026-11-06. Immutable record.</textarea>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+

@@ -1,0 +1,785 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.currency",
+    "name": "Currency",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0-alpha.2",
+    "summary": "FinCore's native currency input: label + control with currency prefix/suffix + decimal formatting + helper/error message, four states, independent focus ring and only currency.* component tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring Input canonical patterns with monetary prefix/suffix affordances.",
+        "The token block was added to tokens/tokens.json and generated into tokens/dist/tokens.css; node tokens/check.mjs passed with 28 currency.* component tokens.",
+        "The stylesheet consumes only variables generated from currency.* component tokens.",
+        "No Figma component set exists for Currency in v0.1, so canonical.figma is null and no design-evidence claims are made."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the currency field anatomy: label, control container with prefix symbol/suffix code, formatted numeric input, and helper/error row.",
+      "Apply only currency.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay around the control wrapper when focused.",
+      "Support numeric/decimal input with currency formatting."
+    ],
+    "application": [
+      "Supply the label, currency symbol/code, and numeric amount.",
+      "Own validation: decide when an entered amount is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Currency in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Monetary amounts, deposits, withdrawals, transfers, payments and financial transactions."
+    ],
+    "inappropriate": [
+      {
+        "use": "Standard non-monetary numeric input such as quantities or years.",
+        "reason": "Currency is tailored specifically for monetary formatting and currency affixes.",
+        "alternative": "Use Input with type=\"number\"."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Control wrapper: flex container housing prefix symbol, input field, and suffix code.",
+      "Affixes: prefix symbol (e.g., $) and/or suffix currency code (e.g., USD).",
+      "Field: 40px height, right-aligned numeric entry.",
+      "Focus Ring: absolute sibling overlay on the control wrapper, 2px stroke, 8px concentric radius.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [
+      {
+        "property": "control height",
+        "value": "40px",
+        "token": "currency.height"
+      },
+      {
+        "property": "horizontal padding",
+        "value": "12px",
+        "token": "currency.padding-x"
+      },
+      {
+        "property": "affix gap",
+        "value": "8px",
+        "token": "currency.affix-gap"
+      },
+      {
+        "property": "corner radius",
+        "value": "6px",
+        "token": "currency.radius"
+      },
+      {
+        "property": "border width",
+        "value": "1px",
+        "token": "currency.border-width"
+      },
+      {
+        "property": "label gap",
+        "value": "8px",
+        "token": "currency.label-gap"
+      },
+      {
+        "property": "helper gap",
+        "value": "4px",
+        "token": "currency.helper-gap"
+      },
+      {
+        "property": "focus ring width",
+        "value": "2px",
+        "token": "currency.focus.width"
+      },
+      {
+        "property": "focus ring offset",
+        "value": "2px",
+        "token": "currency.focus.offset"
+      },
+      {
+        "property": "focus ring radius",
+        "value": "8px",
+        "token": "currency.focus.radius"
+      }
+    ],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Label",
+      "figmaType": "TEXT",
+      "figmaDefault": "Amount",
+      "required": true,
+      "description": "Visible label for the control.",
+      "translation": "direct",
+      "production": {
+        "prop": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "derived": false,
+        "notes": "Accessible name for the currency input."
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "id",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Stable id used for the label association and message references.",
+      "notes": "Generated if omitted."
+    },
+    {
+      "prop": "prefix",
+      "type": "string",
+      "default": "\"$\"",
+      "required": false,
+      "description": "Currency prefix symbol.",
+      "notes": "Defaults to \"$\"."
+    },
+    {
+      "prop": "suffix",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Currency suffix code, e.g., \"USD\".",
+      "notes": "Optional currency ISO code."
+    },
+    {
+      "prop": "value",
+      "type": "string | number",
+      "default": null,
+      "required": false,
+      "description": "Controlled amount value.",
+      "notes": "Formatted or numeric amount."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and displays error message.",
+      "notes": "Application owns error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Replaced by error message."
+    },
+    {
+      "prop": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "required": false,
+      "description": "Controls the size variant (sm, md, lg).",
+      "notes": "Applies corresponding size modifier class."
+    },
+    {
+      "prop": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Applies loading state and sets aria-busy=\"true\".",
+      "notes": "Suppresses interactions while loading."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "currency.height",
+        "currency.padding-x",
+        "currency.affix-gap",
+        "currency.radius",
+        "currency.border-width",
+        "currency.font-size",
+        "currency.line-height",
+        "currency.font-weight",
+        "currency.label-gap",
+        "currency.helper-gap",
+        "currency.focus.color",
+        "currency.focus.width",
+        "currency.focus.offset",
+        "currency.focus.radius",
+        "currency.background",
+        "currency.border",
+        "currency.text",
+        "currency.affix-color",
+        "currency.placeholder",
+        "currency.border-hover",
+        "currency.border-error",
+        "currency.text-error",
+        "currency.background-disabled",
+        "currency.border-disabled",
+        "currency.text-disabled",
+        "currency.label.color",
+        "currency.label.font-weight",
+        "currency.helper.color",
+        "currency.helper.font-size",
+        "currency.helper.line-height"
+      ],
+      "notes": "Runtime token surface."
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "Component code consumes only currency.* component tokens.",
+    "dependencies": [
+      {
+        "name": "currency.height",
+        "type": "dimension",
+        "cssVar": "--fc-currency-height",
+        "alias": "size.control.md",
+        "resolved": "40px",
+        "role": "Control height",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-currency-padding-x",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Horizontal padding",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.affix-gap",
+        "type": "dimension",
+        "cssVar": "--fc-currency-affix-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Affix gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.radius",
+        "type": "dimension",
+        "cssVar": "--fc-currency-radius",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Corner radius",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-currency-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Border width",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-currency-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Amount font size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-currency-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Amount line height",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-currency-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "Amount font weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.label-gap",
+        "type": "dimension",
+        "cssVar": "--fc-currency-label-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Label gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.helper-gap",
+        "type": "dimension",
+        "cssVar": "--fc-currency-helper-gap",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Helper gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.focus.color",
+        "type": "color",
+        "cssVar": "--fc-currency-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "Focus ring color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.focus.width",
+        "type": "dimension",
+        "cssVar": "--fc-currency-focus-width",
+        "alias": "size.focus-ring.width",
+        "resolved": "2px",
+        "role": "Focus ring width",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.focus.offset",
+        "type": "dimension",
+        "cssVar": "--fc-currency-focus-offset",
+        "alias": "size.focus-ring.offset",
+        "resolved": "2px",
+        "role": "Focus ring offset",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.focus.radius",
+        "type": "dimension",
+        "cssVar": "--fc-currency-focus-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Concentric focus ring radius",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.background",
+        "type": "color",
+        "cssVar": "--fc-currency-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "Control background",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.border",
+        "type": "color",
+        "cssVar": "--fc-currency-border",
+        "alias": "color.border.control",
+        "resolved": "#71717A",
+        "role": "Border color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.text",
+        "type": "color",
+        "cssVar": "--fc-currency-text",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Amount text color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.affix-color",
+        "type": "color",
+        "cssVar": "--fc-currency-affix-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "Affix symbol/code color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.placeholder",
+        "type": "color",
+        "cssVar": "--fc-currency-placeholder",
+        "alias": "color.content.tertiary",
+        "resolved": "#71717A",
+        "role": "Placeholder text color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.border-hover",
+        "type": "color",
+        "cssVar": "--fc-currency-border-hover",
+        "alias": "color.border.control-hover",
+        "resolved": "#52525B",
+        "role": "Hovered border color",
+        "usedBy": [
+          "Hover"
+        ]
+      },
+      {
+        "name": "currency.border-error",
+        "type": "color",
+        "cssVar": "--fc-currency-border-error",
+        "alias": "color.border.error",
+        "resolved": "#DC2626",
+        "role": "Error border color",
+        "usedBy": [
+          "Error"
+        ]
+      },
+      {
+        "name": "currency.text-error",
+        "type": "color",
+        "cssVar": "--fc-currency-text-error",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "Error message text color",
+        "usedBy": [
+          "Error"
+        ]
+      },
+      {
+        "name": "currency.background-disabled",
+        "type": "color",
+        "cssVar": "--fc-currency-background-disabled",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "Disabled control fill",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "currency.border-disabled",
+        "type": "color",
+        "cssVar": "--fc-currency-border-disabled",
+        "alias": "color.border.disabled",
+        "resolved": "#E4E4E7",
+        "role": "Disabled border color",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "currency.text-disabled",
+        "type": "color",
+        "cssVar": "--fc-currency-text-disabled",
+        "alias": "color.content.disabled",
+        "resolved": "#A1A1AA",
+        "role": "Disabled text color",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "currency.label.color",
+        "type": "color",
+        "cssVar": "--fc-currency-label-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "Label text color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.label.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-currency-label-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Label weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.helper.color",
+        "type": "color",
+        "cssVar": "--fc-currency-helper-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "Helper copy color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.helper.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-currency-helper-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Helper font size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "currency.helper.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-currency-helper-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Helper line height",
+        "usedBy": [
+          "Default"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "currency.background",
+        "foreground": "currency.text",
+        "border": "currency.border",
+        "label": "currency.label.color",
+        "helper": "currency.helper.color",
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Do not consume color.* or space.* directly in Currency code."
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Control is 40px high, meeting target requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Input field has programmatic label association.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "currency.text",
+        "background": "currency.background",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 17.72
+        },
+        "status": "pass",
+        "notes": "Text on control background."
+      },
+      {
+        "role": "non-text",
+        "foreground": "currency.border",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 4.83
+        },
+        "status": "pass",
+        "notes": "Boundary on surface."
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-currency",
+      "configuration": "Currency input without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "amount-input",
+        "given": "an enabled currency input",
+        "when": "amount is typed",
+        "then": "value is formatted as currency."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled currency input",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "currency css",
+        "when": "inspected",
+        "then": "only currency.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible around control wrapper."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Currency in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/currency/currency.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only currency.* tokens in Currency code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native currency input",
+        "language": "html",
+        "code": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amount\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amount\" /><span class=\"fc-currency__suffix\">USD</span></div></div>",
+        "explanation": "Valid currency composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled currency input",
+        "language": "html",
+        "code": "<input class=\"fc-currency__field\" />",
+        "explanation": "Missing container, control wrapper, prefix and label."
+      }
+    ]
+  }
+}

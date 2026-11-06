@@ -1,0 +1,722 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.checkbox",
+    "name": "Checkbox",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0-alpha.2",
+    "summary": "FinCore's native single-option checkbox: control + label + helper/error, four mutually exclusive states, an independent focus ring and only checkbox.* component tokens. Implemented as framework-agnostic CSS with native HTML semantics.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring Input and Select canonical patterns.",
+        "The token block was added to tokens/tokens.json and generated into tokens/dist/tokens.css; node tokens/check.mjs passed with 27 checkbox.* component tokens.",
+        "The stylesheet consumes only variables generated from checkbox.* component tokens.",
+        "No Figma component set exists for Checkbox in v0.1, so canonical.figma is null and no design-evidence claims are made."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the checkbox anatomy: native checkbox control, checkmark icon indicator, label, and optional helper/error row.",
+      "Apply only checkbox.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay when keyboard focus is present, except when disabled.",
+      "Expose native checkbox semantics, the native checked and disabled states."
+    ],
+    "application": [
+      "Supply the label and manage the checked/unchecked state.",
+      "Own validation: decide when a value is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby.",
+      "Use native disabled only when the control is genuinely unavailable.",
+      "Never use Checkbox for mutual exclusion where Radio is required."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Checkbox in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Single binary choices such as accepting terms and conditions.",
+      "Selecting multiple independent options from a list."
+    ],
+    "inappropriate": [
+      {
+        "use": "Mutually exclusive options.",
+        "reason": "Radio buttons are the accessible pattern for mutually exclusive options.",
+        "alternative": "Use Radio Group."
+      },
+      {
+        "use": "Instant action toggles.",
+        "reason": "Checkboxes require a form submission or explicit save step.",
+        "alternative": "Use a toggle switch."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: container with label wrapper and helper/error message.",
+      "Body: horizontal row containing control box and label text.",
+      "Control: 16px square with 1px border, 4px radius, checkmark icon.",
+      "Focus Ring: absolute overlay, 2px stroke, 6px concentric radius on :focus-visible.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [
+      {
+        "property": "control size",
+        "value": "16px",
+        "token": "checkbox.size"
+      },
+      {
+        "property": "control corner radius",
+        "value": "4px",
+        "token": "checkbox.radius"
+      },
+      {
+        "property": "border width",
+        "value": "1px",
+        "token": "checkbox.border-width"
+      },
+      {
+        "property": "label gap",
+        "value": "8px",
+        "token": "checkbox.label-gap"
+      },
+      {
+        "property": "helper gap",
+        "value": "4px",
+        "token": "checkbox.helper-gap"
+      },
+      {
+        "property": "focus ring width",
+        "value": "2px",
+        "token": "checkbox.focus.width"
+      },
+      {
+        "property": "focus ring offset",
+        "value": "2px",
+        "token": "checkbox.focus.offset"
+      },
+      {
+        "property": "focus ring radius",
+        "value": "6px",
+        "token": "checkbox.focus.radius"
+      }
+    ],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Label",
+      "figmaType": "TEXT",
+      "figmaDefault": "Checkbox",
+      "required": true,
+      "description": "Visible label for the control.",
+      "translation": "direct",
+      "production": {
+        "prop": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "derived": false,
+        "notes": "Accessible name for the checkbox."
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "id",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Stable id used for the label association and message references.",
+      "notes": "Generated if omitted."
+    },
+    {
+      "prop": "checked",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Controlled checked state.",
+      "notes": "Maps to native checked attribute."
+    },
+    {
+      "prop": "disabled",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Maps to native disabled attribute.",
+      "notes": "Disables interaction and dims control."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and displays error message.",
+      "notes": "The application owns error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Replaced by error message."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "checkbox.size",
+        "checkbox.radius",
+        "checkbox.border-width",
+        "checkbox.label-gap",
+        "checkbox.helper-gap",
+        "checkbox.font-size",
+        "checkbox.line-height",
+        "checkbox.font-weight",
+        "checkbox.focus.color",
+        "checkbox.focus.width",
+        "checkbox.focus.offset",
+        "checkbox.focus.radius",
+        "checkbox.background",
+        "checkbox.background-checked",
+        "checkbox.foreground-checked",
+        "checkbox.border",
+        "checkbox.border-hover",
+        "checkbox.border-error",
+        "checkbox.text-error",
+        "checkbox.background-disabled",
+        "checkbox.border-disabled",
+        "checkbox.text-disabled",
+        "checkbox.label.color",
+        "checkbox.label.font-weight",
+        "checkbox.helper.color",
+        "checkbox.helper.font-size",
+        "checkbox.helper.line-height"
+      ],
+      "notes": "Runtime token surface."
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "Component code consumes only checkbox.* component tokens.",
+    "dependencies": [
+      {
+        "name": "checkbox.size",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-size",
+        "alias": "space.4",
+        "resolved": "16px",
+        "role": "Box size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.radius",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-radius",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Box radius",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Box border width",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.label-gap",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-label-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Box to label gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.helper-gap",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-helper-gap",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Helper row gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Label font size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Label line height",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-checkbox-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "Label font weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.focus.color",
+        "type": "color",
+        "cssVar": "--fc-checkbox-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "Focus ring color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.focus.width",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-focus-width",
+        "alias": "size.focus-ring.width",
+        "resolved": "2px",
+        "role": "Focus ring width",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.focus.offset",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-focus-offset",
+        "alias": "size.focus-ring.offset",
+        "resolved": "2px",
+        "role": "Focus ring offset",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.focus.radius",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-focus-radius",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Focus ring radius",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.background",
+        "type": "color",
+        "cssVar": "--fc-checkbox-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "Unchecked box background",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.background-checked",
+        "type": "color",
+        "cssVar": "--fc-checkbox-background-checked",
+        "alias": "color.action.primary",
+        "resolved": "#2563EB",
+        "role": "Checked box background",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.foreground-checked",
+        "type": "color",
+        "cssVar": "--fc-checkbox-foreground-checked",
+        "alias": "color.action.primary-foreground",
+        "resolved": "#FFFFFF",
+        "role": "Checkmark icon color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.border",
+        "type": "color",
+        "cssVar": "--fc-checkbox-border",
+        "alias": "color.border.control",
+        "resolved": "#71717A",
+        "role": "Default boundary",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.border-hover",
+        "type": "color",
+        "cssVar": "--fc-checkbox-border-hover",
+        "alias": "color.border.control-hover",
+        "resolved": "#52525B",
+        "role": "Hovered boundary",
+        "usedBy": [
+          "Hover"
+        ]
+      },
+      {
+        "name": "checkbox.border-error",
+        "type": "color",
+        "cssVar": "--fc-checkbox-border-error",
+        "alias": "color.border.error",
+        "resolved": "#DC2626",
+        "role": "Error boundary",
+        "usedBy": [
+          "Error"
+        ]
+      },
+      {
+        "name": "checkbox.text-error",
+        "type": "color",
+        "cssVar": "--fc-checkbox-text-error",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "Error text",
+        "usedBy": [
+          "Error"
+        ]
+      },
+      {
+        "name": "checkbox.background-disabled",
+        "type": "color",
+        "cssVar": "--fc-checkbox-background-disabled",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "Disabled box background",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "checkbox.border-disabled",
+        "type": "color",
+        "cssVar": "--fc-checkbox-border-disabled",
+        "alias": "color.border.disabled",
+        "resolved": "#E4E4E7",
+        "role": "Disabled border",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "checkbox.text-disabled",
+        "type": "color",
+        "cssVar": "--fc-checkbox-text-disabled",
+        "alias": "color.content.disabled",
+        "resolved": "#A1A1AA",
+        "role": "Disabled label/icon color",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "checkbox.label.color",
+        "type": "color",
+        "cssVar": "--fc-checkbox-label-color",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Label color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.label.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-checkbox-label-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "Label font weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.helper.color",
+        "type": "color",
+        "cssVar": "--fc-checkbox-helper-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "Helper copy color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.helper.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-helper-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Helper font size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "checkbox.helper.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-checkbox-helper-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Helper line height",
+        "usedBy": [
+          "Default"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "checkbox.background",
+        "foreground": "checkbox.label.color",
+        "border": "checkbox.border",
+        "label": "checkbox.label.color",
+        "helper": "checkbox.helper.color",
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Do not consume color.* or space.* directly in Checkbox code."
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "touch-target",
+        "requirement": "Touch target meets minimum requirements via body wrapper padding or label area.",
+        "verification": "Inspect rendered layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "accessible-label",
+        "requirement": "Native checkbox is programmatically labelled.",
+        "verification": "Check accessibility tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "checkbox.label.color",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 17.72
+        },
+        "status": "pass",
+        "notes": "Label on surface."
+      },
+      {
+        "role": "non-text",
+        "foreground": "checkbox.border",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 4.83
+        },
+        "status": "pass",
+        "notes": "Boundary on surface."
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout and spacing wrappers."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-checkbox\"><label class=\"fc-checkbox__body\"><span class=\"fc-checkbox__control\"><input type=\"checkbox\" class=\"fc-checkbox__field\" /><span class=\"fc-checkbox__box\"><svg class=\"fc-checkbox__icon\" viewBox=\"0 0 12 12\"><polyline points=\"2 6 5 9 10 3\"></polyline></svg></span></span><span class=\"fc-checkbox__label\">Label</span></label></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-checkbox\"><label class=\"fc-checkbox__body\"><span class=\"fc-checkbox__control\"><input type=\"checkbox\" class=\"fc-checkbox__field\" /><span class=\"fc-checkbox__box\"><svg class=\"fc-checkbox__icon\" viewBox=\"0 0 12 12\"><polyline points=\"2 6 5 9 10 3\"></polyline></svg></span></span><span class=\"fc-checkbox__label\">Label</span></label></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-checkbox",
+      "configuration": "Checkbox without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "checkbox is rendered",
+        "then": "classes and styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "toggle",
+        "given": "an enabled checkbox",
+        "when": "clicked",
+        "then": "checked state toggles."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled checkbox",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "checkbox css",
+        "when": "inspected",
+        "then": "only checkbox.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Checkbox in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/checkbox/checkbox.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only checkbox.* tokens in Checkbox code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native checkbox",
+        "language": "html",
+        "code": "<div class=\"fc-checkbox\"><label class=\"fc-checkbox__body\"><span class=\"fc-checkbox__control\"><input type=\"checkbox\" class=\"fc-checkbox__field\" /><span class=\"fc-checkbox__box\"><svg class=\"fc-checkbox__icon\" viewBox=\"0 0 12 12\"><polyline points=\"2 6 5 9 10 3\"></polyline></svg></span></span><span class=\"fc-checkbox__label\">Agree</span></label></div>",
+        "explanation": "Valid checkbox composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled checkbox",
+        "language": "html",
+        "code": "<input type=\"checkbox\" class=\"fc-checkbox__field\" />",
+        "explanation": "Missing container, control box and label."
+      }
+    ]
+  }
+}

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Accessibility — Sorleed</title>
+  <meta name="description" content="Sorleed accessibility rules, implemented semantics and the validation that has and has not been performed.">
+  <link rel="stylesheet" href="../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/input/input.css">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="accessibility">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="index.html" data-page="overview">Overview</a></li>
+          <li><a href="getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="components.html" data-page="components">Components</a></li>
+          <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="cli.html" data-page="cli">CLI</a></li>
+          <li><a href="customisation.html" data-page="customisation">Customisation</a></li>
+          <li><a href="accessibility.html" data-page="accessibility">Accessibility</a></li>
+          <li><a href="ai.html" data-page="ai">AI</a></li>
+          <li><a href="limitations.html" data-page="limits">Limits</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="On this page">
+        <h2>On this page</h2>
+        <ul>
+          <li><a href="#implemented">Implemented</a></li>
+          <li><a href="#keyboard">Keyboard</a></li>
+          <li><a href="#contrast">Contrast</a></li>
+          <li><a href="#validated">What was validated</a></li>
+          <li><a href="#not-certified">Not certified</a></li>
+        </ul>
+      </aside>
+
+      <div class="content">
+        <h1>Accessibility</h1>
+        <p class="lede">Native controls, programmatic labels, visible focus and semantic errors. The limits are documented instead of implied.</p>
+
+        <h2 id="implemented">Implemented semantics</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable table">
+          <table>
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Accessible names</td><td>Every field has a <code>&lt;label for&gt;</code> or an explicit accessible name. <code>hideLabel</code> is visual only.</td></tr>
+              <tr><td>Error association</td><td><code>errorMessage</code> sets <code>aria-invalid="true"</code> and is connected with <code>aria-describedby</code>.</td></tr>
+              <tr><td>Helper association</td><td>Helper text is connected with <code>aria-describedby</code> when no error is present.</td></tr>
+              <tr><td>Focus visibility</td><td>A 2px focus overlay at 2px offset, additive to the component state.</td></tr>
+              <tr><td>Disabled semantics</td><td>Native <code>disabled</code> on both PhoneInput controls; disabled suppresses error and focus treatment.</td></tr>
+              <tr><td>Toggle semantics</td><td>PasswordInput uses <code>&lt;button type="button"&gt;</code> with <code>aria-pressed</code>.</td></tr>
+              <tr><td>Country selector</td><td>Native <code>&lt;select&gt;</code> with an accessible name and full country names plus dial codes.</td></tr>
+              <tr><td>Forced colours</td><td>Stylesheets include <code>@media (forced-colors: active)</code> rules for boundaries and focus.</td></tr>
+              <tr><td>Reduced motion</td><td>The documentation site honours <code>prefers-reduced-motion</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="keyboard">Keyboard behaviour</h2>
+        <ul>
+          <li>Button: native activation with Enter and Space.</li>
+          <li>Input and PasswordInput: native text editing. The toggle is reachable with Tab and activated with Enter or Space.</li>
+          <li>PhoneInput: native select and telephone input; no keyboard trap and no custom listbox.</li>
+          <li>Focus order follows DOM order. The focus overlay is not clipped by the component container.</li>
+        </ul>
+
+        <h2 id="contrast">Contrast</h2>
+        <p>Token validation checks text, boundary, focus and error pairs. Disabled text is excluded because inactive controls are exempt under WCAG 1.4.3 and 1.4.11.</p>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable table">
+          <table>
+            <thead><tr><th>Pair</th><th>Target</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Body text on default surface</td><td>4.5:1</td><td>Pass</td></tr>
+              <tr><td>Control boundary on surface</td><td>3:1</td><td>Pass</td></tr>
+              <tr><td>Focus ring on surface</td><td>3:1</td><td>Pass</td></tr>
+              <tr><td>Error text on surface</td><td>4.5:1</td><td>Pass</td></tr>
+              <tr><td>Disabled text on disabled fill</td><td>—</td><td>Exempt</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Run <code>node tokens/check.mjs</code> to reproduce the token contrast report.</p>
+
+        <h2 id="validated">What was validated</h2>
+        <ul>
+          <li>Token structure and contrast pairs: automated.</li>
+          <li>Contract, parity and component behaviour: automated.</li>
+          <li>React adapter behaviour: automated tests.</li>
+          <li>CLI installation and conflict handling: automated tests.</li>
+          <li>Documentation site structure, links and mobile layout: automated checks plus manual review.</li>
+        </ul>
+
+        <h2 id="not-certified">Not certified</h2>
+        <div class="callout callout--warning">
+          <p><strong>No formal certification.</strong> Sorleed has not been certified with screen readers, assistive technology users, or every browser and zoom combination. Automated checks are evidence, not certification.</p>
+        </div>
+        <ul>
+          <li>No NVDA, JAWS, VoiceOver or TalkBack certification.</li>
+          <li>No independent WCAG audit.</li>
+          <li>No formal cross-browser matrix beyond the automated checks described in the repository.</li>
+          <li>No forced-colours manual test on every platform.</li>
+          <li>No claim that every consumer composition is accessible; the consumer owns labels, error copy and page structure.</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed — UI Infrastructure. MIT licensed. Copyright (c) 2026 Sorleed.</p>
+      <p><a href="../README.md">Repository README</a> · <a href="../PRODUCT.md">Product</a> · <a href="../SECURITY.md">Security</a></p>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>

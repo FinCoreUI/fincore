@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Sorleed — UI Infrastructure</title>
+  <meta name="description" content="Sorleed is a source-first UI toolkit for designers and developers: accessible components, design tokens, a source-distribution CLI and AI context.">
+  <link rel="stylesheet" href="../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/input/input.css">
+  <link rel="stylesheet" href="../components/password-input/password-input.css">
+  <link rel="stylesheet" href="../components/phone-input/phone-input.css">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="overview">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
+        Menu
+      </button>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="index.html" data-page="overview">Overview</a></li>
+          <li><a href="getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="components.html" data-page="components">Components</a></li>
+          <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="cli.html" data-page="cli">CLI</a></li>
+          <li><a href="customisation.html" data-page="customisation">Customisation</a></li>
+          <li><a href="accessibility.html" data-page="accessibility">Accessibility</a></li>
+          <li><a href="ai.html" data-page="ai">AI</a></li>
+          <li><a href="limitations.html" data-page="limits">Limits</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page">
+      <div class="content">
+        <section class="hero">
+          <p><span class="badge">Private alpha</span></p>
+          <h1>UI infrastructure you can own.</h1>
+          <p class="lede">
+            Sorleed is a source-first UI toolkit for designers and developers.
+            Four carefully specified components, one token system, a
+            source-distribution CLI and AI context that describes what actually
+            exists.
+          </p>
+          <div class="hero__actions">
+            <a class="button-link" href="getting-started.html">Get started</a>
+            <a class="button-link button-link--secondary" href="components.html">Browse components</a>
+          </div>
+        </section>
+
+        <div class="demo">
+          <div class="demo__row">
+            <div class="demo__surface">
+              <div class="sl-input">
+                <label class="sl-input__label" for="hero-email">Work email</label>
+                <div class="sl-input__control">
+                  <input class="sl-input__field" id="hero-email" type="email" placeholder="you@example.com">
+                </div>
+                <p class="sl-input__message">We never send marketing email.</p>
+              </div>
+            </div>
+            <div class="demo__surface">
+              <div class="sl-input">
+                <label class="sl-input__label" for="hero-password">Password</label>
+                <div class="sl-password-input__control">
+                  <input class="sl-password-input__field" id="hero-password" type="password" value="correct-horse-battery">
+                  <button class="sl-password-input__toggle" type="button" aria-controls="hero-password" aria-pressed="false" data-password-toggle>Show password</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="demo__row">
+            <div class="demo__surface">
+              <button class="sl-button sl-button--primary" type="button">Primary action</button>
+            </div>
+            <div class="demo__surface">
+              <button class="sl-button sl-button--secondary" type="button">Secondary</button>
+            </div>
+            <div class="demo__surface">
+              <button class="sl-button sl-button--ghost" type="button">Ghost</button>
+            </div>
+          </div>
+        </div>
+
+        <h2>What is in the box</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Sorleed UI</h3>
+            <p>Button, Input, PasswordInput and PhoneInput. Native elements, visible focus, explicit states and no hidden behaviour.</p>
+          </article>
+          <article class="card">
+            <h3>Sorleed Tokens</h3>
+            <p>229 <code>--sl-*</code> custom properties across primitive, semantic and component layers. Generated CSS, reproducible output.</p>
+          </article>
+          <article class="card">
+            <h3>Sorleed CLI</h3>
+            <p>Copy canonical component source into your project. Existing files are never silently overwritten.</p>
+          </article>
+          <article class="card">
+            <h3>Sorleed AI</h3>
+            <p>Context files for AI coding tools, with explicit rules against inventing components, props or tokens.</p>
+          </article>
+          <article class="card">
+            <h3>Sorleed Figma</h3>
+            <p>Token import, component specifications and SVG evidence prepared for a Figma library. No Community Library is published yet.</p>
+          </article>
+          <article class="card">
+            <h3>Sorleed Website</h3>
+            <p>This static documentation site. No tracking, no build step and no external runtime.</p>
+          </article>
+        </div>
+
+        <h2>Install</h2>
+        <p>Use the React package when it is available in your environment, or copy source with the CLI.</p>
+        <pre><code>npm install @sorleed/react react react-dom
+
+import { Button } from "@sorleed/react";
+import "@sorleed/react/styles/tokens.css";
+import "@sorleed/react/styles/button.css";</code></pre>
+        <p>Or copy the canonical source:</p>
+        <pre><code>npx sorleed list
+npx sorleed add button --dir ./my-app</code></pre>
+
+        <div class="callout">
+          <p><strong>Alpha status.</strong> <code>@sorleed/react</code> and <code>@sorleed/cli</code> are private and unpublished. This site documents the implementation that exists in the repository; it is not a public release announcement.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed — UI Infrastructure. MIT licensed. Copyright (c) 2026 Sorleed.</p>
+      <p><a href="../README.md">Repository README</a> · <a href="../PRODUCT.md">Product</a> · <a href="../SECURITY.md">Security</a></p>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transactions — FinCore proof of concept</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../../components/button/button.css">
+  <link rel="stylesheet" href="../../components/input/input.css">
+  <link rel="stylesheet" href="poc.css">
+</head>
+<body>
+  <main class="tx-page">
+    <header class="tx-header">
+      <h1 class="tx-title">Transactions</h1>
+      <p class="tx-account">
+        Everyday Account
+        <span aria-hidden="true">·</span>
+        <span class="tx-account__number">•••• 4821</span>
+      </p>
+      <p class="tx-disclaimer">
+        Illustrative data for a FinCore proof of concept. This is not a real customer account.
+      </p>
+    </header>
+
+    <section class="tx-summary" aria-labelledby="tx-balance-label">
+      <p class="tx-summary__label" id="tx-balance-label">Available balance</p>
+      <p class="tx-summary__value" id="tx-balance">$12,480.55</p>
+      <p class="tx-summary__note">Balance as of 27 October 2026. Illustrative only.</p>
+    </section>
+
+    <section class="tx-filters" aria-labelledby="tx-filter-heading">
+      <h2 class="tx-section-title" id="tx-filter-heading">Filter transactions</h2>
+
+      <form class="tx-filter-form" id="tx-filter-form">
+        <div class="tx-filter-field">
+          <div class="fc-input">
+            <label class="fc-input__label" for="tx-filter">Description</label>
+            <div class="fc-input__control">
+              <input
+                class="fc-input__field"
+                id="tx-filter"
+                name="filter"
+                type="text"
+                autocomplete="off"
+                placeholder="Filter by description"
+                aria-describedby="tx-filter-helper"
+              >
+            </div>
+            <p class="fc-input__message" id="tx-filter-helper">
+              Matches description text only. Amounts, references and statuses are not searched.
+            </p>
+          </div>
+        </div>
+
+        <div class="tx-filter-actions">
+          <button class="fc-button fc-button--secondary" id="tx-clear" type="button">Clear</button>
+          <button class="fc-button" type="submit">Apply filter</button>
+        </div>
+      </form>
+    </section>
+
+    <p class="tx-result-status" id="tx-result-status" role="status" aria-live="polite">
+      Showing all 10 transactions.
+    </p>
+
+    <section class="tx-results" aria-labelledby="tx-results-heading">
+      <h2 class="tx-section-title" id="tx-results-heading">Transaction history</h2>
+
+      <div class="tx-table-wrap" id="tx-table-wrap">
+        <table class="tx-table">
+          <caption class="tx-table__caption">Transactions, most recent first.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Description</th>
+              <th scope="col">Reference</th>
+              <th scope="col" class="tx-table__amount-heading">Amount</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody id="tx-rows"></tbody>
+        </table>
+      </div>
+
+      <ul class="tx-list" id="tx-list" aria-labelledby="tx-results-heading" hidden></ul>
+
+      <div class="tx-empty" id="tx-empty" hidden>
+        <h3 class="tx-empty__heading">No matching transactions</h3>
+        <p class="tx-empty__body">
+          No description contains <strong id="tx-empty-term"></strong>.
+          Clear the filter to see all 10 transactions.
+        </p>
+      </div>
+
+      <noscript>
+        <p class="tx-empty__body">
+          This proof of concept needs JavaScript to filter the illustrative transactions.
+          The full record set is defined in <code>poc.js</code>.
+        </p>
+      </noscript>
+    </section>
+
+    <footer class="tx-footer">
+      <p>
+        FinCore proof of concept. Button and Input are FinCore components.
+        The page layout, table, filtering and formatting are ordinary application code,
+        not FinCore components.
+      </p>
+    </footer>
+  </main>
+
+  <script src="poc.js"></script>
+</body>
+</html>

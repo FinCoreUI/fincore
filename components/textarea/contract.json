@@ -1,0 +1,774 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.textarea",
+    "name": "Textarea",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0-alpha.2",
+    "summary": "FinCore's native multiline text area: label + control + helper/error message, four states, independent focus ring and only textarea.* component tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring Input canonical patterns with multiline sizing.",
+        "The token block was added to tokens/tokens.json and generated into tokens/dist/tokens.css; node tokens/check.mjs passed with 28 textarea.* component tokens.",
+        "The stylesheet consumes only variables generated from textarea.* component tokens.",
+        "No Figma component set exists for Textarea in v0.1, so canonical.figma is null and no design-evidence claims are made."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the textarea field anatomy: label, native textarea control, and helper/error row.",
+      "Apply only textarea.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay when keyboard focus is present, except when disabled.",
+      "Expose native textarea semantics and support vertical resizing by default."
+    ],
+    "application": [
+      "Provide the label and control value.",
+      "Own validation: decide when a value is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby.",
+      "Use native disabled only when the control is genuinely unavailable."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Textarea in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Multiline free-text entry such as comments, descriptions, notes, or messages.",
+      "Form fields where the anticipated input exceeds a single line."
+    ],
+    "inappropriate": [
+      {
+        "use": "Single-line values such as email, phone or currency.",
+        "reason": "Textarea does not constrain to a single line or provide inputmode optimizations.",
+        "alternative": "Use Input or PhoneInput."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Label: 14/20, weight 500, label.color.",
+      "Control: 80px min-height, 1px inside border, 6px radius, white fill by default.",
+      "Focus Ring: absolute sibling overlay, 2px stroke, 8px concentric radius on :focus-visible.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [
+      {
+        "property": "min-height",
+        "value": "80px",
+        "token": "textarea.min-height"
+      },
+      {
+        "property": "horizontal padding",
+        "value": "12px",
+        "token": "textarea.padding-x"
+      },
+      {
+        "property": "vertical padding",
+        "value": "8px",
+        "token": "textarea.padding-y"
+      },
+      {
+        "property": "corner radius",
+        "value": "6px",
+        "token": "textarea.radius"
+      },
+      {
+        "property": "border width",
+        "value": "1px",
+        "token": "textarea.border-width"
+      },
+      {
+        "property": "label gap",
+        "value": "8px",
+        "token": "textarea.label-gap"
+      },
+      {
+        "property": "helper gap",
+        "value": "4px",
+        "token": "textarea.helper-gap"
+      },
+      {
+        "property": "focus ring width",
+        "value": "2px",
+        "token": "textarea.focus.width"
+      },
+      {
+        "property": "focus ring offset",
+        "value": "2px",
+        "token": "textarea.focus.offset"
+      },
+      {
+        "property": "focus ring radius",
+        "value": "8px",
+        "token": "textarea.focus.radius"
+      }
+    ],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Label",
+      "figmaType": "TEXT",
+      "figmaDefault": "Textarea",
+      "required": true,
+      "description": "Visible label for the control.",
+      "translation": "direct",
+      "production": {
+        "prop": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "derived": false,
+        "notes": "Accessible name for the textarea."
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "id",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Stable id used for the label association and message references.",
+      "notes": "Generated if omitted."
+    },
+    {
+      "prop": "value",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Controlled value.",
+      "notes": "Maps to native textarea value."
+    },
+    {
+      "prop": "rows",
+      "type": "number",
+      "default": 3,
+      "required": false,
+      "description": "Visible rows count.",
+      "notes": "Default is 3."
+    },
+    {
+      "prop": "resize",
+      "type": "\"none\" | \"vertical\" | \"horizontal\" | \"both\"",
+      "default": "\"vertical\"",
+      "required": false,
+      "description": "Resize mode.",
+      "notes": "Defaults to vertical."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and displays error message.",
+      "notes": "Application owns error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Replaced by error message."
+    },
+    {
+      "prop": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "required": false,
+      "description": "Controls the size variant (sm, md, lg).",
+      "notes": "Applies corresponding size modifier class."
+    },
+    {
+      "prop": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Applies loading state and sets aria-busy=\"true\".",
+      "notes": "Suppresses interactions while loading."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "textarea.min-height",
+        "textarea.padding-x",
+        "textarea.padding-y",
+        "textarea.radius",
+        "textarea.border-width",
+        "textarea.font-size",
+        "textarea.line-height",
+        "textarea.font-weight",
+        "textarea.label-gap",
+        "textarea.helper-gap",
+        "textarea.focus.color",
+        "textarea.focus.width",
+        "textarea.focus.offset",
+        "textarea.focus.radius",
+        "textarea.background",
+        "textarea.border",
+        "textarea.text",
+        "textarea.placeholder",
+        "textarea.border-hover",
+        "textarea.border-error",
+        "textarea.text-error",
+        "textarea.background-disabled",
+        "textarea.border-disabled",
+        "textarea.text-disabled",
+        "textarea.label.color",
+        "textarea.label.font-weight",
+        "textarea.helper.color",
+        "textarea.helper.font-size",
+        "textarea.helper.line-height"
+      ],
+      "notes": "Runtime token surface."
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "Component code consumes only textarea.* component tokens.",
+    "dependencies": [
+      {
+        "name": "textarea.min-height",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-min-height",
+        "alias": "size.control.textarea-min",
+        "resolved": "80px",
+        "role": "Minimum control height",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-padding-x",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Horizontal padding",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.padding-y",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-padding-y",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Vertical padding",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.radius",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-radius",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Control corner radius",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Border width",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Text font size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Text line height",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-textarea-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "Text font weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.label-gap",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-label-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Label gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.helper-gap",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-helper-gap",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Helper gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.focus.color",
+        "type": "color",
+        "cssVar": "--fc-textarea-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "Focus ring color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.focus.width",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-focus-width",
+        "alias": "size.focus-ring.width",
+        "resolved": "2px",
+        "role": "Focus ring stroke width",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.focus.offset",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-focus-offset",
+        "alias": "size.focus-ring.offset",
+        "resolved": "2px",
+        "role": "Focus ring offset",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.focus.radius",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-focus-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Concentric focus ring radius",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.background",
+        "type": "color",
+        "cssVar": "--fc-textarea-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "Control background",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.border",
+        "type": "color",
+        "cssVar": "--fc-textarea-border",
+        "alias": "color.border.control",
+        "resolved": "#71717A",
+        "role": "Border color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.text",
+        "type": "color",
+        "cssVar": "--fc-textarea-text",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Text content color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.placeholder",
+        "type": "color",
+        "cssVar": "--fc-textarea-placeholder",
+        "alias": "color.content.tertiary",
+        "resolved": "#71717A",
+        "role": "Placeholder text color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.border-hover",
+        "type": "color",
+        "cssVar": "--fc-textarea-border-hover",
+        "alias": "color.border.control-hover",
+        "resolved": "#52525B",
+        "role": "Hovered border color",
+        "usedBy": [
+          "Hover"
+        ]
+      },
+      {
+        "name": "textarea.border-error",
+        "type": "color",
+        "cssVar": "--fc-textarea-border-error",
+        "alias": "color.border.error",
+        "resolved": "#DC2626",
+        "role": "Error border color",
+        "usedBy": [
+          "Error"
+        ]
+      },
+      {
+        "name": "textarea.text-error",
+        "type": "color",
+        "cssVar": "--fc-textarea-text-error",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "Error message text color",
+        "usedBy": [
+          "Error"
+        ]
+      },
+      {
+        "name": "textarea.background-disabled",
+        "type": "color",
+        "cssVar": "--fc-textarea-background-disabled",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "Disabled control fill",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "textarea.border-disabled",
+        "type": "color",
+        "cssVar": "--fc-textarea-border-disabled",
+        "alias": "color.border.disabled",
+        "resolved": "#E4E4E7",
+        "role": "Disabled border color",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "textarea.text-disabled",
+        "type": "color",
+        "cssVar": "--fc-textarea-text-disabled",
+        "alias": "color.content.disabled",
+        "resolved": "#A1A1AA",
+        "role": "Disabled text color",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "textarea.label.color",
+        "type": "color",
+        "cssVar": "--fc-textarea-label-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "Label text color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.label.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-textarea-label-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Label weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.helper.color",
+        "type": "color",
+        "cssVar": "--fc-textarea-helper-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "Helper copy color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.helper.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-helper-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Helper font size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "textarea.helper.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-textarea-helper-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Helper line height",
+        "usedBy": [
+          "Default"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "textarea.background",
+        "foreground": "textarea.text",
+        "border": "textarea.border",
+        "label": "textarea.label.color",
+        "helper": "textarea.helper.color",
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Do not consume color.* or space.* directly in Textarea code."
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Control meets target size requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Textarea has programmatic label association via htmlFor/id.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "textarea.text",
+        "background": "textarea.background",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 17.72
+        },
+        "status": "pass",
+        "notes": "Text on control background."
+      },
+      {
+        "role": "non-text",
+        "foreground": "textarea.border",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 4.83
+        },
+        "status": "pass",
+        "notes": "Boundary on surface."
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning and sizing."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-textarea\"><label class=\"fc-textarea__label\" for=\"notes\">Notes</label><div class=\"fc-textarea__control\"><textarea class=\"fc-textarea__field\" id=\"notes\"></textarea></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-textarea\"><label class=\"fc-textarea__label\" for=\"notes\">Notes</label><div class=\"fc-textarea__control\"><textarea class=\"fc-textarea__field\" id=\"notes\"></textarea></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-textarea",
+      "configuration": "Textarea without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "input",
+        "given": "an enabled textarea",
+        "when": "typed in",
+        "then": "value updates."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled textarea",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "textarea css",
+        "when": "inspected",
+        "then": "only textarea.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Textarea in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/textarea/textarea.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only textarea.* tokens in Textarea code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native textarea",
+        "language": "html",
+        "code": "<div class=\"fc-textarea\"><label class=\"fc-textarea__label\" for=\"memo\">Memo</label><div class=\"fc-textarea__control\"><textarea class=\"fc-textarea__field\" id=\"memo\"></textarea></div></div>",
+        "explanation": "Valid textarea composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled textarea",
+        "language": "html",
+        "code": "<textarea class=\"fc-textarea__field\"></textarea>",
+        "explanation": "Missing container, control wrapper and label."
+      }
+    ]
+  }
+}

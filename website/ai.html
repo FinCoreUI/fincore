@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>AI context — Sorleed</title>
+  <meta name="description" content="Sorleed AI context files: accurate product, component, token and accessibility guidance for AI coding tools.">
+  <link rel="stylesheet" href="../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="ai">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="index.html" data-page="overview">Overview</a></li>
+          <li><a href="getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="components.html" data-page="components">Components</a></li>
+          <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="cli.html" data-page="cli">CLI</a></li>
+          <li><a href="customisation.html" data-page="customisation">Customisation</a></li>
+          <li><a href="accessibility.html" data-page="accessibility">Accessibility</a></li>
+          <li><a href="ai.html" data-page="ai">AI</a></li>
+          <li><a href="limitations.html" data-page="limits">Limits</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="On this page">
+        <h2>On this page</h2>
+        <ul>
+          <li><a href="#files">Context files</a></li>
+          <li><a href="#use">Use with a tool</a></li>
+          <li><a href="#rules">Rules</a></li>
+          <li><a href="#limits">Limits</a></li>
+        </ul>
+      </aside>
+
+      <div class="content">
+        <h1>AI context</h1>
+        <p class="lede">A compact, accurate description of Sorleed for AI coding tools. It is generated from the implementation, not marketing copy.</p>
+
+        <h2 id="files">Context files</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable table">
+          <table>
+            <thead><tr><th>File</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>ai/product-overview.md</code></td><td>Identity, product areas and status.</td></tr>
+              <tr><td><code>ai/installation.md</code></td><td>React package, CLI and CSS setup.</td></tr>
+              <tr><td><code>ai/components.md</code></td><td>The four components and their APIs.</td></tr>
+              <tr><td><code>ai/tokens.md</code></td><td>Token architecture and conventions.</td></tr>
+              <tr><td><code>ai/accessibility.md</code></td><td>Implemented semantics and limits.</td></tr>
+              <tr><td><code>ai/customisation.md</code></td><td>Source-first customisation.</td></tr>
+              <tr><td><code>ai/instructions.md</code></td><td>Rules AI tools must follow.</td></tr>
+              <tr><td><code>ai/prompts.md</code></td><td>Reusable prompts.</td></tr>
+              <tr><td><code>ai/agent.md</code></td><td>Compact agent briefing.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="use">Use with a tool</h2>
+        <p>Give the tool the smallest set of files it needs. For most code tasks, start with <code>ai/agent.md</code>, then add <code>ai/components.md</code> and the matching contract.</p>
+        <pre><code>Read ai/agent.md and ai/components.md.
+Use only Button, Input, PasswordInput and PhoneInput.
+Do not invent props, tokens or components.
+Load tokens.css before component CSS.</code></pre>
+
+        <h2 id="rules">Non-negotiable rules</h2>
+        <ul>
+          <li>Only four components exist.</li>
+          <li>Contracts are authoritative.</li>
+          <li>No invented props, variants, tokens or Figma node IDs.</li>
+          <li>Native controls, labels and semantic errors.</li>
+          <li>No dark mode simulation.</li>
+          <li>No phone deliverability claims.</li>
+          <li>No claim that the private packages are public.</li>
+          <li>No claim of screen-reader or cross-browser certification.</li>
+        </ul>
+
+        <h2 id="limits">What the AI layer is not</h2>
+        <p>It is not a hosted AI service, a retrieval index or a chatbot. It is a set of versioned Markdown files in the repository. There is no telemetry and no external API call.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed — UI Infrastructure. MIT licensed. Copyright (c) 2026 Sorleed.</p>
+      <p><a href="../README.md">Repository README</a> · <a href="../PRODUCT.md">Product</a> · <a href="../SECURITY.md">Security</a></p>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,770 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.radio-group",
+    "name": "Radio Group",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0-alpha.2",
+    "summary": "FinCore's native radio group: fieldset + legend + native radio controls with shared name + helper/error message, four states, independent circular focus ring and only radio-group.* component tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring Checkbox, Input and Select canonical patterns.",
+        "The token block was added to tokens/tokens.json and generated into tokens/dist/tokens.css; node tokens/check.mjs passed with 27 radio-group.* component tokens.",
+        "The stylesheet consumes only variables generated from radio-group.* component tokens.",
+        "No Figma component set exists for Radio Group in v0.1, so canonical.figma is null and no design-evidence claims are made."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the radio group anatomy: group legend/label, native radio inputs with a shared name, circular indicator with inner dot, and helper/error row.",
+      "Apply only radio-group.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the circular focus ring as an independent overlay when keyboard focus is present, except when disabled.",
+      "Expose native radio group keyboard navigation (Arrow keys) and accessibility semantics."
+    ],
+    "application": [
+      "Supply the group label, options list, and manage the selected value.",
+      "Own validation: decide when a value is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby.",
+      "Use native disabled only when the control is genuinely unavailable."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Radio Group in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Choosing one option from a small, fixed set of 2–7 mutually exclusive choices.",
+      "Scenarios where all options need to be visible upfront without opening a dropdown."
+    ],
+    "inappropriate": [
+      {
+        "use": "Selecting multiple options simultaneously.",
+        "reason": "Radio inputs are strictly mutually exclusive.",
+        "alternative": "Use Checkbox."
+      },
+      {
+        "use": "Long lists of 8+ options.",
+        "reason": "Takes excessive vertical space.",
+        "alternative": "Use Select."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Fieldset: container with legend and helper/error message.",
+      "Items: column stack of radio option items.",
+      "Item: row containing radio circle and option label.",
+      "Control: 16px circular button with 8px inner dot when checked.",
+      "Focus Ring: circular absolute overlay, 2px stroke, 2px offset.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [
+      {
+        "property": "control size",
+        "value": "16px",
+        "token": "radio-group.size"
+      },
+      {
+        "property": "dot size",
+        "value": "8px",
+        "token": "radio-group.dot-size"
+      },
+      {
+        "property": "border width",
+        "value": "1px",
+        "token": "radio-group.border-width"
+      },
+      {
+        "property": "item gap",
+        "value": "12px",
+        "token": "radio-group.item-gap"
+      },
+      {
+        "property": "label gap",
+        "value": "8px",
+        "token": "radio-group.label-gap"
+      },
+      {
+        "property": "helper gap",
+        "value": "4px",
+        "token": "radio-group.helper-gap"
+      },
+      {
+        "property": "focus ring width",
+        "value": "2px",
+        "token": "radio-group.focus.width"
+      },
+      {
+        "property": "focus ring offset",
+        "value": "2px",
+        "token": "radio-group.focus.offset"
+      }
+    ],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Label",
+      "figmaType": "TEXT",
+      "figmaDefault": "Radio Group",
+      "required": true,
+      "description": "Visible group legend / label.",
+      "translation": "direct",
+      "production": {
+        "prop": "label",
+        "type": "string",
+        "default": null,
+        "required": true,
+        "derived": false,
+        "notes": "Accessible name for the radio group."
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "name",
+      "type": "string",
+      "default": null,
+      "required": true,
+      "description": "Shared name attribute connecting the radio buttons in the group.",
+      "notes": "Required for mutual exclusion."
+    },
+    {
+      "prop": "options",
+      "type": "RadioOption[]",
+      "default": null,
+      "required": true,
+      "description": "Array of radio choices with label, value, and optional disabled state.",
+      "notes": "Each option renders an accessible radio."
+    },
+    {
+      "prop": "value",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Currently selected value in controlled mode.",
+      "notes": "Matches option value."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and displays error message.",
+      "notes": "Application owns error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Replaced by error message."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "radio-group.size",
+        "radio-group.dot-size",
+        "radio-group.border-width",
+        "radio-group.item-gap",
+        "radio-group.label-gap",
+        "radio-group.helper-gap",
+        "radio-group.font-size",
+        "radio-group.line-height",
+        "radio-group.font-weight",
+        "radio-group.focus.color",
+        "radio-group.focus.width",
+        "radio-group.focus.offset",
+        "radio-group.background",
+        "radio-group.background-checked",
+        "radio-group.dot-checked",
+        "radio-group.border",
+        "radio-group.border-checked",
+        "radio-group.border-hover",
+        "radio-group.border-error",
+        "radio-group.text-error",
+        "radio-group.background-disabled",
+        "radio-group.border-disabled",
+        "radio-group.dot-disabled",
+        "radio-group.text-disabled",
+        "radio-group.label.color",
+        "radio-group.label.font-weight",
+        "radio-group.group-label.color",
+        "radio-group.group-label.font-weight",
+        "radio-group.helper.color",
+        "radio-group.helper.font-size",
+        "radio-group.helper.line-height"
+      ],
+      "notes": "Runtime token surface."
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "Component code consumes only radio-group.* component tokens.",
+    "dependencies": [
+      {
+        "name": "radio-group.size",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-size",
+        "alias": "space.4",
+        "resolved": "16px",
+        "role": "Circle size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.dot-size",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-dot-size",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Inner dot size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Border width",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.item-gap",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-item-gap",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Gap between options",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.label-gap",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-label-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Circle to label gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.helper-gap",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-helper-gap",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Helper gap",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Font size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Line height",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-radio-group-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "Font weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.focus.color",
+        "type": "color",
+        "cssVar": "--fc-radio-group-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "Focus ring color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.focus.width",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-focus-width",
+        "alias": "size.focus-ring.width",
+        "resolved": "2px",
+        "role": "Focus ring width",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.focus.offset",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-focus-offset",
+        "alias": "size.focus-ring.offset",
+        "resolved": "2px",
+        "role": "Focus ring offset",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.background",
+        "type": "color",
+        "cssVar": "--fc-radio-group-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "Unchecked circle fill",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.background-checked",
+        "type": "color",
+        "cssVar": "--fc-radio-group-background-checked",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "Checked circle fill",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.dot-checked",
+        "type": "color",
+        "cssVar": "--fc-radio-group-dot-checked",
+        "alias": "color.action.primary",
+        "resolved": "#2563EB",
+        "role": "Inner dot color when checked",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.border",
+        "type": "color",
+        "cssVar": "--fc-radio-group-border",
+        "alias": "color.border.control",
+        "resolved": "#71717A",
+        "role": "Border color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.border-checked",
+        "type": "color",
+        "cssVar": "--fc-radio-group-border-checked",
+        "alias": "color.action.primary",
+        "resolved": "#2563EB",
+        "role": "Border color when checked",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.border-hover",
+        "type": "color",
+        "cssVar": "--fc-radio-group-border-hover",
+        "alias": "color.border.control-hover",
+        "resolved": "#52525B",
+        "role": "Border color on hover",
+        "usedBy": [
+          "Hover"
+        ]
+      },
+      {
+        "name": "radio-group.border-error",
+        "type": "color",
+        "cssVar": "--fc-radio-group-border-error",
+        "alias": "color.border.error",
+        "resolved": "#DC2626",
+        "role": "Border color in error",
+        "usedBy": [
+          "Error"
+        ]
+      },
+      {
+        "name": "radio-group.text-error",
+        "type": "color",
+        "cssVar": "--fc-radio-group-text-error",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "Error message text",
+        "usedBy": [
+          "Error"
+        ]
+      },
+      {
+        "name": "radio-group.background-disabled",
+        "type": "color",
+        "cssVar": "--fc-radio-group-background-disabled",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "Disabled circle background",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "radio-group.border-disabled",
+        "type": "color",
+        "cssVar": "--fc-radio-group-border-disabled",
+        "alias": "color.border.disabled",
+        "resolved": "#E4E4E7",
+        "role": "Disabled circle border",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "radio-group.dot-disabled",
+        "type": "color",
+        "cssVar": "--fc-radio-group-dot-disabled",
+        "alias": "color.content.disabled",
+        "resolved": "#A1A1AA",
+        "role": "Disabled dot color",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "radio-group.text-disabled",
+        "type": "color",
+        "cssVar": "--fc-radio-group-text-disabled",
+        "alias": "color.content.disabled",
+        "resolved": "#A1A1AA",
+        "role": "Disabled text color",
+        "usedBy": [
+          "Disabled"
+        ]
+      },
+      {
+        "name": "radio-group.label.color",
+        "type": "color",
+        "cssVar": "--fc-radio-group-label-color",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Option label text color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.label.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-radio-group-label-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "Option label font weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.group-label.color",
+        "type": "color",
+        "cssVar": "--fc-radio-group-group-label-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "Legend / group label color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.group-label.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-radio-group-group-label-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Legend / group label font weight",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.helper.color",
+        "type": "color",
+        "cssVar": "--fc-radio-group-helper-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "Helper copy color",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.helper.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-helper-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Helper font size",
+        "usedBy": [
+          "Default"
+        ]
+      },
+      {
+        "name": "radio-group.helper.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-radio-group-helper-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Helper line height",
+        "usedBy": [
+          "Default"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "radio-group.background",
+        "foreground": "radio-group.label.color",
+        "border": "radio-group.border",
+        "label": "radio-group.label.color",
+        "helper": "radio-group.helper.color",
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Do not consume color.* or space.* directly in Radio Group code."
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Touch target area covers the full row item.",
+        "verification": "Inspect rendered layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "grouping-semantics",
+        "requirement": "Radio buttons are grouped under a fieldset with a legend.",
+        "verification": "Inspect DOM and accessibility tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "radio-group.label.color",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "default": 17.72
+        },
+        "status": "pass",
+        "notes": "Option label on surface."
+      },
+      {
+        "role": "non-text",
+        "foreground": "radio-group.border",
+        "background": "color.surface.default",
+        "minimum": 3,
+        "ratios": {
+          "default": 4.83
+        },
+        "status": "pass",
+        "notes": "Boundary on surface."
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<fieldset class=\"fc-radio-group\"><legend class=\"fc-radio-group__label\">Options</legend><div class=\"fc-radio-group__items\"><label class=\"fc-radio-group__item\"><span class=\"fc-radio-group__control\"><input type=\"radio\" class=\"fc-radio-group__field\" /><span class=\"fc-radio-group__circle\"><span class=\"fc-radio-group__dot\"></span></span></span><span class=\"fc-radio-group__item-label\">Item 1</span></label></div></fieldset>"
+    ],
+    "forbidden": [
+      "Do not use radio group for multiple selections."
+    ],
+    "example": "<fieldset class=\"fc-radio-group\"><legend class=\"fc-radio-group__label\">Options</legend><div class=\"fc-radio-group__items\"><label class=\"fc-radio-group__item\"><span class=\"fc-radio-group__control\"><input type=\"radio\" class=\"fc-radio-group__field\" /><span class=\"fc-radio-group__circle\"><span class=\"fc-radio-group__dot\"></span></span></span><span class=\"fc-radio-group__item-label\">Item 1</span></label></div></fieldset>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unnamed-radios",
+      "configuration": "Radios without shared name.",
+      "why": "Fails mutual exclusion and native keyboard navigation.",
+      "correct": "Always supply a shared name attribute."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "selection",
+        "given": "a radio group",
+        "when": "option clicked",
+        "then": "selection updates mutually exclusively."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-group",
+        "given": "a radio group",
+        "when": "inspected",
+        "then": "legend provides accessible group name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "radio group css",
+        "when": "inspected",
+        "then": "only radio-group.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard navigation",
+        "when": "focused",
+        "then": "circular focus ring is visible."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Radio Group in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/radio-group/radio-group.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only radio-group.* tokens in Radio Group code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Fieldset radio group",
+        "language": "html",
+        "code": "<fieldset class=\"fc-radio-group\"><legend class=\"fc-radio-group__label\">Billing</legend><div class=\"fc-radio-group__items\"><label class=\"fc-radio-group__item\"><span class=\"fc-radio-group__control\"><input type=\"radio\" name=\"b\" class=\"fc-radio-group__field\" /><span class=\"fc-radio-group__circle\"><span class=\"fc-radio-group__dot\"></span></span></span><span class=\"fc-radio-group__item-label\">Monthly</span></label></div></fieldset>",
+        "explanation": "Valid radio group."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Radios without fieldset",
+        "language": "html",
+        "code": "<input type=\"radio\" />",
+        "explanation": "Missing group semantics and label."
+      }
+    ]
+  }
+}

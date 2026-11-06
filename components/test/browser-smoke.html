@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore browser smoke fixture</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../input/input.css">
+  <style>
+    body {
+      margin: 24px;
+      font-family: system-ui, sans-serif;
+      color: #18181b;
+      background: #ffffff;
+    }
+    main { max-width: 760px; }
+    section { margin-block: 24px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .field { max-width: 320px; }
+    .results { white-space: pre-wrap; padding: 12px; border: 1px solid #d4d4d8; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>FinCore browser smoke fixture</h1>
+    <p>
+      This is a dependency-free browser fixture for the existing Button and Input
+      CSS. It is not a production page. Open it through the local server described
+      in <code>BROWSER-TESTING.md</code> and check the results below.
+    </p>
+    <output id="results" class="results" aria-live="polite">Running checks…</output>
+
+    <section aria-labelledby="button-cases">
+      <h2 id="button-cases">Button cases</h2>
+      <div class="row">
+        <button id="btn-primary" class="fc-button" type="button">Primary</button>
+        <button id="btn-secondary" class="fc-button fc-button--secondary" type="button">Secondary</button>
+        <button id="btn-ghost" class="fc-button fc-button--ghost" type="button">Ghost</button>
+        <button id="btn-disabled-primary" class="fc-button" type="button" disabled>Disabled primary</button>
+        <button id="btn-disabled-secondary" class="fc-button fc-button--secondary" type="button" disabled>Disabled secondary</button>
+        <button id="btn-disabled-ghost" class="fc-button fc-button--ghost" type="button" disabled>Disabled ghost</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="input-cases">
+      <h2 id="input-cases">Input cases</h2>
+
+      <div class="fc-input field">
+        <label class="fc-input__label" for="input-default">Default field</label>
+        <div class="fc-input__control">
+          <input
+            class="fc-input__field"
+            id="input-default"
+            name="defaultField"
+            type="text"
+            placeholder="Placeholder"
+            aria-describedby="input-default-helper"
+          >
+        </div>
+        <p class="fc-input__message" id="input-default-helper">Helper copy.</p>
+      </div>
+
+      <div class="fc-input field">
+        <label class="fc-input__label" for="input-disabled">Disabled field</label>
+        <div class="fc-input__control">
+          <input
+            class="fc-input__field"
+            id="input-disabled"
+            name="disabledField"
+            type="text"
+            value="Unavailable"
+            aria-describedby="input-disabled-helper"
+            disabled
+          >
+        </div>
+        <p class="fc-input__message" id="input-disabled-helper">Not available.</p>
+      </div>
+
+      <div class="fc-input field">
+        <label class="fc-input__label" for="input-error">Error field</label>
+        <div class="fc-input__control">
+          <input
+            class="fc-input__field"
+            id="input-error"
+            name="errorField"
+            type="text"
+            value="invalid"
+            aria-invalid="true"
+            aria-describedby="input-error-message"
+          >
+        </div>
+        <!-- Static example: no role="alert" on first paint. The application may add role="alert" when it inserts this message after validation. -->
+        <p class="fc-input__message fc-input__message--error" id="input-error-message">
+          Enter a valid value.
+        </p>
+      </div>
+
+      <div class="fc-input field">
+        <label class="fc-input__label fc-input__label--visually-hidden" for="input-hidden-label">
+          Hidden transaction reference
+        </label>
+        <div class="fc-input__control">
+          <input
+            class="fc-input__field"
+            id="input-hidden-label"
+            name="transactionReference"
+            type="text"
+            autocomplete="off"
+            placeholder="e.g. INV-4821"
+          >
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const checks = [];
+
+      function check(name, assertion) {
+        try {
+          const detail = assertion();
+          checks.push({ name, pass: true, detail: detail || "" });
+        } catch (error) {
+          checks.push({ name, pass: false, detail: error.message });
+        }
+      }
+
+      function assert(condition, message) {
+        if (!condition) throw new Error(message);
+      }
+
+      function byId(id) {
+        const element = document.getElementById(id);
+        assert(element, `Missing element #${id}`);
+        return element;
+      }
+
+      function style(id, property, pseudo) {
+        return getComputedStyle(byId(id), pseudo || null)[property];
+      }
+
+      function expectColor(id, property, expected) {
+        const actual = style(id, property);
+        assert(
+          actual === expected,
+          `${id} ${property}: expected ${expected}, got ${actual}`,
+        );
+        return actual;
+      }
+
+      function expectRect(id, expectedHeight) {
+        const height = Math.round(byId(id).getBoundingClientRect().height);
+        assert(
+          height === expectedHeight,
+          `${id}: expected ${expectedHeight}px height, got ${height}px`,
+        );
+        return `${height}px`;
+      }
+
+      function expectTransparent(id) {
+        const actual = style(id, "backgroundColor");
+        assert(
+          actual === "transparent" || actual === "rgba(0, 0, 0, 0)",
+          `${id} background: expected transparent, got ${actual}`,
+        );
+        return actual;
+      }
+
+      function expectDescription(inputId, messageId) {
+        const input = byId(inputId);
+        const message = byId(messageId);
+        assert(
+          message,
+          `${messageId} is not present`,
+        );
+        assert(
+          (input.getAttribute("aria-describedby") || "")
+            .split(/\s+/)
+            .includes(messageId),
+          `${inputId} does not reference ${messageId}`,
+        );
+        return `${inputId} → ${messageId}`;
+      }
+
+      check("token CSS variables are present", () => {
+        const root = getComputedStyle(document.documentElement);
+        const value = root.getPropertyValue("--fc-button-primary-background").trim();
+        assert(value.length > 0, "--fc-button-primary-background is empty");
+        return value;
+      });
+
+      check("Button variants resolve token colours", () => {
+        expectColor("btn-primary", "backgroundColor", "rgb(37, 99, 235)");
+        expectColor("btn-primary", "color", "rgb(255, 255, 255)");
+        expectColor("btn-secondary", "backgroundColor", "rgb(244, 244, 245)");
+        expectColor("btn-secondary", "color", "rgb(24, 24, 27)");
+        expectTransparent("btn-ghost");
+        expectColor("btn-ghost", "color", "rgb(24, 24, 27)");
+        return "primary/secondary/ghost";
+      });
+
+      check("Button geometry and radius resolve", () => {
+        expectRect("btn-primary", 40);
+        expectRect("btn-secondary", 40);
+        expectRect("btn-ghost", 40);
+        assert(
+          style("btn-primary", "borderRadius") === "6px",
+          `button radius: ${style("btn-primary", "borderRadius")}`,
+        );
+        return "40px high, 6px radius";
+      });
+
+      check("Disabled buttons use the inactive treatment", () => {
+        for (const id of [
+          "btn-disabled-primary",
+          "btn-disabled-secondary",
+        ]) {
+          expectColor(id, "backgroundColor", "rgb(228, 228, 231)");
+          expectColor(id, "color", "rgb(161, 161, 170)");
+          assert(byId(id).disabled, `${id} is not disabled`);
+        }
+        expectTransparent("btn-disabled-ghost");
+        expectColor("btn-disabled-ghost", "color", "rgb(161, 161, 170)");
+        return "disabled fill/text and transparent ghost";
+      });
+
+      check("Default Input resolves geometry and colours", () => {
+        expectRect("input-default", 40);
+        expectColor("input-default", "backgroundColor", "rgb(255, 255, 255)");
+        expectColor("input-default", "color", "rgb(24, 24, 27)");
+        expectColor("input-default", "borderTopColor", "rgb(113, 113, 122)");
+        assert(
+          style("input-default", "borderTopWidth") === "1px",
+          `input border width: ${style("input-default", "borderTopWidth")}`,
+        );
+        return "40px high, 1px border, token colours";
+      });
+
+      check("Disabled Input exposes disabled semantics and colours", () => {
+        const input = byId("input-disabled");
+        assert(input.disabled, "disabled input is not disabled");
+        expectColor("input-disabled", "backgroundColor", "rgb(228, 228, 231)");
+        expectColor("input-disabled", "borderTopColor", "rgb(228, 228, 231)");
+        expectColor("input-disabled", "color", "rgb(161, 161, 170)");
+        return "disabled fill/border/text";
+      });
+
+      check("Error Input applies error styling and message association", () => {
+        expectColor("input-error", "borderTopColor", "rgb(220, 38, 38)");
+        expectColor("input-error-message", "color", "rgb(153, 27, 27)");
+        assert(
+          byId("input-error").getAttribute("aria-invalid") === "true",
+          "error input is not aria-invalid",
+        );
+        expectDescription("input-error", "input-error-message");
+        assert(
+          !byId("input-error-message").hasAttribute("role"),
+          "static error message must not use role=alert on first paint",
+        );
+        return "red border, red message, aria-invalid, describedby";
+      });
+
+      check("Helper references resolve", () => {
+        expectDescription("input-default", "input-default-helper");
+        expectDescription("input-disabled", "input-disabled-helper");
+        return "helper descriptions resolve";
+      });
+
+      check("Visually hidden label remains associated", () => {
+        const label = document.querySelector('label[for="input-hidden-label"]');
+        const input = byId("input-hidden-label");
+        assert(label, "hidden label is missing");
+        assert(
+          label.classList.contains("fc-input__label--visually-hidden"),
+          "hidden label class is missing",
+        );
+        assert(input.labels.length === 1 && input.labels[0] === label, "input.labels association failed");
+        assert(
+          getComputedStyle(label).position === "absolute",
+          "hidden label is not visually hidden",
+        );
+        return "input.labels points to the hidden label";
+      });
+
+      check("Enabled controls are keyboard-focusable", () => {
+        const enabledControls = document.querySelectorAll(
+          "#btn-primary, #btn-secondary, #btn-ghost, #input-default, #input-error, #input-hidden-label",
+        );
+        enabledControls.forEach((control) => {
+          assert(control.tabIndex >= 0, `${control.id} is not tab-focusable`);
+        });
+        return `${enabledControls.length} enabled controls`;
+      });
+
+      const failures = checks.filter((entry) => !entry.pass);
+      const output = document.getElementById("results");
+      output.dataset.status = failures.length === 0 ? "pass" : "fail";
+      output.textContent = [
+        `${checks.length - failures.length} passed, ${failures.length} failed`,
+        "",
+        ...checks.map((entry) =>
+          `${entry.pass ? "PASS" : "FAIL"}  ${entry.name}${entry.detail ? ` — ${entry.detail}` : ""}`,
+        ),
+      ].join("\n");
+
+      window.__fincoreBrowserSmoke = checks;
+    })();
+  </script>
+</body>
+</html>

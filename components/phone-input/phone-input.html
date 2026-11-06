@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore PhoneInput — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./phone-input.css">
+</head>
+<body>
+  <main>
+    <h1>PhoneInput reference markup</h1>
+    <p>
+      International phone field: label, country selector, number input and helper/error row.
+      This is a structural reference. A full searchable country selector with formatting requires
+      adapter logic (e.g., libphonenumber-js). No IP geolocation or forced default country.
+    </p>
+
+    <section aria-labelledby="phone-default">
+      <h2 id="phone-default">Default (no default country)</h2>
+
+      <div class="fc-phone-input">
+        <label class="fc-phone-input__label" for="phone-1">Phone number</label>
+        <div class="fc-phone-input__row">
+          <div class="fc-phone-input__country">
+            <label class="fc-phone-input__country-label" for="phone-1-country">Country</label>
+            <select class="fc-phone-input__country-select" id="phone-1-country" name="phoneCountry" aria-label="Country">
+              <option value="">Select country</option>
+              <option value="US">United States (+1)</option>
+              <option value="GB">United Kingdom (+44)</option>
+              <option value="CA">Canada (+1)</option>
+            </select>
+          </div>
+          <div class="fc-phone-input__control">
+            <input
+              class="fc-phone-input__field"
+              id="phone-1"
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              placeholder="+1 (555) 000-0000"
+              aria-describedby="phone-1-helper"
+            >
+          </div>
+        </div>
+        <p class="fc-phone-input__message" id="phone-1-helper">
+          Enter your phone number in international format.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="phone-error">
+      <h2 id="phone-error">Error state</h2>
+
+      <div class="fc-phone-input">
+        <label class="fc-phone-input__label" for="phone-2">Phone number</label>
+        <div class="fc-phone-input__row">
+          <div class="fc-phone-input__country">
+            <label class="fc-phone-input__country-label" for="phone-2-country">Country</label>
+            <select class="fc-phone-input__country-select" id="phone-2-country" name="phoneCountry" aria-label="Country">
+              <option value="US">United States (+1)</option>
+            </select>
+          </div>
+          <div class="fc-phone-input__control">
+            <input
+              class="fc-phone-input__field"
+              id="phone-2"
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              value="+1 555"
+              aria-invalid="true"
+              aria-describedby="phone-2-error"
+            >
+          </div>
+        </div>
+        <p class="fc-phone-input__message fc-phone-input__message--error" id="phone-2-error">
+          Enter a valid phone number.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="phone-disabled">
+      <h2 id="phone-disabled">Disabled</h2>
+
+      <div class="fc-phone-input">
+        <label class="fc-phone-input__label" for="phone-3">Phone number</label>
+        <div class="fc-phone-input__row">
+          <div class="fc-phone-input__country">
+            <label class="fc-phone-input__country-label" for="phone-3-country">Country</label>
+            <select class="fc-phone-input__country-select" id="phone-3-country" name="phoneCountry" aria-label="Country" disabled>
+              <option value="GB">United Kingdom (+44)</option>
+            </select>
+          </div>
+          <div class="fc-phone-input__control">
+            <input
+              class="fc-phone-input__field"
+              id="phone-3"
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              value="+44 20 7946 0958"
+              aria-describedby="phone-3-helper"
+              disabled
+            >
+          </div>
+        </div>
+        <p class="fc-phone-input__message" id="phone-3-helper">
+          Not editable in this context.
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

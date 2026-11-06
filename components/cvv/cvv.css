@@ -1,0 +1,156 @@
+/*
+ * FinCore CVV — production styles for card security code inputs.
+ * Contract: components/cvv/contract.json (1.0.0)
+ *
+ * Consumes only --fc-cvv-* component tokens from tokens/dist/tokens.css.
+ * State precedence: Disabled > Error > Hover > Default.
+ * Focus is an independent overlay, shown for keyboard/pointer focus and
+ * suppressed by the native disabled attribute.
+ */
+
+.fc-cvv {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+}
+
+.fc-cvv__label {
+  margin: 0;
+  margin-block-end: var(--fc-cvv-label-gap);
+  color: var(--fc-cvv-label-color);
+  font-size: var(--fc-cvv-font-size);
+  font-weight: var(--fc-cvv-label-font-weight);
+  line-height: var(--fc-cvv-line-height);
+}
+
+.fc-cvv__label--visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fc-cvv__control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.fc-cvv__field {
+  box-sizing: border-box;
+  width: 100px;
+  min-height: var(--fc-cvv-height);
+  padding-inline: var(--fc-cvv-padding-x);
+  border: var(--fc-cvv-border-width) solid var(--fc-cvv-border);
+  border-radius: var(--fc-cvv-radius);
+  background-color: var(--fc-cvv-background);
+  color: var(--fc-cvv-text);
+  font-family: inherit;
+  font-size: var(--fc-cvv-font-size);
+  font-weight: var(--fc-cvv-font-weight);
+  letter-spacing: var(--fc-cvv-letter-spacing);
+  line-height: var(--fc-cvv-line-height);
+  appearance: none;
+  transition: border-color 120ms ease;
+}
+
+.fc-cvv__field--with-toggle {
+  padding-inline-end: calc(var(--fc-cvv-padding-x) + 24px);
+}
+
+.fc-cvv__field::placeholder {
+  color: var(--fc-cvv-placeholder);
+  letter-spacing: normal;
+  opacity: 1;
+}
+
+.fc-cvv__field:hover:not(:disabled):not([aria-invalid="true"]) {
+  border-color: var(--fc-cvv-border-hover);
+}
+
+.fc-cvv__field[aria-invalid="true"]:not(:disabled) {
+  border-color: var(--fc-cvv-border-error);
+}
+
+.fc-cvv__field:focus {
+  outline: none;
+}
+
+.fc-cvv__field:focus-visible {
+  outline: var(--fc-cvv-focus-width) solid var(--fc-cvv-focus-color);
+  outline-offset: var(--fc-cvv-focus-offset);
+}
+
+.fc-cvv__field:disabled {
+  border-color: var(--fc-cvv-border-disabled);
+  background-color: var(--fc-cvv-background-disabled);
+  color: var(--fc-cvv-text-disabled);
+  cursor: not-allowed;
+}
+
+.fc-cvv__toggle {
+  position: absolute;
+  inset-inline-end: var(--fc-cvv-padding-x);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--fc-cvv-helper-color);
+  font-size: var(--fc-cvv-helper-font-size);
+  line-height: var(--fc-cvv-helper-line-height);
+  cursor: pointer;
+}
+
+.fc-cvv__toggle:disabled {
+  color: var(--fc-cvv-text-disabled);
+  cursor: not-allowed;
+}
+
+.fc-cvv__toggle:focus-visible {
+  outline: var(--fc-cvv-focus-width) solid var(--fc-cvv-focus-color);
+  outline-offset: var(--fc-cvv-focus-offset);
+}
+
+.fc-cvv__message {
+  margin: 0;
+  margin-block-start: var(--fc-cvv-helper-gap);
+  color: var(--fc-cvv-helper-color);
+  font-size: var(--fc-cvv-helper-font-size);
+  line-height: var(--fc-cvv-helper-line-height);
+}
+
+.fc-cvv__message--error {
+  color: var(--fc-cvv-text-error);
+}
+
+
+/* Size variants */
+.fc-cvv--sm .fc-cvv__field {
+  min-height: calc(var(--fc-cvv-height) - var(--fc-cvv-label-gap));
+  padding-block: calc((var(--fc-cvv-height) - var(--fc-cvv-label-gap) - var(--fc-cvv-line-height)) / 2);
+}
+
+.fc-cvv--lg .fc-cvv__field {
+  min-height: calc(var(--fc-cvv-height) + var(--fc-cvv-label-gap));
+  padding-block: calc((var(--fc-cvv-height) + var(--fc-cvv-label-gap) - var(--fc-cvv-line-height)) / 2);
+}
+
+/* Loading state */
+.fc-cvv--loading,
+.fc-cvv[aria-busy="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}

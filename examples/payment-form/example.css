@@ -1,0 +1,211 @@
+/*
+ * Application layout for the FinCore payment-form example.
+ *
+ * This is not a FinCore component stylesheet. It consumes existing --fc-*
+ * variables, defines no FinCore tokens and never targets component classes.
+ * The Button and Input implementation CSS is loaded separately.
+ */
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  background-color: var(--fc-color-surface-canvas);
+  color: var(--fc-color-content-primary);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: var(--fc-font-size-sm);
+  line-height: var(--fc-font-line-height-sm);
+}
+
+.example-page {
+  max-width: 48rem;
+  margin-inline: auto;
+  padding: var(--fc-space-4);
+}
+
+.example-header {
+  margin-block-end: var(--fc-space-4);
+}
+
+.example-eyebrow {
+  margin: 0 0 var(--fc-space-1);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  font-weight: var(--fc-font-weight-medium);
+  line-height: var(--fc-font-line-height-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.example-title {
+  margin: 0 0 var(--fc-space-2);
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+.example-intro {
+  margin: 0;
+  color: var(--fc-color-content-secondary);
+}
+
+.example-status {
+  min-height: var(--fc-font-line-height-xs);
+  margin: 0 0 var(--fc-space-3);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-layout {
+  display: grid;
+  gap: var(--fc-space-4);
+}
+
+.example-account,
+.example-review {
+  min-width: 0;
+  padding: var(--fc-space-4);
+  border: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  border-radius: var(--fc-radius-lg);
+  background-color: var(--fc-color-surface-default);
+}
+
+.example-account__name {
+  margin: 0 0 var(--fc-space-1);
+  font-size: var(--fc-font-size-sm);
+  font-weight: var(--fc-font-weight-medium);
+  line-height: var(--fc-font-line-height-sm);
+}
+
+.example-account__number {
+  margin: 0 0 var(--fc-space-2);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-account__balance {
+  margin: 0;
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-account__balance strong {
+  color: var(--fc-color-content-primary);
+  font-weight: var(--fc-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+.example-form-section,
+.example-review {
+  min-width: 0;
+}
+
+.example-form-section[hidden],
+.example-review[hidden] {
+  display: none;
+}
+
+.example-section-title {
+  margin: 0 0 var(--fc-space-2);
+  font-size: var(--fc-font-size-sm);
+  font-weight: var(--fc-font-weight-medium);
+  line-height: var(--fc-font-line-height-sm);
+}
+
+.example-form-note {
+  margin: 0 0 var(--fc-space-2);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-form {
+  display: grid;
+  gap: var(--fc-space-3);
+}
+
+.example-field {
+  min-width: 0;
+}
+
+.example-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fc-space-2);
+  margin-block-start: var(--fc-space-2);
+}
+
+.example-review__note {
+  margin: 0 0 var(--fc-space-3);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-summary {
+  margin: 0 0 var(--fc-space-3);
+  padding-block: var(--fc-space-2);
+  border-block: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+}
+
+.example-summary > div {
+  display: grid;
+  grid-template-columns: minmax(6rem, auto) 1fr;
+  column-gap: var(--fc-space-3);
+  padding-block: var(--fc-space-1);
+}
+
+.example-summary dt {
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-summary dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.example-summary__amount dd {
+  font-weight: var(--fc-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.example-footer {
+  margin-block-start: var(--fc-space-4);
+  padding-block-start: var(--fc-space-3);
+  border-block-start: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-footer p {
+  margin: 0;
+}
+
+@media (min-width: 760px) {
+  .example-layout {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+  }
+}
+
+@media (max-width: 639px) {
+  .example-page {
+    padding: var(--fc-space-3) var(--fc-space-2);
+  }
+}

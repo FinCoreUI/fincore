@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Tokens — Sorleed</title>
+  <meta name="description" content="Sorleed token architecture: primitives, semantic roles and component tokens across 460 --fc-* properties with dark theme support.">
+  <link rel="stylesheet" href="../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/input/input.css">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="tokens">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="index.html" data-page="overview">Overview</a></li>
+          <li><a href="getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="components.html" data-page="components">Components</a></li>
+          <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="cli.html" data-page="cli">CLI</a></li>
+          <li><a href="customisation.html" data-page="customisation">Customisation</a></li>
+          <li><a href="accessibility.html" data-page="accessibility">Accessibility</a></li>
+          <li><a href="ai.html" data-page="ai">AI</a></li>
+          <li><a href="limitations.html" data-page="limits">Limits</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="On this page">
+        <h2>On this page</h2>
+        <ul>
+          <li><a href="#layers">Layers</a></li>
+          <li><a href="#naming">Naming</a></li>
+          <li><a href="#families">Component families</a></li>
+          <li><a href="#customise">Customise</a></li>
+          <li><a href="#validation">Validation</a></li>
+        </ul>
+      </aside>
+
+      <div class="content">
+        <h1>Tokens</h1>
+        <p class="lede">460 <code>--fc-*</code> custom properties, generated from one source of truth with full dark theme support via <code>[data-theme="dark"]</code> and <code>.dark</code>.</p>
+
+        <h2 id="layers">Layers</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>1. Primitive</h3>
+            <p>Raw palette values: neutral, blue, green, amber, red, purple, orange, white and black. Not consumed by component CSS.</p>
+          </article>
+          <article class="card">
+            <h3>2. Semantic</h3>
+            <p>Roles such as <code>color.surface.default</code>, <code>color.content.primary</code> and <code>color.border.focus</code>.</p>
+          </article>
+          <article class="card">
+            <h3>3. Component</h3>
+            <p><code>button.*</code>, <code>input.*</code> and <code>phone-input.*</code>. The only layer component CSS may consume.</p>
+          </article>
+        </div>
+        <p>Aliases flow downward: component → semantic → primitive. A component token never repeats a raw value directly.</p>
+
+        <h2 id="naming">Naming</h2>
+        <ul>
+          <li>Groups are dot-separated: <code>color.surface.default</code>.</li>
+          <li>State suffixes are hyphenated: <code>input.background-disabled</code>.</li>
+          <li>CSS variables add the <code>--sl-</code> prefix and use hyphens: <code>--sl-input-background-disabled</code>.</li>
+        </ul>
+        <pre><code>--sl-color-content-primary: #18181B;
+--sl-input-text: var(--sl-color-content-primary);
+--sl-input-border-error: var(--sl-color-border-error);</code></pre>
+
+        <h2 id="families">Component families</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable table">
+          <table>
+            <thead><tr><th>Family</th><th>Count</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>--fc-button-*</code></td><td>22</td><td>Primary, secondary and ghost variants; focus and disabled.</td></tr>
+              <tr><td><code>--fc-input-*</code></td><td>28</td><td>Default, hover, error and disabled; helper and focus.</td></tr>
+              <tr><td><code>--fc-phone-input-*</code></td><td>31</td><td>Country selector, number input, message and focus.</td></tr>
+              <tr><td><code>--fc-select-*</code></td><td>27</td><td>Native select field with label and helper/error.</td></tr>
+              <tr><td><code>--fc-checkbox-*</code></td><td>27</td><td>Accessible checkbox with label association.</td></tr>
+              <tr><td><code>--fc-radio-group-*</code></td><td>31</td><td>Radio options group with mutual exclusion.</td></tr>
+              <tr><td><code>--fc-textarea-*</code></td><td>29</td><td>Multi-line textarea control with resize tokens.</td></tr>
+              <tr><td><code>--fc-otp-*</code></td><td>27</td><td>One-time code group with fixed cell geometry.</td></tr>
+              <tr><td><code>--fc-currency-*</code></td><td>30</td><td>Financial input with currency prefix and suffix.</td></tr>
+              <tr><td><code>--fc-cvv-*</code></td><td>29</td><td>Payment security code input with masked styling.</td></tr>
+              <tr><td><code>--fc-date-picker-*</code></td><td>30</td><td>Native date picker with label and error states.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="customise">Customise</h2>
+        <p>Override semantic roles in your application theme. Do not edit generated token CSS and do not invent component names.</p>
+        <pre><code>:root {
+  --sl-color-border-focus: #0f766e;
+  --sl-color-content-primary: #111827;
+}</code></pre>
+        <p>After a change, re-check text, boundary, focus and error contrast. Keep the alias chain intact.</p>
+
+        <h2 id="validation">Validation and generation</h2>
+        <pre><code>node tokens/check.mjs
+node tokens/check.mjs --write</code></pre>
+        <p>The validator checks structure, contrast pairs and generated-CSS currency. <code>--write</code> regenerates <code>tokens/dist/tokens.css</code> after an intentional source change.</p>
+        <div class="demo">
+          <div class="demo__row">
+            <div class="demo__surface" style="background: var(--sl-color-surface-muted); padding: 1rem; border-radius: 8px;">
+              <p style="margin:0; color: var(--sl-color-content-secondary);">Surface muted sample</p>
+            </div>
+            <div class="demo__surface" style="background: var(--sl-color-surface-default); padding: 1rem; border-radius: 8px; border: 1px solid var(--sl-color-border-subtle);">
+              <p style="margin:0; color: var(--sl-color-content-primary);">Surface default sample</p>
+            </div>
+            <div class="demo__surface" style="background: var(--sl-color-surface-default); padding: 1rem; border-radius: 8px;">
+              <button class="sl-button sl-button--primary" type="button">Token-driven button</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout--info">
+          <p><strong>Dark Theme Supported.</strong> Semantic color roles switch seamlessly under <code>[data-theme="dark"]</code> or <code>.dark</code> containers.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed — UI Infrastructure. MIT licensed. Copyright (c) 2026 Sorleed.</p>
+      <p><a href="../README.md">Repository README</a> · <a href="../PRODUCT.md">Product</a> · <a href="../SECURITY.md">Security</a></p>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>

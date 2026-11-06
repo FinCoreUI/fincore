@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore OTP — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./otp.css">
+</head>
+<body>
+  <main>
+    <h1>OTP Input reference markup</h1>
+    <p>
+      Verification code entry: accessible label, single-digit cells with auto-advance and paste support, and helper/error row.
+    </p>
+
+    <section aria-labelledby="otp-default">
+      <h2 id="otp-default">Default 6-digit verification</h2>
+
+      <div class="fc-otp" role="group" aria-labelledby="otp-default-label">
+        <span class="fc-otp__label" id="otp-default-label">Verification code</span>
+        <div class="fc-otp__cells">
+          <div class="fc-otp__cell-wrapper">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="fc-otp__cell" aria-label="Digit 1 of 6" autocomplete="one-time-code">
+          </div>
+          <div class="fc-otp__cell-wrapper">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="fc-otp__cell" aria-label="Digit 2 of 6">
+          </div>
+          <div class="fc-otp__cell-wrapper">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="fc-otp__cell" aria-label="Digit 3 of 6">
+          </div>
+          <div class="fc-otp__cell-wrapper">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="fc-otp__cell" aria-label="Digit 4 of 6">
+          </div>
+          <div class="fc-otp__cell-wrapper">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="fc-otp__cell" aria-label="Digit 5 of 6">
+          </div>
+          <div class="fc-otp__cell-wrapper">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="fc-otp__cell" aria-label="Digit 6 of 6">
+          </div>
+        </div>
+        <p class="fc-otp__message" id="otp-helper">
+          Enter the 6-digit code sent to your mobile phone.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="otp-error">
+      <h2 id="otp-error">Error after failed verification</h2>
+
+      <div class="fc-otp" role="group" aria-labelledby="otp-error-label" aria-describedby="otp-error-msg">
+        <span class="fc-otp__label" id="otp-error-label">Security PIN</span>
+        <div class="fc-otp__cells">
+          <div class="fc-otp__cell-wrapper">
+            <input type="text" inputmode="numeric" maxlength="1" class="fc-otp__cell" aria-invalid="true" aria-label="Digit 1 of 4" value="1">
+          </div>
+          <div class="fc-otp__cell-wrapper">
+            <input type="text" inputmode="numeric" maxlength="1" class="fc-otp__cell" aria-invalid="true" aria-label="Digit 2 of 4" value="2">
+          </div>
+          <div class="fc-otp__cell-wrapper">
+            <input type="text" inputmode="numeric" maxlength="1" class="fc-otp__cell" aria-invalid="true" aria-label="Digit 3 of 4" value="3">
+          </div>
+          <div class="fc-otp__cell-wrapper">
+            <input type="text" inputmode="numeric" maxlength="1" class="fc-otp__cell" aria-invalid="true" aria-label="Digit 4 of 4" value="4">
+          </div>
+        </div>
+        <p class="fc-otp__message fc-otp__message--error" id="otp-error-msg">
+          Invalid code. 2 attempts remaining.
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+

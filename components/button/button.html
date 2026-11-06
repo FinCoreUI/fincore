@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore Button — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./button.css">
+</head>
+<body>
+  <main>
+    <h1>Button reference markup</h1>
+    <p>
+      Native <code>&lt;button&gt;</code> elements. Hover, active and keyboard focus
+      are produced by the browser; there is no state prop or fake role.
+    </p>
+
+    <section aria-labelledby="button-variants">
+      <h2 id="button-variants">Variants</h2>
+
+      <!-- Primary is the default. The explicit modifier is optional. -->
+      <button class="fc-button" type="button">Primary action</button>
+      <button class="fc-button fc-button--primary" type="button">Primary action</button>
+      <button class="fc-button fc-button--secondary" type="button">Secondary action</button>
+      <button class="fc-button fc-button--ghost" type="button">Ghost action</button>
+    </section>
+
+    <section aria-labelledby="button-disabled">
+      <h2 id="button-disabled">Genuinely unavailable actions</h2>
+      <p>The native <code>disabled</code> attribute removes the control from interaction and tab order.</p>
+
+      <button class="fc-button" type="button" disabled>Unavailable primary action</button>
+      <button class="fc-button fc-button--secondary" type="button" disabled>Unavailable secondary action</button>
+      <button class="fc-button fc-button--ghost" type="button" disabled>Unavailable ghost action</button>
+    </section>
+
+    <section aria-labelledby="button-form">
+      <h2 id="button-form">Form actions</h2>
+
+      <form>
+        <!-- type="button" prevents accidental submission. -->
+        <button class="fc-button fc-button--secondary" type="button">Cancel</button>
+        <!-- Explicit type="submit" drives native form submission. -->
+        <button class="fc-button fc-button--primary" type="submit">Review transfer</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

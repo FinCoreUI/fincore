@@ -1,0 +1,124 @@
+/*
+ * FinCore Button — production styles for a native <button>.
+ * Contract: components/button/contract.json (1.0.0)
+ *
+ * Consumes only --fc-button-* component tokens from tokens/dist/tokens.css.
+ * State is derived from native interaction:
+ *   surface: disabled > active > hover > default
+ *   focus:   additive keyboard-focus ring (:focus-visible), suppressed when disabled
+ *
+ * There is no state prop, no combined Hover+Focus variant and no non-button element.
+ */
+
+.fc-button,
+.fc-button--primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--fc-button-height);
+  margin: 0;
+  padding-block: calc((var(--fc-button-height) - var(--fc-button-line-height)) / 2);
+  padding-inline: var(--fc-button-padding-x);
+  border: 0;
+  border-radius: var(--fc-button-radius);
+  background-color: var(--fc-button-primary-background);
+  color: var(--fc-button-primary-foreground);
+  font-family: inherit;
+  font-size: var(--fc-button-font-size);
+  font-weight: var(--fc-button-font-weight);
+  line-height: var(--fc-button-line-height);
+  text-align: center;
+  cursor: pointer;
+  appearance: none;
+}
+
+/* Primary is the default variant. The explicit modifier is optional. */
+.fc-button:not(:disabled):hover {
+  background-color: var(--fc-button-primary-background-hover);
+}
+
+.fc-button:not(:disabled):active {
+  background-color: var(--fc-button-primary-background-active);
+}
+
+.fc-button--secondary {
+  background-color: var(--fc-button-secondary-background);
+  color: var(--fc-button-secondary-foreground);
+}
+
+.fc-button--secondary:not(:disabled):hover {
+  background-color: var(--fc-button-secondary-background-hover);
+}
+
+.fc-button--secondary:not(:disabled):active {
+  background-color: var(--fc-button-secondary-background-active);
+}
+
+.fc-button--ghost {
+  /* No Ghost default-background token exists; the page surface shows through. */
+  background-color: transparent;
+  color: var(--fc-button-ghost-foreground);
+}
+
+.fc-button--ghost:not(:disabled):hover {
+  background-color: var(--fc-button-ghost-background-hover);
+}
+
+.fc-button--ghost:not(:disabled):active {
+  background-color: var(--fc-button-ghost-background-active);
+}
+
+/*
+ * The ring is an additive keyboard-focus overlay, not a second state axis.
+ * Inset by the offset token, then draw the ring width outside the surface.
+ */
+.fc-button::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--fc-button-focus-offset));
+  border: var(--fc-button-focus-width) solid transparent;
+  border-radius: calc(var(--fc-button-radius) + var(--fc-button-focus-offset));
+  pointer-events: none;
+}
+
+.fc-button:focus-visible {
+  outline: none;
+}
+
+.fc-button:focus-visible::after {
+  border-color: var(--fc-button-focus-color);
+}
+
+/* Disabled is the final state: it suppresses hover, active and focus treatment. */
+.fc-button:disabled {
+  background-color: var(--fc-button-disabled-background);
+  color: var(--fc-button-disabled-foreground);
+  cursor: not-allowed;
+}
+
+.fc-button--ghost:disabled {
+  background-color: transparent;
+}
+
+.fc-button:disabled::after {
+  display: none;
+}
+
+/* Preserve a visible boundary and focus indicator with system colours. */
+@media (forced-colors: active) {
+  .fc-button {
+    border: var(--fc-button-focus-width) solid ButtonText;
+  }
+
+  .fc-button::after {
+    display: none;
+  }
+
+  .fc-button:focus-visible {
+    outline: var(--fc-button-focus-width) solid Highlight;
+    outline-offset: var(--fc-button-focus-offset);
+  }
+}
+

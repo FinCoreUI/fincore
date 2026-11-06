@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Components — Sorleed</title>
+  <meta name="description" content="Sorleed Button, Input, PhoneInput, Select, Checkbox, Radio Group, Textarea, OTP, Currency, CVV, DatePicker: states, props, accessibility and usage.">
+  <link rel="stylesheet" href="../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/input/input.css">
+  <link rel="stylesheet" href="../components/password-input/password-input.css">
+  <link rel="stylesheet" href="../components/phone-input/phone-input.css">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="components">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="index.html" data-page="overview">Overview</a></li>
+          <li><a href="getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="components.html" data-page="components">Components</a></li>
+          <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="cli.html" data-page="cli">CLI</a></li>
+          <li><a href="customisation.html" data-page="customisation">Customisation</a></li>
+          <li><a href="accessibility.html" data-page="accessibility">Accessibility</a></li>
+          <li><a href="ai.html" data-page="ai">AI</a></li>
+          <li><a href="limitations.html" data-page="limits">Limits</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="On this page">
+        <h2>Components</h2>
+        <ul>
+          <li><a href="#button">Button</a></li>
+          <li><a href="#input">Input</a></li>
+          <li><a href="#password-input">PasswordInput</a></li>
+          <li><a href="#phone-input">PhoneInput</a></li>
+          <li><a href="#select">Select</a></li>
+          <li><a href="#checkbox">Checkbox</a></li>
+          <li><a href="#radio-group">Radio Group</a></li>
+          <li><a href="#textarea">Textarea</a></li>
+          <li><a href="#otp">OTP</a></li>
+          <li><a href="#currency">Currency</a></li>
+          <li><a href="#cvv">CVV</a></li>
+          <li><a href="#date-picker">DatePicker</a></li>
+          <li><a href="#shared">Shared rules</a></li>
+        </ul>
+      </aside>
+
+      <div class="content">
+        <h1>Components</h1>
+        <p class="lede">Twelve canonical components. Full contract validation, dark theme, and size/loading variant support. Each one has a contract, canonical CSS, native reference markup and a React adapter.</p>
+
+        <h2 id="button">Button</h2>
+        <p>A native <code>&lt;button&gt;</code>. Defaults to <code>type="button"</code> and the primary variant.</p>
+        <div class="demo">
+          <div class="demo__row">
+            <div class="demo__surface"><button class="sl-button sl-button--primary" type="button">Primary</button></div>
+            <div class="demo__surface"><button class="sl-button sl-button--secondary" type="button">Secondary</button></div>
+            <div class="demo__surface"><button class="sl-button sl-button--ghost" type="button">Ghost</button></div>
+            <div class="demo__surface"><button class="sl-button sl-button--primary" type="button" disabled>Disabled</button></div>
+          </div>
+        </div>
+        <pre><code>import { Button } from "@sorleed/react";
+
+&lt;Button variant="primary"&gt;Continue&lt;/Button&gt;
+&lt;Button variant="secondary"&gt;Cancel&lt;/Button&gt;
+&lt;Button variant="ghost"&gt;Back&lt;/Button&gt;
+&lt;Button disabled&gt;Unavailable&lt;/Button&gt;</code></pre>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable table">
+          <table>
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>variant</code></td><td><code>"primary" | "secondary" | "ghost"</code></td><td><code>"primary"</code></td><td>Visual variant.</td></tr>
+              <tr><td><code>type</code></td><td>Native button type</td><td><code>"button"</code></td><td>Prevents accidental form submission.</td></tr>
+              <tr><td>native attributes</td><td><code>ButtonHTMLAttributes</code></td><td>—</td><td><code>disabled</code>, <code>aria-*</code>, <code>data-*</code> pass through.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>States: default, hover, active, focus-visible and disabled. Disabled wins over every other state.</p>
+
+        <h2 id="input">Input</h2>
+        <p>A native text-like input with a required label, optional helper and explicit error state.</p>
+        <div class="demo">
+          <div class="demo__row">
+            <div class="demo__surface">
+              <div class="sl-input">
+                <label class="sl-input__label" for="demo-email">Email</label>
+                <div class="sl-input__control">
+                  <input class="sl-input__field" id="demo-email" type="email" placeholder="you@example.com">
+                </div>
+                <p class="sl-input__message">We only use this for account notices.</p>
+              </div>
+            </div>
+            <div class="demo__surface">
+              <div class="sl-input">
+                <label class="sl-input__label" for="demo-error">Account number</label>
+                <div class="sl-input__control">
+                  <input class="sl-input__field" id="demo-error" type="text" value="1234" aria-invalid="true" aria-describedby="demo-error-message">
+                </div>
+                <p class="sl-input__message sl-input__message--error" id="demo-error-message">Account number must be 10 digits.</p>
+              </div>
+            </div>
+            <div class="demo__surface">
+              <div class="sl-input">
+                <label class="sl-input__label" for="demo-disabled">Read only field</label>
+                <div class="sl-input__control">
+                  <input class="sl-input__field" id="demo-disabled" type="text" value="Not editable" disabled>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <pre><code>import { Input } from "@sorleed/react";
+
+&lt;Input label="Email" type="email" placeholder="you@example.com" /&gt;
+&lt;Input label="Name" helperText="Enter your full name." /&gt;
+&lt;Input
+  label="Account number"
+  value={value}
+  onChange={(event) =&gt; setValue(event.target.value)}
+  errorMessage={error}
+/&gt;</code></pre>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable table">
+          <table>
+            <thead><tr><th>Prop</th><th>Type</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>label</code></td><td><code>string</code></td><td>Required. Visible or visually hidden.</td></tr>
+              <tr><td><code>hideLabel</code></td><td><code>boolean</code></td><td>Hides visually; keeps the accessible name.</td></tr>
+              <tr><td><code>helperText</code></td><td><code>string</code></td><td>Shown when there is no error.</td></tr>
+              <tr><td><code>errorMessage</code></td><td><code>string</code></td><td>Replaces helper text and sets <code>aria-invalid</code>.</td></tr>
+              <tr><td><code>type</code></td><td><code>"text" | "email" | "tel" | "number" | "url"</code></td><td>Other types are out of scope.</td></tr>
+              <tr><td><code>id</code></td><td><code>string</code></td><td>Generated when omitted.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="password-input">PasswordInput</h2>
+        <p>A password input with a real toggle button. The toggle reports its state with <code>aria-pressed</code>.</p>
+        <div class="demo">
+          <div class="demo__surface">
+            <div class="sl-password-input">
+              <label class="sl-password-input__label" for="demo-password">Password</label>
+              <div class="sl-password-input__control">
+                <input class="sl-password-input__field" id="demo-password" type="password" value="correct-horse-battery" aria-describedby="demo-password-helper">
+                <button class="sl-password-input__toggle" type="button" aria-controls="demo-password" aria-pressed="false" data-password-toggle>Show password</button>
+              </div>
+              <p class="sl-password-input__message" id="demo-password-helper">Use at least 12 characters.</p>
+            </div>
+          </div>
+        </div>
+        <pre><code>import { PasswordInput } from "@sorleed/react";
+
+&lt;PasswordInput
+  label="Password"
+  autoComplete="current-password"
+  helperText="Use at least 12 characters."
+/&gt;</code></pre>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable table">
+          <table>
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required.</td></tr>
+              <tr><td><code>hideLabel</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Visually hides the label.</td></tr>
+              <tr><td><code>helperText</code></td><td><code>string</code></td><td>—</td><td>Shown when there is no error.</td></tr>
+              <tr><td><code>errorMessage</code></td><td><code>string</code></td><td>—</td><td>Sets <code>aria-invalid</code>.</td></tr>
+              <tr><td><code>visible</code></td><td><code>boolean</code></td><td>—</td><td>Controlled visibility.</td></tr>
+              <tr><td><code>defaultVisible</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Uncontrolled initial visibility.</td></tr>
+              <tr><td><code>onVisibleChange</code></td><td><code>(visible: boolean) =&gt; void</code></td><td>—</td><td>Toggle callback.</td></tr>
+              <tr><td><code>showPasswordLabel</code></td><td><code>string</code></td><td><code>"Show password"</code></td><td>Accessible toggle name.</td></tr>
+              <tr><td><code>hidePasswordLabel</code></td><td><code>string</code></td><td><code>"Hide password"</code></td><td>Accessible toggle name.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="phone-input">PhoneInput</h2>
+        <p>A phone field with a native country selector and optional <code>libphonenumber-js</code> validation. No IP geolocation and no forced default country.</p>
+        <div class="demo">
+          <div class="demo__surface">
+            <div class="sl-phone-input">
+              <label class="sl-phone-input__label" for="demo-phone">Phone number</label>
+              <div class="sl-phone-input__row">
+                <div class="sl-phone-input__country">
+                  <label class="sl-phone-input__country-label" for="demo-phone-country">Country</label>
+                  <select class="sl-phone-input__country-select" id="demo-phone-country" data-phone-country aria-label="Country">
+                    <option value="">Select country</option>
+                    <option value="US" data-dial="1">United States (+1)</option>
+                    <option value="GB" data-dial="44">United Kingdom (+44)</option>
+                    <option value="CA" data-dial="1">Canada (+1)</option>
+                    <option value="DE" data-dial="49">Germany (+49)</option>
+                    <option value="NG" data-dial="234">Nigeria (+234)</option>
+                  </select>
+                </div>
+                <div class="sl-phone-input__control">
+                  <input class="sl-phone-input__field" id="demo-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+1 (555) 000-0000" aria-describedby="demo-phone-helper">
+                </div>
+              </div>
+              <p class="sl-phone-input__message" id="demo-phone-helper">Dial code: <span data-phone-dial>+</span>. Include your country code.</p>
+            </div>
+          </div>
+        </div>
+        <pre><code>import { PhoneInput } from "@sorleed/react/phone-input";
+
+&lt;PhoneInput
+  label="Phone number"
+  helperText="Include your country code."
+  onChange={({ inputValue, e164, country, status, isValid }) =&gt; {
+    // The application decides what to display.
+  }}
+/&gt;</code></pre>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable table">
+          <table>
+            <thead><tr><th>Prop</th><th>Type</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>label</code></td><td><code>string</code></td><td>Required.</td></tr>
+              <tr><td><code>value</code> / <code>defaultValue</code></td><td><code>string</code></td><td>Controlled or uncontrolled editing value.</td></tr>
+              <tr><td><code>country</code> / <code>defaultCountry</code></td><td><code>string</code></td><td>ISO 3166-1 alpha-2. Never inferred from IP.</td></tr>
+              <tr><td><code>countries</code></td><td><code>string[]</code></td><td>Optional ISO allow-list.</td></tr>
+              <tr><td><code>onChange</code></td><td><code>(result: PhoneInputChangeResult) =&gt; void</code></td><td>Reports editing value and status.</td></tr>
+              <tr><td><code>onCountryChange</code></td><td><code>(country?: string) =&gt; void</code></td><td>Selector callback.</td></tr>
+              <tr><td><code>errorMessage</code></td><td><code>string</code></td><td>Sets <code>aria-invalid</code> and shows the message.</td></tr>
+              <tr><td><code>international</code></td><td><code>boolean</code></td><td>Accepted for compatibility; does not change behaviour yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><code>isValid</code> means numbering-plan format validity. It does not prove that a number is active, reachable or owned.</p>
+
+        
+        <h2 id="select">Select</h2>
+        <p>A native <code>&lt;select&gt;</code> dropdown with associated label, control wrapper, and message row. Supports <code>sm</code>, <code>md</code>, and <code>lg</code> sizes plus loading states.</p>
+
+        <h2 id="checkbox">Checkbox</h2>
+        <p>Accessible native checkbox input with persistent label and error/helper text wiring.</p>
+
+        <h2 id="radio-group">Radio Group</h2>
+        <p>Group of native radio inputs sharing a common name for mutual exclusion and accessible keyboard navigation.</p>
+
+        <h2 id="textarea">Textarea</h2>
+        <p>Multi-line native <code>&lt;textarea&gt;</code> control with flexible resize behavior, size variants, and loading support.</p>
+
+        <h2 id="otp">OTP</h2>
+        <p>Group of single-character inputs supporting automatic advance, backspace navigation, and paste handling.</p>
+
+        <h2 id="currency">Currency</h2>
+        <p>Financial input control with configurable prefix (e.g. <code>$</code>) and suffix currency symbols.</p>
+
+        <h2 id="cvv">CVV</h2>
+        <p>Short fixed-length masked input for payment card verification with optional visibility toggle.</p>
+
+        <h2 id="date-picker">DatePicker</h2>
+        <p>Native date field with accessible label associations, min/max range limits, and validation states.</p>
+
+        <h2 id="shared">Shared rules</h2>
+        <ul>
+          <li>Native elements only. No custom listbox or hidden input tricks.</li>
+          <li>Every field has a programmatic label.</li>
+          <li>Focus is an additive overlay, visible for keyboard and pointer focus.</li>
+          <li>Disabled wins over hover, error and focus.</li>
+          <li>Errors are never colour-only; a message is required.</li>
+          <li>No state, variant or prop outside the contract.</li>
+        </ul>
+        <div class="callout">
+          <p>Read the full contracts in <code>components/&lt;component&gt;/contract.json</code> and the human guides in <code>components/&lt;component&gt;/README.md</code>.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed — UI Infrastructure. MIT licensed. Copyright (c) 2026 Sorleed.</p>
+      <p><a href="../README.md">Repository README</a> · <a href="../PRODUCT.md">Product</a> · <a href="../SECURITY.md">Security</a></p>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>

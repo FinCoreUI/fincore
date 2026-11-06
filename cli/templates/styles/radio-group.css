@@ -1,0 +1,194 @@
+/*
+ * FinCore Radio Group — production styles for native <input type="radio"> groups.
+ * Contract: components/radio-group/contract.json (1.0.0)
+ *
+ * Consumes only --fc-radio-group-* component tokens from tokens/dist/tokens.css.
+ * State precedence: Disabled > Error > Hover > Default.
+ * Focus is an independent overlay, shown for keyboard/pointer focus and
+ * suppressed by the native disabled attribute.
+ */
+
+.fc-radio-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.fc-radio-group__label {
+  margin: 0;
+  margin-block-end: var(--fc-radio-group-label-gap);
+  color: var(--fc-radio-group-group-label-color);
+  font-size: var(--fc-radio-group-font-size);
+  font-weight: var(--fc-radio-group-group-label-font-weight);
+  line-height: var(--fc-radio-group-line-height);
+}
+
+.fc-radio-group__label--visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fc-radio-group__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fc-radio-group-item-gap);
+}
+
+.fc-radio-group__item {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--fc-radio-group-label-gap);
+  cursor: pointer;
+  position: relative;
+}
+
+.fc-radio-group__item--disabled {
+  cursor: not-allowed;
+}
+
+.fc-radio-group__control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--fc-radio-group-size);
+  height: var(--fc-radio-group-size);
+  flex-shrink: 0;
+  margin-block-start: calc((var(--fc-radio-group-line-height) - var(--fc-radio-group-size)) / 2);
+}
+
+.fc-radio-group__field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+  z-index: 1;
+}
+
+.fc-radio-group__circle {
+  box-sizing: border-box;
+  width: var(--fc-radio-group-size);
+  height: var(--fc-radio-group-size);
+  border: var(--fc-radio-group-border-width) solid var(--fc-radio-group-border);
+  border-radius: 50%;
+  background-color: var(--fc-radio-group-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 120ms ease, border-color 120ms ease;
+  pointer-events: none;
+}
+
+.fc-radio-group__dot {
+  display: none;
+  width: var(--fc-radio-group-dot-size);
+  height: var(--fc-radio-group-dot-size);
+  border-radius: 50%;
+  background-color: var(--fc-radio-group-dot-checked);
+}
+
+.fc-radio-group__field:checked ~ .fc-radio-group__circle {
+  border-color: var(--fc-radio-group-border-checked);
+}
+
+.fc-radio-group__field:checked ~ .fc-radio-group__circle .fc-radio-group__dot {
+  display: block;
+}
+
+/* Hover is below Error and Disabled in precedence */
+.fc-radio-group__field:not(:disabled):hover ~ .fc-radio-group__circle {
+  border-color: var(--fc-radio-group-border-hover);
+}
+
+.fc-radio-group__field:checked:not(:disabled):hover ~ .fc-radio-group__circle {
+  border-color: var(--fc-radio-group-border-checked);
+}
+
+/* Error state keyed to aria-invalid */
+.fc-radio-group__field[aria-invalid="true"]:not(:disabled) ~ .fc-radio-group__circle {
+  border-color: var(--fc-radio-group-border-error);
+}
+
+/* Disabled state */
+.fc-radio-group__field:disabled ~ .fc-radio-group__circle {
+  border-color: var(--fc-radio-group-border-disabled);
+  background-color: var(--fc-radio-group-background-disabled);
+}
+
+.fc-radio-group__field:disabled ~ .fc-radio-group__circle .fc-radio-group__dot {
+  background-color: var(--fc-radio-group-dot-disabled);
+}
+
+.fc-radio-group__item-label {
+  margin: 0;
+  color: var(--fc-radio-group-label-color);
+  font-size: var(--fc-radio-group-font-size);
+  font-weight: var(--fc-radio-group-label-font-weight);
+  line-height: var(--fc-radio-group-line-height);
+  user-select: none;
+}
+
+.fc-radio-group__item-label--disabled {
+  color: var(--fc-radio-group-text-disabled);
+}
+
+.fc-radio-group__message {
+  margin: 0;
+  margin-block-start: var(--fc-radio-group-helper-gap);
+  color: var(--fc-radio-group-helper-color);
+  font-size: var(--fc-radio-group-helper-font-size);
+  font-weight: var(--fc-radio-group-font-weight);
+  line-height: var(--fc-radio-group-helper-line-height);
+}
+
+.fc-radio-group__message--error {
+  color: var(--fc-radio-group-text-error);
+}
+
+/* Focus ring overlay */
+.fc-radio-group__control::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--fc-radio-group-focus-offset));
+  border: var(--fc-radio-group-focus-width) solid transparent;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.fc-radio-group__control:has(.fc-radio-group__field:focus-visible)::after {
+  border-color: var(--fc-radio-group-focus-color);
+}
+
+.fc-radio-group__control:has(.fc-radio-group__field:disabled)::after {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .fc-radio-group__circle {
+    border-color: ButtonText;
+  }
+
+  .fc-radio-group__control::after {
+    display: none;
+  }
+
+  .fc-radio-group__control:has(.fc-radio-group__field:focus-visible)::after {
+    display: block;
+    border-color: Highlight;
+  }
+}
+

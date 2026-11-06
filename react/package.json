@@ -1,8 +1,7 @@
 {
-  "name": "@weft-ui/react",
+  "name": "@sorleed/react",
   "version": "0.1.0-alpha.2",
   "description": "Weft React component library",
-  "private": true,
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -51,5 +50,8 @@
     "build": "tsup && node scripts/copy-assets.mjs",
     "test": "node --import tsx --test test/*.test.tsx",
     "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

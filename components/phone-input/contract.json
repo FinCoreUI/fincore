@@ -5,7 +5,7 @@
     "name": "PhoneInput",
     "version": "1.0.0",
     "status": "draft",
-    "componentVersion": "0.1.0-alpha.2",
+    "componentVersion": "0.1.0",
     "summary": "FinCore's international phone-number field with label, country selector, number input and helper or error. Supports global numbers without hardcoding a default country or using IP geolocation and distinguishes editing text, normalised international values and validation status.",
     "maturity": "contract; framework-agnostic CSS + native HTML reference",
     "lastUpdated": "2026-10-28",

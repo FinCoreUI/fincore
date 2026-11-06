@@ -1,8 +1,7 @@
 {
-  "name": "@weft-ui/cli",
+  "name": "@sorleed/cli",
   "version": "0.1.0-alpha.2",
   "description": "Source-distribution CLI for Weft components",
-  "private": true,
   "type": "module",
   "bin": {
     "weft": "./bin/weft.mjs",
@@ -18,5 +17,8 @@
     "src",
     "templates",
     "README.md"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

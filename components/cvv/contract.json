@@ -5,7 +5,7 @@
     "name": "CVV",
     "version": "1.0.0",
     "status": "draft",
-    "componentVersion": "0.1.0-alpha.2",
+    "componentVersion": "0.1.0",
     "summary": "FinCore native CVV input: label + masked card security code input with short length restriction + optional visibility toggle + helper/error message, four states, independent focus ring and only cvv.* component tokens.",
     "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
     "lastUpdated": "2026-11-06",

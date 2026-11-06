@@ -5,7 +5,7 @@
     "name": "DatePicker",
     "version": "1.0.0",
     "status": "draft",
-    "componentVersion": "0.1.0-alpha.2",
+    "componentVersion": "0.1.0",
     "summary": "FinCore native DatePicker input: label + date control wrapper + native calendar picker/segment affordances + helper/error message, four states, independent focus ring and only date-picker.* component tokens.",
     "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
     "lastUpdated": "2026-11-06",

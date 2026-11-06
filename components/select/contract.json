@@ -5,7 +5,7 @@
     "name": "Select",
     "version": "1.0.0",
     "status": "draft",
-    "componentVersion": "0.1.0-alpha.2",
+    "componentVersion": "0.1.0",
     "summary": "FinCore's native single-value select: label + control + helper/error, four mutually exclusive states, an independent focus ring and only select.* component tokens. Implemented as framework-agnostic CSS with native HTML semantics; no Figma source exists yet.",
     "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
     "lastUpdated": "2026-11-06",

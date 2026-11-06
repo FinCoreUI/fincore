@@ -5,7 +5,7 @@
     "name": "OTP",
     "version": "1.0.0",
     "status": "draft",
-    "componentVersion": "0.1.0-alpha.2",
+    "componentVersion": "0.1.0",
     "summary": "FinCore's native OTP input: label + group of single-character digit cells + helper/error message, four states, independent focus ring and only otp.* component tokens.",
     "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
     "lastUpdated": "2026-11-06",

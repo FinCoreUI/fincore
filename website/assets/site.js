@@ -74,3 +74,38 @@
     updateDial();
   }
 })();
+
+/* Theme Toggle Support (Dark Mode) */
+(function() {
+  function getTheme() {
+    return localStorage.getItem("sorleed-theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  }
+
+  function setTheme(theme) {
+    if (theme === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.setAttribute("data-theme", "light");
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("sorleed-theme", theme);
+    document.querySelectorAll("[data-theme-toggle]").forEach(function(btn) {
+      btn.textContent = theme === "dark" ? "☀️ Light mode" : "🌙 Dark mode";
+      btn.setAttribute("aria-label", "Switch to " + (theme === "dark" ? "light" : "dark") + " mode");
+    });
+  }
+
+  // Initial set
+  setTheme(getTheme());
+
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll("[data-theme-toggle]").forEach(function(btn) {
+      btn.textContent = getTheme() === "dark" ? "☀️ Light mode" : "🌙 Dark mode";
+      btn.addEventListener("click", function() {
+        var current = getTheme();
+        setTheme(current === "dark" ? "light" : "dark");
+      });
+    });
+  });
+})();

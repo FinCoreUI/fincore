@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <title>Input Component — Sorleed</title>
+  <meta name="description" content="Sorleed Input component: interactive playground, props, accessibility, and canonical CSS tokens.">
+  <link rel="stylesheet" href="../tokens-dist/tokens.css">
+  <link rel="stylesheet" href="../components-dist/input/input.css">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-page="components">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="../index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">🌙 Dark mode</button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="../getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="../components.html" data-page="components" aria-current="page">Components</a></li>
+          <li><a href="../tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="../examples.html" data-page="examples">Examples</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="Components navigation">
+        <h2>Components</h2>
+        <ul>
+          <li><a href="button.html">Button</a></li>
+          <li><a href="input.html" class="is-active" aria-current="page"><strong>Input</strong></a></li>
+          <li><a href="../components.html#phone-input">PhoneInput</a></li>
+          <li><a href="../components.html#select">Select</a></li>
+          <li><a href="../components.html#checkbox">Checkbox</a></li>
+          <li><a href="../components.html#radio-group">Radio Group</a></li>
+          <li><a href="../components.html#textarea">Textarea</a></li>
+          <li><a href="../components.html#otp">OTP</a></li>
+          <li><a href="../components.html#currency">Currency</a></li>
+          <li><a href="../components.html#cvv">CVV</a></li>
+          <li><a href="../components.html#date-picker">DatePicker</a></li>
+        </ul>
+      </aside>
+
+      <div class="content">
+        <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.5rem;">
+          <h1 style="margin-bottom: 0;">Input</h1>
+          <span class="badge">Canonical CSS + React</span>
+        </div>
+        <p class="lede">A native text-like input with required accessible label association, optional helper text, explicit error state handling, and dark theme support.</p>
+
+        <!-- Interactive Playground -->
+        <h2>Interactive Playground</h2>
+        <div class="playground" id="input-playground">
+          <div class="playground__stage-wrapper">
+            <div class="playground__stage" style="align-items: flex-start; justify-content: stretch;">
+              <div style="width: 100%; max-width: 360px; margin: auto;">
+                <div id="playground-input-wrapper" class="fc-input">
+                  <label id="playground-input-label" class="fc-input__label" for="demo-input">
+                    Account email
+                  </label>
+                  <div class="fc-input__control">
+                    <input
+                      id="demo-input"
+                      type="text"
+                      class="fc-input__field"
+                      placeholder="name@example.com"
+                      aria-describedby="demo-input-message"
+                    >
+                  </div>
+                  <p id="playground-input-message" class="fc-input__message">
+                    We will send receipts to this email address.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="playground__code-panel">
+              <div class="playground__tabs">
+                <button class="playground__tab is-active" type="button" data-tab="react">React</button>
+                <button class="playground__tab" type="button" data-tab="html">HTML + CSS</button>
+              </div>
+              <div id="code-output-react">
+                <pre><code id="code-snippet-react">import { Input } from "@sorleed/react";
+
+&lt;Input
+  label="Account email"
+  placeholder="name@example.com"
+  helperText="We will send receipts to this email address."
+/&gt;</code></pre>
+              </div>
+              <div id="code-output-html" style="display: none;">
+                <pre><code id="code-snippet-html">&lt;div class="fc-input"&gt;
+  &lt;label class="fc-input__label" for="demo-input"&gt;Account email&lt;/label&gt;
+  &lt;div class="fc-input__control"&gt;
+    &lt;input class="fc-input__field" id="demo-input" placeholder="name@example.com" aria-describedby="demo-input-message"&gt;
+  &lt;/div&gt;
+  &lt;p class="fc-input__message" id="demo-input-message"&gt;We will send receipts to this email address.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="playground__controls">
+            <h3>Props & Controls</h3>
+
+            <div class="control-group">
+              <label for="control-label">Label Text</label>
+              <input type="text" id="control-label" class="control-text" value="Account email">
+            </div>
+
+            <div class="control-group">
+              <label for="control-placeholder">Placeholder</label>
+              <input type="text" id="control-placeholder" class="control-text" value="name@example.com">
+            </div>
+
+            <div class="control-group">
+              <label for="control-helper">Helper Text</label>
+              <input type="text" id="control-helper" class="control-text" value="We will send receipts to this email address.">
+            </div>
+
+            <div class="control-group">
+              <label for="control-error">Error Message</label>
+              <input type="text" id="control-error" class="control-text" placeholder="e.g. Please enter a valid email">
+            </div>
+
+            <div class="control-group">
+              <label for="control-size">Size</label>
+              <select id="control-size" class="control-select">
+                <option value="sm">Small (sm - 32px)</option>
+                <option value="md" selected>Medium (md - 40px)</option>
+                <option value="lg">Large (lg - 48px)</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label class="control-checkbox">
+                <input type="checkbox" id="control-hide-label">
+                <span>Hide Label (visually-hidden)</span>
+              </label>
+            </div>
+
+            <div class="control-group">
+              <label class="control-checkbox">
+                <input type="checkbox" id="control-loading">
+                <span>Loading (aria-busy)</span>
+              </label>
+            </div>
+
+            <div class="control-group">
+              <label class="control-checkbox">
+                <input type="checkbox" id="control-disabled">
+                <span>Disabled</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <h2>Component Props</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Component Props">
+          <table>
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>label</code></td><td><code>string</code></td><td>Required</td><td>Accessible name for the field. Associated via <code>htmlFor/id</code>.</td></tr>
+              <tr><td><code>hideLabel</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Keeps label in accessibility tree but visually hidden.</td></tr>
+              <tr><td><code>helperText</code></td><td><code>string</code></td><td>—</td><td>Optional explanatory helper copy.</td></tr>
+              <tr><td><code>errorMessage</code></td><td><code>string</code></td><td>—</td><td>Triggers error state and applies <code>aria-invalid="true"</code>.</td></tr>
+              <tr><td><code>size</code></td><td><code>"sm" | "md" | "lg"</code></td><td><code>"md"</code></td><td>Geometric control height.</td></tr>
+              <tr><td><code>loading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Displays loading indicator and sets <code>aria-busy="true"</code>.</td></tr>
+              <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Native disabled state; suppresses hover, error, and focus rings.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Design Tokens</h2>
+        <p>Input components consume semantic <code>--fc-input-*</code> tokens:</p>
+        <ul>
+          <li><code>--fc-input-background</code> / <code>--fc-input-text</code> / <code>--fc-input-placeholder</code></li>
+          <li><code>--fc-input-border</code> / <code>--fc-input-border-hover</code> / <code>--fc-input-border-error</code> / <code>--fc-input-border-disabled</code></li>
+          <li><code>--fc-input-focus-color</code> / <code>--fc-input-focus-width</code> / <code>--fc-input-focus-offset</code></li>
+          <li><code>--fc-input-label-color</code> / <code>--fc-input-label-font-weight</code> / <code>--fc-input-label-gap</code></li>
+          <li><code>--fc-input-helper-color</code> / <code>--fc-input-helper-gap</code> / <code>--fc-input-text-error</code></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed · UI Infrastructure for high-integrity interfaces.</p>
+      <p><a href="https://github.com/sorleed/sorleed">GitHub</a> · MIT License</p>
+    </div>
+  </footer>
+
+  <script src="../assets/site.js"></script>
+  <script>
+    (function() {
+      var wrapper = document.getElementById("playground-input-wrapper");
+      var labelEl = document.getElementById("playground-input-label");
+      var inputEl = document.getElementById("demo-input");
+      var messageEl = document.getElementById("playground-input-message");
+
+      var controlLabel = document.getElementById("control-label");
+      var controlPlaceholder = document.getElementById("control-placeholder");
+      var controlHelper = document.getElementById("control-helper");
+      var controlError = document.getElementById("control-error");
+      var controlSize = document.getElementById("control-size");
+      var controlHideLabel = document.getElementById("control-hide-label");
+      var controlLoading = document.getElementById("control-loading");
+      var controlDisabled = document.getElementById("control-disabled");
+
+      var reactCode = document.getElementById("code-snippet-react");
+      var htmlCode = document.getElementById("code-snippet-html");
+
+      function updatePlayground() {
+        var label = controlLabel.value || "Field label";
+        var placeholder = controlPlaceholder.value || "";
+        var helper = controlHelper.value || "";
+        var error = controlError.value || "";
+        var size = controlSize.value;
+        var hideLabel = controlHideLabel.checked;
+        var loading = controlLoading.checked;
+        var disabled = controlDisabled.checked;
+        var hasError = Boolean(error);
+
+        // Update DOM
+        labelEl.textContent = label;
+        labelEl.className = "fc-input__label";
+        if (hideLabel) labelEl.classList.add("fc-input__label--visually-hidden");
+
+        inputEl.placeholder = placeholder;
+        inputEl.disabled = disabled || loading;
+
+        if (loading) {
+          inputEl.setAttribute("aria-busy", "true");
+        } else {
+          inputEl.removeAttribute("aria-busy");
+        }
+
+        if (hasError) {
+          inputEl.setAttribute("aria-invalid", "true");
+        } else {
+          inputEl.removeAttribute("aria-invalid");
+        }
+
+        // Wrapper classes
+        wrapper.className = "fc-input";
+        if (size !== "md") wrapper.classList.add("fc-input--" + size);
+        if (loading) wrapper.classList.add("fc-input--" + loading);
+
+        // Message
+        var msgText = hasError ? error : helper;
+        if (msgText) {
+          messageEl.style.display = "block";
+          messageEl.textContent = msgText;
+          messageEl.className = "fc-input__message" + (hasError ? " fc-input__message--error" : "");
+          inputEl.setAttribute("aria-describedby", "demo-input-message");
+        } else {
+          messageEl.style.display = "none";
+          inputEl.removeAttribute("aria-describedby");
+        }
+
+        // React code
+        var reactLines = ['import { Input } from "@sorleed/react";\n'];
+        reactLines.push('<Input');
+        reactLines.push('  label="' + label + '"');
+        if (hideLabel) reactLines.push('  hideLabel');
+        if (placeholder) reactLines.push('  placeholder="' + placeholder + '"');
+        if (size !== "md") reactLines.push('  size="' + size + '"');
+        if (error) {
+          reactLines.push('  errorMessage="' + error + '"');
+        } else if (helper) {
+          reactLines.push('  helperText="' + helper + '"');
+        }
+        if (loading) reactLines.push('  loading');
+        if (disabled) reactLines.push('  disabled');
+        reactLines.push('/>');
+        reactCode.textContent = reactLines.join("\n");
+
+        // HTML code
+        var htmlLines = ['<div class="' + wrapper.className + '">'];
+        htmlLines.push('  <label class="' + labelEl.className + '" for="demo-input">' + label + '</label>');
+        htmlLines.push('  <div class="fc-input__control">');
+
+        var inputAttrs = ['class="fc-input__field"', 'id="demo-input"'];
+        if (placeholder) inputAttrs.push('placeholder="' + placeholder + '"');
+        if (hasError) inputAttrs.push('aria-invalid="true"');
+        if (msgText) inputAttrs.push('aria-describedby="demo-input-message"');
+        if (disabled || loading) inputAttrs.push('disabled');
+        if (loading) inputAttrs.push('aria-busy="true"');
+
+        htmlLines.push('    <input ' + inputAttrs.join(" ") + '>');
+        htmlLines.push('  </div>');
+        if (msgText) {
+          htmlLines.push('  <p class="' + messageEl.className + '" id="demo-input-message">' + msgText + '</p>');
+        }
+        htmlLines.push('</div>');
+        htmlCode.textContent = htmlLines.join("\n");
+      }
+
+      controlLabel.addEventListener("input", updatePlayground);
+      controlPlaceholder.addEventListener("input", updatePlayground);
+      controlHelper.addEventListener("input", updatePlayground);
+      controlError.addEventListener("input", updatePlayground);
+      controlSize.addEventListener("change", updatePlayground);
+      controlHideLabel.addEventListener("change", updatePlayground);
+      controlLoading.addEventListener("change", updatePlayground);
+      controlDisabled.addEventListener("change", updatePlayground);
+
+      // Tabs
+      var tabs = document.querySelectorAll(".playground__tab");
+      tabs.forEach(function(tab) {
+        tab.addEventListener("click", function() {
+          tabs.forEach(function(t) { t.classList.remove("is-active"); });
+          tab.classList.add("is-active");
+          var tabType = tab.getAttribute("data-tab");
+          document.getElementById("code-output-react").style.display = tabType === "react" ? "block" : "none";
+          document.getElementById("code-output-html").style.display = tabType === "html" ? "block" : "none";
+        });
+      });
+
+      updatePlayground();
+    })();
+  </script>
+</body>
+</html>

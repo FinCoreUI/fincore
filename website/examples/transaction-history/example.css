@@ -1,0 +1,351 @@
+/*
+ * Application layout for the FinCore transaction-history example.
+ *
+ * This is not a FinCore component stylesheet. It consumes existing --fc-*
+ * variables, defines no FinCore tokens and never targets component classes.
+ * The Button and Input implementation CSS is loaded separately.
+ */
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  background-color: var(--fc-color-surface-canvas);
+  color: var(--fc-color-content-primary);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: var(--fc-font-size-sm);
+  line-height: var(--fc-font-line-height-sm);
+}
+
+.example-page {
+  max-width: 60rem;
+  margin-inline: auto;
+  padding: var(--fc-space-4);
+}
+
+.example-header {
+  margin-block-end: var(--fc-space-4);
+}
+
+.example-eyebrow {
+  margin: 0 0 var(--fc-space-1);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  font-weight: var(--fc-font-weight-medium);
+  line-height: var(--fc-font-line-height-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.example-title {
+  margin: 0 0 var(--fc-space-1);
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+.example-account {
+  margin: 0 0 var(--fc-space-1);
+  color: var(--fc-color-content-secondary);
+}
+
+.example-account__number {
+  font-variant-numeric: tabular-nums;
+}
+
+.example-demo-note {
+  margin: 0;
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-summary {
+  margin-block-end: var(--fc-space-4);
+  padding: var(--fc-space-4);
+  border: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  border-radius: var(--fc-radius-lg);
+  background-color: var(--fc-color-surface-default);
+}
+
+.example-summary__label {
+  margin: 0 0 var(--fc-space-1);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-summary__value {
+  margin: 0 0 var(--fc-space-1);
+  font-size: 1.5rem;
+  font-weight: var(--fc-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+}
+
+.example-summary__note {
+  margin: 0;
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-filters,
+.example-results {
+  margin-block-end: var(--fc-space-4);
+}
+
+.example-section-title {
+  margin: 0 0 var(--fc-space-2);
+  font-size: var(--fc-font-size-sm);
+  font-weight: var(--fc-font-weight-medium);
+  line-height: var(--fc-font-line-height-sm);
+}
+
+.example-filter-form {
+  display: grid;
+  gap: var(--fc-space-3);
+}
+
+.example-filter-field {
+  min-width: 0;
+  max-width: 32rem;
+}
+
+.example-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fc-space-2);
+}
+
+.example-status {
+  margin: 0 0 var(--fc-space-2);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-table-wrap {
+  overflow-x: auto;
+  border: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  border-radius: var(--fc-radius-lg);
+  background-color: var(--fc-color-surface-default);
+}
+
+.example-table-wrap[hidden] {
+  display: none;
+}
+
+.example-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.example-caption {
+  padding: var(--fc-space-3);
+  border-block-end: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+  text-align: start;
+}
+
+.example-table th,
+.example-table td {
+  padding: var(--fc-space-2) var(--fc-space-3);
+  border-block-end: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  text-align: start;
+  vertical-align: top;
+}
+
+.example-table th {
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  font-weight: var(--fc-font-weight-medium);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-table tbody tr:last-child td {
+  border-block-end: 0;
+}
+
+/* Keep this selector more specific than the generic cell rule above. */
+.example-table th.example-amount-heading,
+.example-table td.example-amount {
+  text-align: end;
+}
+
+.example-amount {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.example-amount-value {
+  display: block;
+  font-weight: var(--fc-font-weight-medium);
+}
+
+.example-direction {
+  display: block;
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-date,
+.example-status-cell {
+  white-space: nowrap;
+}
+
+.example-description,
+.example-reference {
+  overflow-wrap: anywhere;
+}
+
+.example-list {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  border-radius: var(--fc-radius-lg);
+  background-color: var(--fc-color-surface-default);
+}
+
+.example-card {
+  padding: var(--fc-space-3);
+  border-block-end: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+}
+
+.example-card:last-child {
+  border-block-end: 0;
+}
+
+.example-card__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--fc-space-2);
+  align-items: start;
+}
+
+.example-card__description {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.example-card__amount {
+  margin: 0;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.example-card__meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--fc-space-2);
+  row-gap: var(--fc-space-1);
+  margin: var(--fc-space-2) 0 0;
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-card__meta dt {
+  font-weight: var(--fc-font-weight-medium);
+}
+
+.example-card__meta dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.example-card__meta time {
+  white-space: nowrap;
+}
+
+/*
+ * Visually hidden text that stays in the accessibility tree. Used for the
+ * comma between an amount and its Debit/Credit word so the accessible text
+ * does not concatenate them.
+ */
+.example-sr-only {
+  position: absolute;
+  display: block;
+  width: max-content;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.example-empty {
+  padding: var(--fc-space-4);
+  border: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  border-radius: var(--fc-radius-lg);
+  background-color: var(--fc-color-surface-default);
+}
+
+.example-empty[hidden] {
+  display: none;
+}
+
+.example-empty__heading {
+  margin: 0 0 var(--fc-space-1);
+  font-size: var(--fc-font-size-sm);
+  font-weight: var(--fc-font-weight-medium);
+  line-height: var(--fc-font-line-height-sm);
+}
+
+.example-empty__body {
+  margin: 0;
+  color: var(--fc-color-content-secondary);
+}
+
+.example-footer {
+  margin-block-start: var(--fc-space-4);
+  padding-block-start: var(--fc-space-3);
+  border-block-start: var(--fc-size-border-width) solid var(--fc-color-border-subtle);
+  color: var(--fc-color-content-secondary);
+  font-size: var(--fc-font-size-xs);
+  line-height: var(--fc-font-line-height-xs);
+}
+
+.example-footer p {
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .example-filter-form {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
+  .example-filter-field {
+    max-width: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .example-page {
+    padding: var(--fc-space-3) var(--fc-space-2);
+  }
+
+  .example-table-wrap {
+    display: none;
+  }
+
+  .example-list:not([hidden]) {
+    display: block;
+  }
+}

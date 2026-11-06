@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Transaction history — FinCore example</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="../../components/button/button.css">
+  <link rel="stylesheet" href="../../components/input/input.css">
+  <link rel="stylesheet" href="./example.css">
+</head>
+<body>
+  <main class="example-page">
+    <header class="example-header">
+      <p class="example-eyebrow">FinCore example</p>
+      <h1 class="example-title">Transactions</h1>
+      <p class="example-account">
+        Everyday Checking
+        <span aria-hidden="true">·</span>
+        <span class="example-account__number">Account ending in 4821</span>
+      </p>
+      <p class="example-demo-note">
+        Illustrative demo data. This is not a real account or transaction history.
+      </p>
+    </header>
+
+    <section class="example-summary" aria-labelledby="example-balance-label">
+      <p class="example-summary__label" id="example-balance-label">Available balance</p>
+      <p class="example-summary__value">$12,480.55</p>
+      <p class="example-summary__note">Demo balance as of 28 October 2026.</p>
+    </section>
+
+    <section class="example-filters" aria-labelledby="example-filter-heading">
+      <h2 class="example-section-title" id="example-filter-heading">Filter transactions</h2>
+
+      <form class="example-filter-form" id="example-filter-form">
+        <div class="example-filter-field">
+          <div class="fc-input">
+            <label class="fc-input__label" for="example-filter">Description</label>
+            <div class="fc-input__control">
+              <input
+                class="fc-input__field"
+                id="example-filter"
+                name="filter"
+                type="text"
+                autocomplete="off"
+                placeholder="Filter by description"
+                aria-describedby="example-filter-help"
+              >
+            </div>
+            <p class="fc-input__message" id="example-filter-help">
+              Matches description text only. Amounts, references and statuses are not searched.
+            </p>
+          </div>
+        </div>
+
+        <div class="example-filter-actions">
+          <button class="fc-button fc-button--secondary" id="example-clear" type="button">Clear</button>
+          <button class="fc-button" type="submit">Apply filter</button>
+        </div>
+      </form>
+    </section>
+
+    <p class="example-status" id="example-status" role="status" aria-live="polite">
+      Showing all 10 demo transactions.
+    </p>
+
+    <section class="example-results" aria-labelledby="example-results-heading">
+      <h2 class="example-section-title" id="example-results-heading">Transaction history</h2>
+
+      <div class="example-table-wrap" id="example-table-wrap">
+        <table class="example-table">
+          <caption class="example-caption">Demo transactions, most recent first.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Description</th>
+              <th scope="col">Reference</th>
+              <th scope="col" class="example-amount-heading">Amount</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody id="example-rows"></tbody>
+        </table>
+      </div>
+
+      <ul class="example-list" id="example-list" aria-labelledby="example-results-heading" hidden></ul>
+
+      <div class="example-empty" id="example-empty" hidden>
+        <h3 class="example-empty__heading">No matching transactions</h3>
+        <p class="example-empty__body">
+          No description contains <strong id="example-empty-term"></strong>.
+          Clear the filter to see all demo transactions.
+        </p>
+      </div>
+
+      <noscript>
+        <p class="example-empty__body">
+          This example needs JavaScript to filter the demo transactions.
+          The full dataset is defined in <code>example.js</code>.
+        </p>
+      </noscript>
+    </section>
+
+    <footer class="example-footer">
+      <p>
+        Built with FinCore's existing Button and Input components. The page layout,
+        table, list, filtering and formatting are application code.
+      </p>
+    </footer>
+  </main>
+
+  <script src="./example.js"></script>
+</body>
+</html>

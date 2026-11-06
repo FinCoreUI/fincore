@@ -6,6 +6,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <title>Components — Sorleed</title>
   <meta name="description" content="Sorleed Button, Input, PhoneInput, Select, Checkbox, Radio Group, Textarea, OTP, Currency, CVV, DatePicker: states, props, accessibility and usage.">
+  <link rel="stylesheet" href="tokens-dist/tokens.css">
   <link rel="stylesheet" href="../tokens/dist/tokens.css">
   <link rel="stylesheet" href="../components/button/button.css">
   <link rel="stylesheet" href="../components/input/input.css">
@@ -22,18 +23,16 @@
         <span>Sorleed</span>
         <span class="brand__sub">UI Infrastructure</span>
       </a>
-      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">🌙 Dark mode</button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
       <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
         <ul>
-          <li><a href="index.html" data-page="overview">Overview</a></li>
           <li><a href="getting-started.html" data-page="start">Getting started</a></li>
-          <li><a href="components.html" data-page="components">Components</a></li>
+          <li><a href="components.html" data-page="components" aria-current="page">Components</a></li>
           <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
-          <li><a href="cli.html" data-page="cli">CLI</a></li>
-          <li><a href="customisation.html" data-page="customisation">Customisation</a></li>
-          <li><a href="accessibility.html" data-page="accessibility">Accessibility</a></li>
-          <li><a href="ai.html" data-page="ai">AI</a></li>
-          <li><a href="limitations.html" data-page="limits">Limits</a></li>
+          <li><a href="examples.html" data-page="examples">Examples</a></li>
         </ul>
       </nav>
     </div>
@@ -44,8 +43,10 @@
       <aside class="sidebar" aria-label="On this page">
         <h2>Components</h2>
         <ul>
-          <li><a href="#button">Button</a></li>
-          <li><a href="#input">Input</a></li>
+          <li><a href="components/button.html"><strong>Button ↗ (Playground)</strong></a></li>
+          <li><a href="components/input.html"><strong>Input ↗ (Playground)</strong></a></li>
+          <li><a href="#button">Button (Overview)</a></li>
+          <li><a href="#input">Input (Overview)</a></li>
           <li><a href="#password-input">PasswordInput</a></li>
           <li><a href="#phone-input">PhoneInput</a></li>
           <li><a href="#select">Select</a></li>
@@ -65,13 +66,13 @@
         <p class="lede">Twelve canonical components. Full contract validation, dark theme, and size/loading variant support. Each one has a contract, canonical CSS, native reference markup and a React adapter.</p>
 
         <h2 id="button">Button</h2>
-        <p>A native <code>&lt;button&gt;</code>. Defaults to <code>type="button"</code> and the primary variant.</p>
+        <p>A native <code>&lt;button&gt;</code>. Defaults to <code>type="button"</code> and the primary variant. <a href="components/button.html"><strong>Open Interactive Button Playground →</strong></a></p>
         <div class="demo">
           <div class="demo__row">
-            <div class="demo__surface"><button class="sl-button sl-button--primary" type="button">Primary</button></div>
-            <div class="demo__surface"><button class="sl-button sl-button--secondary" type="button">Secondary</button></div>
-            <div class="demo__surface"><button class="sl-button sl-button--ghost" type="button">Ghost</button></div>
-            <div class="demo__surface"><button class="sl-button sl-button--primary" type="button" disabled>Disabled</button></div>
+            <div class="demo__surface"><button class="fc-button fc-button--primary" type="button">Primary</button></div>
+            <div class="demo__surface"><button class="fc-button fc-button--secondary" type="button">Secondary</button></div>
+            <div class="demo__surface"><button class="fc-button fc-button--ghost" type="button">Ghost</button></div>
+            <div class="demo__surface"><button class="fc-button fc-button--primary" type="button" disabled>Disabled</button></div>
           </div>
         </div>
         <pre><code>import { Button } from "@sorleed/react";
@@ -93,32 +94,32 @@
         <p>States: default, hover, active, focus-visible and disabled. Disabled wins over every other state.</p>
 
         <h2 id="input">Input</h2>
-        <p>A native text-like input with a required label, optional helper and explicit error state.</p>
+        <p>A native text-like input with a required label, optional helper and explicit error state. <a href="components/input.html"><strong>Open Interactive Input Playground →</strong></a></p>
         <div class="demo">
           <div class="demo__row">
             <div class="demo__surface">
-              <div class="sl-input">
-                <label class="sl-input__label" for="demo-email">Email</label>
-                <div class="sl-input__control">
-                  <input class="sl-input__field" id="demo-email" type="email" placeholder="you@example.com">
+              <div class="fc-input">
+                <label class="fc-input__label" for="demo-email">Email</label>
+                <div class="fc-input__control">
+                  <input class="fc-input__field" id="demo-email" type="email" placeholder="you@example.com">
                 </div>
-                <p class="sl-input__message">We only use this for account notices.</p>
+                <p class="fc-input__message">We only use this for account notices.</p>
               </div>
             </div>
             <div class="demo__surface">
-              <div class="sl-input">
-                <label class="sl-input__label" for="demo-error">Account number</label>
-                <div class="sl-input__control">
-                  <input class="sl-input__field" id="demo-error" type="text" value="1234" aria-invalid="true" aria-describedby="demo-error-message">
+              <div class="fc-input">
+                <label class="fc-input__label" for="demo-error">Account number</label>
+                <div class="fc-input__control">
+                  <input class="fc-input__field" id="demo-error" type="text" value="1234" aria-invalid="true" aria-describedby="demo-error-message">
                 </div>
-                <p class="sl-input__message sl-input__message--error" id="demo-error-message">Account number must be 10 digits.</p>
+                <p class="fc-input__message fc-input__message--error" id="demo-error-message">Account number must be 10 digits.</p>
               </div>
             </div>
             <div class="demo__surface">
-              <div class="sl-input">
-                <label class="sl-input__label" for="demo-disabled">Read only field</label>
-                <div class="sl-input__control">
-                  <input class="sl-input__field" id="demo-disabled" type="text" value="Not editable" disabled>
+              <div class="fc-input">
+                <label class="fc-input__label" for="demo-disabled">Read only field</label>
+                <div class="fc-input__control">
+                  <input class="fc-input__field" id="demo-disabled" type="text" value="Not editable" disabled>
                 </div>
               </div>
             </div>

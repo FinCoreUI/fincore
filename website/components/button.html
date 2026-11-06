@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <title>Button Component — Sorleed</title>
+  <meta name="description" content="Sorleed Button component: interactive playground, props, accessibility, and canonical CSS tokens.">
+  <link rel="stylesheet" href="../tokens-dist/tokens.css">
+  <link rel="stylesheet" href="../components-dist/button/button.css">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-page="components">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="../index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">🌙 Dark mode</button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="../getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="../components.html" data-page="components" aria-current="page">Components</a></li>
+          <li><a href="../tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="../examples.html" data-page="examples">Examples</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="Components navigation">
+        <h2>Components</h2>
+        <ul>
+          <li><a href="button.html" class="is-active" aria-current="page"><strong>Button</strong></a></li>
+          <li><a href="input.html">Input</a></li>
+          <li><a href="../components.html#phone-input">PhoneInput</a></li>
+          <li><a href="../components.html#select">Select</a></li>
+          <li><a href="../components.html#checkbox">Checkbox</a></li>
+          <li><a href="../components.html#radio-group">Radio Group</a></li>
+          <li><a href="../components.html#textarea">Textarea</a></li>
+          <li><a href="../components.html#otp">OTP</a></li>
+          <li><a href="../components.html#currency">Currency</a></li>
+          <li><a href="../components.html#cvv">CVV</a></li>
+          <li><a href="../components.html#date-picker">DatePicker</a></li>
+        </ul>
+      </aside>
+
+      <div class="content">
+        <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.5rem;">
+          <h1 style="margin-bottom: 0;">Button</h1>
+          <span class="badge">Canonical CSS + React</span>
+        </div>
+        <p class="lede">A native <code>&lt;button&gt;</code> element with strict visual hierarchy, accessible keyboard focus rings, and dark theme support. Defaults to <code>type="button"</code>.</p>
+
+        <!-- Interactive Playground -->
+        <h2>Interactive Playground</h2>
+        <div class="playground" id="button-playground">
+          <div class="playground__stage-wrapper">
+            <div class="playground__stage">
+              <button id="playground-button" class="fc-button fc-button--primary" type="button">
+                Continue
+              </button>
+            </div>
+            <div class="playground__code-panel">
+              <div class="playground__tabs">
+                <button class="playground__tab is-active" type="button" data-tab="react">React</button>
+                <button class="playground__tab" type="button" data-tab="html">HTML + CSS</button>
+              </div>
+              <div id="code-output-react">
+                <pre><code id="code-snippet-react">import { Button } from "@sorleed/react";
+
+&lt;Button variant="primary" size="md"&gt;
+  Continue
+&lt;/Button&gt;</code></pre>
+              </div>
+              <div id="code-output-html" style="display: none;">
+                <pre><code id="code-snippet-html">&lt;button class="fc-button fc-button--primary" type="button"&gt;
+  Continue
+&lt;/button&gt;</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="playground__controls">
+            <h3>Props & Controls</h3>
+
+            <div class="control-group">
+              <label for="control-label">Label Text</label>
+              <input type="text" id="control-label" class="control-text" value="Continue">
+            </div>
+
+            <div class="control-group">
+              <label for="control-variant">Variant</label>
+              <select id="control-variant" class="control-select">
+                <option value="primary" selected>Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="ghost">Ghost</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="control-size">Size</label>
+              <select id="control-size" class="control-select">
+                <option value="sm">Small (sm - 32px)</option>
+                <option value="md" selected>Medium (md - 40px)</option>
+                <option value="lg">Large (lg - 48px)</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label class="control-checkbox">
+                <input type="checkbox" id="control-loading">
+                <span>Loading (aria-busy)</span>
+              </label>
+            </div>
+
+            <div class="control-group">
+              <label class="control-checkbox">
+                <input type="checkbox" id="control-disabled">
+                <span>Disabled</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <h2>Component Props</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Component Props">
+          <table>
+            <thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>variant</code></td><td><code>"primary" | "secondary" | "ghost"</code></td><td><code>"primary"</code></td><td>Visual styling hierarchy.</td></tr>
+              <tr><td><code>size</code></td><td><code>"sm" | "md" | "lg"</code></td><td><code>"md"</code></td><td>Geometric height and padding.</td></tr>
+              <tr><td><code>loading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Displays loading indicator and sets <code>aria-busy="true"</code>.</td></tr>
+              <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Native disabled state; suppresses hover and focus.</td></tr>
+              <tr><td><code>type</code></td><td><code>"button" | "submit" | "reset"</code></td><td><code>"button"</code></td><td>Native button type to prevent accidental submission.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Design Tokens</h2>
+        <p>Button styles are powered entirely by <code>--fc-button-*</code> design tokens:</p>
+        <ul>
+          <li><code>--fc-button-primary-background</code> / <code>--fc-button-primary-foreground</code></li>
+          <li><code>--fc-button-secondary-background</code> / <code>--fc-button-secondary-foreground</code></li>
+          <li><code>--fc-button-ghost-foreground</code></li>
+          <li><code>--fc-button-focus-color</code> / <code>--fc-button-focus-width</code> / <code>--fc-button-focus-offset</code></li>
+          <li><code>--fc-button-radius</code> / <code>--fc-button-height</code> / <code>--fc-button-padding-x</code></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed · UI Infrastructure for high-integrity interfaces.</p>
+      <p><a href="https://github.com/sorleed/sorleed">GitHub</a> · MIT License</p>
+    </div>
+  </footer>
+
+  <script src="../assets/site.js"></script>
+  <script>
+    (function() {
+      var btn = document.getElementById("playground-button");
+      var controlLabel = document.getElementById("control-label");
+      var controlVariant = document.getElementById("control-variant");
+      var controlSize = document.getElementById("control-size");
+      var controlLoading = document.getElementById("control-loading");
+      var controlDisabled = document.getElementById("control-disabled");
+      var reactCode = document.getElementById("code-snippet-react");
+      var htmlCode = document.getElementById("code-snippet-html");
+
+      function updatePlayground() {
+        var label = controlLabel.value || "Continue";
+        var variant = controlVariant.value;
+        var size = controlSize.value;
+        var loading = controlLoading.checked;
+        var disabled = controlDisabled.checked;
+
+        // Update button DOM
+        btn.textContent = label;
+        btn.className = "fc-button";
+        if (variant) btn.classList.add("fc-button--" + variant);
+        if (size !== "md") btn.classList.add("fc-button--" + size);
+        if (loading) btn.classList.add("fc-button--loading");
+
+        btn.disabled = disabled || loading;
+        if (loading) {
+          btn.setAttribute("aria-busy", "true");
+        } else {
+          btn.removeAttribute("aria-busy");
+        }
+
+        // Update React snippet
+        var reactProps = [];
+        if (variant !== "primary") reactProps.push('variant="' + variant + '"');
+        if (size !== "md") reactProps.push('size="' + size + '"');
+        if (loading) reactProps.push('loading');
+        if (disabled) reactProps.push('disabled');
+        var reactPropsStr = reactProps.length ? " " + reactProps.join(" ") : "";
+
+        reactCode.textContent = 'import { Button } from "@sorleed/react";\n\n<Button' + reactPropsStr + '>\n  ' + label + '\n</Button>';
+
+        // Update HTML snippet
+        var classes = ["fc-button"];
+        if (variant) classes.push("fc-button--" + variant);
+        if (size !== "md") classes.push("fc-button--" + size);
+        if (loading) classes.push("fc-button--loading");
+
+        var htmlAttrs = ['class="' + classes.join(" ") + '"', 'type="button"'];
+        if (disabled || loading) htmlAttrs.push("disabled");
+        if (loading) htmlAttrs.push('aria-busy="true"');
+
+        htmlCode.textContent = '<button ' + htmlAttrs.join(" ") + '>\n  ' + label + '\n</button>';
+      }
+
+      controlLabel.addEventListener("input", updatePlayground);
+      controlVariant.addEventListener("change", updatePlayground);
+      controlSize.addEventListener("change", updatePlayground);
+      controlLoading.addEventListener("change", updatePlayground);
+      controlDisabled.addEventListener("change", updatePlayground);
+
+      // Tab switcher
+      var tabs = document.querySelectorAll(".playground__tab");
+      tabs.forEach(function(tab) {
+        tab.addEventListener("click", function() {
+          tabs.forEach(function(t) { t.classList.remove("is-active"); });
+          tab.classList.add("is-active");
+          var tabType = tab.getAttribute("data-tab");
+          document.getElementById("code-output-react").style.display = tabType === "react" ? "block" : "none";
+          document.getElementById("code-output-html").style.display = tabType === "html" ? "block" : "none";
+        });
+      });
+
+      updatePlayground();
+    })();
+  </script>
+</body>
+</html>

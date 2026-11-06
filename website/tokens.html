@@ -6,7 +6,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <title>Tokens — Sorleed</title>
   <meta name="description" content="Sorleed token architecture: primitives, semantic roles and component tokens across 460 --fc-* properties with dark theme support.">
-  <link rel="stylesheet" href="../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="tokens-dist/tokens.css">
   <link rel="stylesheet" href="../components/button/button.css">
   <link rel="stylesheet" href="../components/input/input.css">
   <link rel="stylesheet" href="assets/site.css">
@@ -20,18 +20,16 @@
         <span>Sorleed</span>
         <span class="brand__sub">UI Infrastructure</span>
       </a>
-      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">🌙 Dark mode</button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
       <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
         <ul>
-          <li><a href="index.html" data-page="overview">Overview</a></li>
           <li><a href="getting-started.html" data-page="start">Getting started</a></li>
           <li><a href="components.html" data-page="components">Components</a></li>
           <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
-          <li><a href="cli.html" data-page="cli">CLI</a></li>
-          <li><a href="customisation.html" data-page="customisation">Customisation</a></li>
-          <li><a href="accessibility.html" data-page="accessibility">Accessibility</a></li>
-          <li><a href="ai.html" data-page="ai">AI</a></li>
-          <li><a href="limitations.html" data-page="limits">Limits</a></li>
+          <li><a href="examples.html" data-page="examples">Examples</a></li>
         </ul>
       </nav>
     </div>

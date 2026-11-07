@@ -326,8 +326,8 @@
       "type": "\"sm\" | \"md\" | \"lg\"",
       "default": "\"md\"",
       "required": false,
-      "description": "Controls the size variant (sm, md, lg) in component adapter.",
-      "notes": "Applies corresponding size modifier class."
+      "description": "Controls the size variant (sm, md, lg). Maps to the fc-button--{size} modifier and the button.*-{size} tokens.",
+      "notes": "md uses the unsuffixed default tokens; sm is 32px high and lg 48px. Colour, state and focus treatment are unchanged."
     },
     {
       "prop": "loading",
@@ -705,7 +705,7 @@
       "State names are design metadata. They do not map to ARIA attributes; native button behaviour and the disabled attribute carry the semantics.",
       "Hover and Focus are not independent axes. There is no combined Hover+Focus state and no way to select one; the ring is an indicator, not a second state axis.",
       "Adding a sixth State or a combined state requires a new Figma build and a new contract version.",
-      "Button has one size. There is no small, large, compact or icon-only axis.",
+      "Size is a separate code-only axis: sm, md and lg map to fc-button--{size} and the button.*-{size} tokens. There is no compact or icon-only axis.",
       "The focus ring must remain visible at every supported surface; it is not decorative."
     ]
   },
@@ -1014,6 +1014,116 @@
           "Primary/Disabled",
           "Secondary/Disabled",
           "Ghost/Disabled"
+        ]
+      },
+      {
+        "name": "button.height-sm",
+        "type": "dimension",
+        "cssVar": "--fc-button-height-sm",
+        "alias": "size.control.sm",
+        "resolved": "32px",
+        "role": "Control height (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "button.padding-x-sm",
+        "type": "dimension",
+        "cssVar": "--fc-button-padding-x-sm",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Horizontal padding (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "button.radius-sm",
+        "type": "dimension",
+        "cssVar": "--fc-button-radius-sm",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Corner radius (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "button.font-size-sm",
+        "type": "dimension",
+        "cssVar": "--fc-button-font-size-sm",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Label font size (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "button.line-height-sm",
+        "type": "dimension",
+        "cssVar": "--fc-button-line-height-sm",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Label line height (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "button.height-lg",
+        "type": "dimension",
+        "cssVar": "--fc-button-height-lg",
+        "alias": "size.control.lg",
+        "resolved": "48px",
+        "role": "Control height (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "button.padding-x-lg",
+        "type": "dimension",
+        "cssVar": "--fc-button-padding-x-lg",
+        "alias": "space.6",
+        "resolved": "24px",
+        "role": "Horizontal padding (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "button.radius-lg",
+        "type": "dimension",
+        "cssVar": "--fc-button-radius-lg",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Corner radius (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "button.font-size-lg",
+        "type": "dimension",
+        "cssVar": "--fc-button-font-size-lg",
+        "alias": "font.size.md",
+        "resolved": "16px",
+        "role": "Label font size (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "button.line-height-lg",
+        "type": "dimension",
+        "cssVar": "--fc-button-line-height-lg",
+        "alias": "font.line-height.md",
+        "resolved": "24px",
+        "role": "Label line height (lg)",
+        "usedBy": [
+          "Size=lg"
         ]
       }
     ],
@@ -1481,8 +1591,8 @@
     {
       "id": "geometry-override",
       "configuration": "A 32px-high button with a 4px radius and 8px horizontal padding.",
-      "why": "Only one size exists: 40px high, 6px radius, 16px horizontal padding. A smaller button would also risk the 24px target minimum.",
-      "correct": "Keep the token geometry. If a compact size is required, add a size contract and tokens first."
+      "why": "Sizes are token-driven: sm is 32px high with a 6px radius and 12px horizontal padding. Hardcoding 32/4/8 bypasses the button.*-sm tokens.",
+      "correct": "Use size=\"sm\" (or .fc-button--sm) and the button.*-sm tokens; never hardcode geometry."
     },
     {
       "id": "multiple-primaries",
@@ -1611,7 +1721,7 @@
         "id": "tokens-count",
         "given": "This contract.",
         "when": "The dependency list is compared with tokens/tokens.json.",
-        "then": "All 22 button.* dependencies exist, resolve to the stated values, and map to the stated --fc-* CSS variables."
+        "then": "All 32 button.* dependencies exist, resolve to the stated values, and map to the stated --fc-* CSS variables."
       },
       {
         "id": "tokens-state-binding",
@@ -1622,8 +1732,8 @@
       {
         "id": "tokens-no-invention",
         "given": "The implementation.",
-        "when": "Searching for button.danger, button.success, button.loading, button.ghost.background, button.focus.radius or a size variant.",
-        "then": "No such token or API exists in the implementation."
+        "when": "Searching for button.danger, button.success, button.loading, button.ghost.background, button.focus.radius or a size token outside sm/md/lg.",
+        "then": "No such token or API exists; size is limited to sm, md and lg."
       }
     ],
     "regression": [
@@ -1728,9 +1838,9 @@
     },
     {
       "id": "one-size",
-      "limitation": "There is only one size: 40px high with 14/20 text.",
-      "impact": "Compact and large contexts cannot be served by a size variant.",
-      "mitigation": "Do not compress the button below 24px. A size contract is future work."
+      "limitation": "Size covers sm (32px), md (40px) and lg (48px). There is no compact, icon-only or full-width axis.",
+      "impact": "Dense and prominent contexts are served by sm/lg; width remains content-driven.",
+      "mitigation": "Use size=\"sm\" | \"md\" | \"lg\". Do not compress the control below the 24px target minimum."
     },
     {
       "id": "figma-state-is-not-runtime",
@@ -1755,7 +1865,7 @@
       "Read components/examples/financial-form.md only after the Button contract is understood; it is illustrative, not a production feature."
     ],
     "rules": [
-      "Use only variant='primary' | 'secondary' | 'ghost'. Do not invent danger, success, link, outline, loading, icon-only, full-width or size variants.",
+      "Use only variant='primary' | 'secondary' | 'ghost' and size='sm' | 'md' | 'lg'. Do not invent danger, success, link, outline, loading, icon-only or full-width variants.",
       "Use only the length, width, radius, padding, typography and focus tokens listed in this contract.",
       "Render a native button. Derive state from interaction; do not accept a state prop.",
       "Use the native disabled attribute. Do not substitute aria-disabled alone.",
@@ -1781,7 +1891,7 @@
       "Click, keyboard activation, form submission, disabled behaviour and label updates pass.",
       "The focus ring is visible and unclipped at 100% and 200% zoom, including while hovered.",
       "Accessible name, role, disabled semantics and target size pass an accessibility audit.",
-      "The 22 token dependencies resolve to the values in this contract and match the generated CSS variables.",
+      "The 32 token dependencies resolve to the values in this contract and match the generated CSS variables.",
       "No unsupported variant, state, icon, loading behaviour, navigation or inverse usage is present.",
       "The illustrative composition example, if used, is adapted rather than copied as production code."
     ]

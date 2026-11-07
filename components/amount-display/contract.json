@@ -195,7 +195,7 @@
         "name": "amount-display.font-size-lg",
         "type": "dimension",
         "cssVar": "--fc-amount-display-font-size-lg",
-        "alias": "space.6",
+        "alias": "font.size.lg",
         "resolved": "24px",
         "role": "Token for amount-display.font-size-lg",
         "usedBy": [
@@ -206,7 +206,7 @@
         "name": "amount-display.line-height-lg",
         "type": "dimension",
         "cssVar": "--fc-amount-display-line-height-lg",
-        "alias": "space.6",
+        "alias": "font.line-height.lg",
         "resolved": "24px",
         "role": "Token for amount-display.line-height-lg",
         "usedBy": [

@@ -1,5 +1,5 @@
 /* FinCore design tokens — generated file. Do not edit by hand. */
-/* Source: tokens/tokens.json (sha256: f116ce2f69a7812cf82252ba05b2758758de4c9bb41e9bf4ea411aff4b6b8792) */
+/* Source: tokens/tokens.json (sha256: 4ba1e92192b1d77b8fe3a787a9a58b67e40f4211114c19754657c0a2da0cd795) */
 /* Themes: light (default) and dark ([data-theme="dark"], .dark). */
 /* Regenerate: node tokens/check.mjs --write */
 
@@ -96,11 +96,17 @@
   --fc-radius-lg: 8px;
   --fc-font-size-xs: 12px;
   --fc-font-size-sm: 14px;
+  --fc-font-size-md: 16px;
+  --fc-font-size-lg: 24px;
   --fc-font-weight-regular: 400;
   --fc-font-weight-medium: 500;
   --fc-font-line-height-xs: 16px;
   --fc-font-line-height-sm: 20px;
+  --fc-font-line-height-md: 24px;
+  --fc-font-line-height-lg: 24px;
+  --fc-size-control-sm: 32px;
   --fc-size-control-md: 40px;
+  --fc-size-control-lg: 48px;
   --fc-size-control-textarea-min: 80px;
   --fc-size-border-width: 1px;
   --fc-size-focus-ring-width: 2px;
@@ -165,6 +171,21 @@
   --fc-button-font-size: var(--fc-font-size-sm);
   --fc-button-font-weight: var(--fc-font-weight-medium);
   --fc-button-line-height: var(--fc-font-line-height-sm);
+  --fc-button-height-sm: var(--fc-size-control-sm);
+  --fc-button-padding-x-sm: var(--fc-space-3);
+  --fc-button-font-size-sm: var(--fc-font-size-xs);
+  --fc-button-line-height-sm: var(--fc-font-line-height-xs);
+  --fc-button-radius-sm: var(--fc-radius-md);
+  --fc-button-height-md: var(--fc-size-control-md);
+  --fc-button-padding-x-md: var(--fc-space-4);
+  --fc-button-font-size-md: var(--fc-font-size-sm);
+  --fc-button-line-height-md: var(--fc-font-line-height-sm);
+  --fc-button-radius-md: var(--fc-radius-md);
+  --fc-button-height-lg: var(--fc-size-control-lg);
+  --fc-button-padding-x-lg: var(--fc-space-6);
+  --fc-button-font-size-lg: var(--fc-font-size-md);
+  --fc-button-line-height-lg: var(--fc-font-line-height-md);
+  --fc-button-radius-lg: var(--fc-radius-lg);
   --fc-button-focus-color: var(--fc-color-border-focus);
   --fc-button-focus-width: var(--fc-size-focus-ring-width);
   --fc-button-focus-offset: var(--fc-size-focus-ring-offset);
@@ -187,6 +208,21 @@
   --fc-input-border-width: var(--fc-size-border-width);
   --fc-input-font-size: var(--fc-font-size-sm);
   --fc-input-line-height: var(--fc-font-line-height-sm);
+  --fc-input-height-sm: var(--fc-size-control-sm);
+  --fc-input-padding-x-sm: var(--fc-space-2);
+  --fc-input-font-size-sm: var(--fc-font-size-xs);
+  --fc-input-line-height-sm: var(--fc-font-line-height-xs);
+  --fc-input-radius-sm: var(--fc-radius-md);
+  --fc-input-height-md: var(--fc-size-control-md);
+  --fc-input-padding-x-md: var(--fc-space-3);
+  --fc-input-font-size-md: var(--fc-font-size-sm);
+  --fc-input-line-height-md: var(--fc-font-line-height-sm);
+  --fc-input-radius-md: var(--fc-radius-md);
+  --fc-input-height-lg: var(--fc-size-control-lg);
+  --fc-input-padding-x-lg: var(--fc-space-4);
+  --fc-input-font-size-lg: var(--fc-font-size-md);
+  --fc-input-line-height-lg: var(--fc-font-line-height-md);
+  --fc-input-radius-lg: var(--fc-radius-lg);
   --fc-input-font-weight: var(--fc-font-weight-regular);
   --fc-input-label-gap: var(--fc-space-2);
   --fc-input-helper-gap: var(--fc-space-1);
@@ -389,6 +425,21 @@
   --fc-currency-border-width: var(--fc-size-border-width);
   --fc-currency-font-size: var(--fc-font-size-sm);
   --fc-currency-line-height: var(--fc-font-line-height-sm);
+  --fc-currency-height-sm: var(--fc-size-control-sm);
+  --fc-currency-padding-x-sm: var(--fc-space-2);
+  --fc-currency-font-size-sm: var(--fc-font-size-xs);
+  --fc-currency-line-height-sm: var(--fc-font-line-height-xs);
+  --fc-currency-radius-sm: var(--fc-radius-md);
+  --fc-currency-height-md: var(--fc-size-control-md);
+  --fc-currency-padding-x-md: var(--fc-space-3);
+  --fc-currency-font-size-md: var(--fc-font-size-sm);
+  --fc-currency-line-height-md: var(--fc-font-line-height-sm);
+  --fc-currency-radius-md: var(--fc-radius-md);
+  --fc-currency-height-lg: var(--fc-size-control-lg);
+  --fc-currency-padding-x-lg: var(--fc-space-4);
+  --fc-currency-font-size-lg: var(--fc-font-size-md);
+  --fc-currency-line-height-lg: var(--fc-font-line-height-md);
+  --fc-currency-radius-lg: var(--fc-radius-lg);
   --fc-currency-font-weight: var(--fc-font-weight-regular);
   --fc-currency-label-gap: var(--fc-space-2);
   --fc-currency-helper-gap: var(--fc-space-1);
@@ -630,8 +681,8 @@
   --fc-amount-display-line-height-sm: var(--fc-font-line-height-xs);
   --fc-amount-display-font-size-md: var(--fc-font-size-sm);
   --fc-amount-display-line-height-md: var(--fc-font-line-height-sm);
-  --fc-amount-display-font-size-lg: var(--fc-space-6);
-  --fc-amount-display-line-height-lg: var(--fc-space-6);
+  --fc-amount-display-font-size-lg: var(--fc-font-size-lg);
+  --fc-amount-display-line-height-lg: var(--fc-font-line-height-lg);
   --fc-amount-display-font-weight: var(--fc-font-weight-medium);
   --fc-amount-display-positive-color: var(--fc-color-feedback-success-foreground);
   --fc-amount-display-negative-color: var(--fc-color-feedback-error-foreground);

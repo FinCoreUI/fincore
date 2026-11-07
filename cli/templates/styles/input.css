@@ -136,6 +136,50 @@
   display: none;
 }
 
+/*
+ * Size variants change field geometry and typography only. Colour, state
+ * precedence and the focus overlay stay identical across sm, md and lg.
+ */
+.fc-input--sm .fc-input__label {
+  font-size: var(--fc-input-font-size-sm);
+  line-height: var(--fc-input-line-height-sm);
+}
+
+.fc-input--sm .fc-input__field {
+  min-height: var(--fc-input-height-sm);
+  padding-block: calc(
+    (var(--fc-input-height-sm) - var(--fc-input-line-height-sm) - (2 * var(--fc-input-border-width))) / 2
+  );
+  padding-inline: var(--fc-input-padding-x-sm);
+  border-radius: var(--fc-input-radius-sm);
+  font-size: var(--fc-input-font-size-sm);
+  line-height: var(--fc-input-line-height-sm);
+}
+
+.fc-input--sm .fc-input__control::after {
+  border-radius: calc(var(--fc-input-radius-sm) + var(--fc-input-focus-offset));
+}
+
+.fc-input--lg .fc-input__label {
+  font-size: var(--fc-input-font-size-lg);
+  line-height: var(--fc-input-line-height-lg);
+}
+
+.fc-input--lg .fc-input__field {
+  min-height: var(--fc-input-height-lg);
+  padding-block: calc(
+    (var(--fc-input-height-lg) - var(--fc-input-line-height-lg) - (2 * var(--fc-input-border-width))) / 2
+  );
+  padding-inline: var(--fc-input-padding-x-lg);
+  border-radius: var(--fc-input-radius-lg);
+  font-size: var(--fc-input-font-size-lg);
+  line-height: var(--fc-input-line-height-lg);
+}
+
+.fc-input--lg .fc-input__control::after {
+  border-radius: calc(var(--fc-input-radius-lg) + var(--fc-input-focus-offset));
+}
+
 /* Preserve a visible boundary and focus indicator with system colours. */
 @media (forced-colors: active) {
   .fc-input__field {

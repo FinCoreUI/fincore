@@ -1,0 +1,1613 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Interactive Playground — Sorleed</title>
+  <meta name="description" content="Live Sorleed components rendered with the canonical component CSS and the three-layer token system. Change size, variant and state, and toggle dark mode.">
+  <link rel="stylesheet" href="../tokens/dist/tokens.css?v=20261107c">
+  <link rel="stylesheet" href="assets/site.css?v=20261107c">
+  <link rel="stylesheet" href="../components/button/button.css?v=20261107c">
+  <link rel="stylesheet" href="../components/input/input.css?v=20261107c">
+  <link rel="stylesheet" href="../components/currency/currency.css?v=20261107c">
+  <link rel="stylesheet" href="../components/alert/alert.css?v=20261107c">
+  <link rel="stylesheet" href="../components/tabs/tabs.css?v=20261107c">
+  <link rel="stylesheet" href="../components/switch/switch.css?v=20261107c">
+  <link rel="stylesheet" href="../components/checkbox/checkbox.css?v=20261107c">
+  <link rel="stylesheet" href="../components/otp/otp.css?v=20261107c">
+  <link rel="stylesheet" href="../components/card/card.css?v=20261107c">
+  <link rel="stylesheet" href="../components/table/table.css?v=20261107c">
+  <link rel="stylesheet" href="../components/badge/badge.css?v=20261107c">
+  <link rel="stylesheet" href="../components/balance-card/balance-card.css?v=20261107c">
+  <link rel="stylesheet" href="../components/transaction-item/transaction-item.css?v=20261107c">
+  <link rel="stylesheet" href="../components/amount-display/amount-display.css?v=20261107c">
+  <link rel="stylesheet" href="../components/status-indicator/status-indicator.css?v=20261107c">
+  <style>
+    .pg-hero {
+      margin-bottom: 2rem;
+    }
+
+    .pg-hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1rem 0 1.25rem;
+    }
+
+    .pg-file-note {
+      margin: 1rem 0 0;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--fc-color-border-subtle, #e4e4e7);
+      background: var(--fc-color-surface-subtle, #fafafa);
+      color: var(--fc-color-content-secondary, #3f3f46);
+      font-size: 0.9rem;
+    }
+
+    .pg-arch {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0 2rem;
+    }
+
+    @media (max-width: 880px) {
+      .pg-arch {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pg-arch__card {
+      padding: 1.1rem 1.2rem;
+      border: 1px solid var(--fc-color-border-subtle, #e4e4e7);
+      border-radius: 10px;
+      background: var(--fc-color-surface-default, #ffffff);
+    }
+
+    .pg-arch__step {
+      margin: 0 0 0.25rem;
+      color: var(--fc-color-content-tertiary, #71717a);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pg-arch__card h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1rem;
+    }
+
+    .pg-arch__meta {
+      margin: 0 0 0.5rem;
+      color: var(--fc-color-content-tertiary, #71717a);
+      font-size: 0.8rem;
+    }
+
+    .pg-arch__card p:last-child {
+      margin-bottom: 0;
+      font-size: 0.9rem;
+      color: var(--fc-color-content-secondary, #3f3f46);
+    }
+
+    .pg-section {
+      margin-top: 3rem;
+    }
+
+    .pg-section > h2 {
+      margin-top: 0;
+    }
+
+    .pg-section__intro {
+      max-width: 68ch;
+      color: var(--fc-color-content-secondary, #3f3f46);
+    }
+
+    .pg-stage {
+      min-height: 200px;
+      padding: 2rem;
+    }
+
+    .pg-stage--table {
+      align-items: stretch;
+      justify-content: flex-start;
+    }
+
+    .pg-stage--table .fc-table-container {
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .pg-stage--otp {
+      align-items: flex-start;
+      overflow-x: auto;
+    }
+
+    .pg-hint {
+      margin: 0.75rem 0 0;
+      color: var(--fc-color-content-secondary, #3f3f46);
+      font-size: 0.82rem;
+    }
+
+    .pg-hint code {
+      color: var(--fc-color-content-primary, #18181b);
+      font-size: 0.78rem;
+    }
+
+    .pg-card-demo {
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .pg-card-demo .fc-card__footer {
+      gap: 0.75rem;
+      justify-content: space-between;
+    }
+
+    .pg-tabs-demo {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .pg-table-amount {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    /* Fintech replicas */
+    .pg-replica-tabs {
+      margin-top: 1.25rem;
+    }
+
+    .pg-replica-tabs > .fc-tabs__list {
+      margin-bottom: 1rem;
+    }
+
+    .pg-replica {
+      padding: 1.5rem;
+      border: 1px solid var(--fc-color-border-subtle, #e4e4e7);
+      border-radius: 12px;
+      background: var(--fc-color-surface-canvas, #f4f4f5);
+    }
+
+    .pg-replica__topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .pg-replica__topbar strong {
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+    }
+
+    .pg-checkout {
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .pg-checkout__brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .pg-checkout__brand-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .pg-checkout__logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--fc-color-action-primary, #2563eb);
+      color: var(--fc-color-action-primary-foreground, #ffffff);
+      font-weight: 700;
+    }
+
+    .pg-checkout__amount {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-block: 0.85rem;
+      border-block: 1px solid var(--fc-color-border-subtle, #e4e4e7);
+    }
+
+    .pg-checkout__fields {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .pg-checkout__fields .fc-input {
+      width: 100%;
+    }
+
+    .pg-checkout__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .pg-checkout__secure {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin: 0.25rem 0 0;
+      color: var(--fc-color-content-tertiary, #71717a);
+      font-size: 0.8rem;
+    }
+
+    .pg-dashboard {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .pg-dashboard__side {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .pg-metric {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-block: 0.6rem;
+      border-bottom: 1px solid var(--fc-color-border-subtle, #e4e4e7);
+    }
+
+    .pg-metric:first-child {
+      padding-top: 0;
+    }
+
+    .pg-metric:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .pg-metric span:first-child {
+      color: var(--fc-color-content-secondary, #3f3f46);
+      font-size: 0.9rem;
+    }
+
+    .pg-dashboard .fc-table-container {
+      border: 0;
+      border-radius: 0;
+    }
+
+    .pg-dashboard .fc-table__th:first-child,
+    .pg-dashboard .fc-table__td:first-child {
+      padding-inline-start: 0;
+    }
+
+    .pg-dashboard .fc-table__th:last-child,
+    .pg-dashboard .fc-table__td:last-child {
+      padding-inline-end: 0;
+    }
+
+    .pg-dashboard__filter {
+      max-width: 220px;
+      margin-top: 0.75rem;
+    }
+
+    .pg-invest {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .pg-invest__hero {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .pg-invest__value {
+      display: block;
+      margin-block: 0.25rem;
+    }
+
+    .pg-invest__delta {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 0;
+    }
+
+    .pg-invest__actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .pg-invest__actions .control-select {
+      margin-left: auto;
+      max-width: 150px;
+    }
+
+    .pg-invest__list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pg-ticker {
+      color: var(--fc-color-content-secondary, #3f3f46);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 760px) {
+      .pg-dashboard,
+      .pg-invest {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .pg-replica {
+        padding: 1rem;
+      }
+
+      .pg-checkout__row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body data-page="playground">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">🌙 Dark mode</button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="components.html" data-page="components">Components</a></li>
+          <li><a href="playground.html" data-page="playground" aria-current="page">Playground</a></li>
+          <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="examples.html" data-page="examples">Examples</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page">
+      <div class="content">
+        <header class="pg-hero">
+          <p class="badge">Live · canonical component CSS</p>
+          <h1>Interactive playground</h1>
+          <p class="lede">
+            Every example below is rendered with the shipped <code>--fc-*</code> tokens and the real
+            component stylesheets linked directly from <code>components/</code>. No component styles
+            are redefined on this page. Change props, states and themes and the components update
+            immediately.
+          </p>
+          <div class="pg-hero__meta">
+            <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">🌙 Dark mode</button>
+            <a class="badge" href="tokens.html">Inspect the token layer →</a>
+          </div>
+          <p class="pg-file-note">
+            <strong>Source files:</strong> <code>tokens/dist/tokens.css</code> and
+            <code>components/&lt;name&gt;/&lt;name&gt;.css</code> are linked directly from this page.
+            Dark mode is applied with <code>data-theme="dark"</code> on the document element.
+          </p>
+        </header>
+
+        <section aria-labelledby="token-architecture">
+          <h2 id="token-architecture">Three-layer tokens</h2>
+          <p class="pg-section__intro">
+            Components never consume raw values. They bind to Component tokens, which alias Semantic
+            roles, which alias Primitives. Light and Dark are owned by the Semantic layer, so one theme
+            switch updates every component on this page.
+          </p>
+          <div class="pg-arch">
+            <article class="pg-arch__card">
+              <p class="pg-arch__step">1 · Foundation</p>
+              <h3>Primitives</h3>
+              <p class="pg-arch__meta">106 variables · Value</p>
+              <p>Raw colour scales, space, radius, type and control sizes. No theme awareness.</p>
+            </article>
+            <article class="pg-arch__card">
+              <p class="pg-arch__step">2 · Purpose</p>
+              <h3>Semantic</h3>
+              <p class="pg-arch__meta">63 variables · Light + Dark</p>
+              <p>Content, surface, border, action and feedback roles. The only layer with theme modes.</p>
+            </article>
+            <article class="pg-arch__card">
+              <p class="pg-arch__step">3 · Product</p>
+              <h3>Component</h3>
+              <p class="pg-arch__meta">599 variables · Value</p>
+              <p>Per-component geometry, typography and colour, including sm / md / lg size tokens.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="pg-section" id="fintech-replicas" aria-labelledby="fintech-replicas-heading">
+          <h2 id="fintech-replicas-heading">Fintech replicas</h2>
+          <p class="pg-section__intro">
+            Three local, unpublished fintech screens assembled entirely from the canonical components.
+            Use the tabs to switch between checkout, dashboard and investing.
+          </p>
+
+          <div class="fc-tabs pg-replica-tabs" id="pg-replica-tabs">
+            <div class="fc-tabs__list" role="tablist" aria-label="Fintech replicas">
+              <button class="fc-tabs__trigger fc-tabs__trigger--active" type="button" role="tab" id="pg-replica-tab-checkout" data-replica="checkout" data-state="active" aria-selected="true" aria-controls="pg-replica-panel-checkout">Checkout</button>
+              <button class="fc-tabs__trigger" type="button" role="tab" id="pg-replica-tab-dashboard" data-replica="dashboard" data-state="inactive" aria-selected="false" aria-controls="pg-replica-panel-dashboard">Dashboard</button>
+              <button class="fc-tabs__trigger" type="button" role="tab" id="pg-replica-tab-invest" data-replica="invest" data-state="inactive" aria-selected="false" aria-controls="pg-replica-panel-invest">Invest</button>
+            </div>
+
+            <div class="fc-tabs__content" id="pg-replica-panel-checkout" role="tabpanel" aria-labelledby="pg-replica-tab-checkout">
+              <div class="pg-replica">
+                <div class="pg-replica__topbar">
+                  <strong>Paystack</strong>
+                  <span class="fc-badge fc-badge--info">Test mode</span>
+                </div>
+                <div class="pg-checkout">
+                  <div class="fc-card">
+                    <div class="fc-card__header">
+                      <div class="pg-checkout__brand">
+                        <div class="pg-checkout__brand-left">
+                          <span class="pg-checkout__logo" aria-hidden="true">A</span>
+                          <div>
+                            <p class="fc-card__title" style="margin: 0;">Acme Store</p>
+                            <p class="fc-card__description" style="margin: 0;">Secure checkout</p>
+                          </div>
+                        </div>
+                        <span class="fc-badge fc-badge--success">PCI ready</span>
+                      </div>
+                    </div>
+                    <div class="fc-card__body">
+                      <div class="pg-checkout__amount">
+                        <span style="color: var(--fc-color-content-secondary); font-size: 0.9rem;">Total due</span>
+                        <span class="fc-amount-display fc-amount-display--lg fc-amount-display--default">
+                          <span class="fc-amount-display__currency">₦</span><span class="fc-amount-display__value">25,000.00</span>
+                        </span>
+                      </div>
+                      <div class="pg-checkout__fields">
+                        <div class="fc-input fc-input--lg">
+                          <label class="fc-input__label" for="pg-pay-email">Email</label>
+                          <div class="fc-input__control">
+                            <input class="fc-input__field" id="pg-pay-email" type="email" autocomplete="email" value="ada@example.com">
+                          </div>
+                        </div>
+                        <div class="fc-input fc-input--lg">
+                          <label class="fc-input__label" for="pg-pay-card">Card number</label>
+                          <div class="fc-input__control">
+                            <input class="fc-input__field" id="pg-pay-card" type="text" inputmode="numeric" autocomplete="cc-number" maxlength="19" value="4084 0840 8408 4081" aria-describedby="pg-pay-card-error">
+                          </div>
+                          <p class="fc-input__message fc-input__message--error" id="pg-pay-card-error" hidden>Enter a valid card number.</p>
+                        </div>
+                        <div class="pg-checkout__row">
+                          <div class="fc-input fc-input--lg">
+                            <label class="fc-input__label" for="pg-pay-expiry">Expiry</label>
+                            <div class="fc-input__control">
+                              <input class="fc-input__field" id="pg-pay-expiry" type="text" inputmode="numeric" autocomplete="cc-exp" maxlength="7" value="09 / 28">
+                            </div>
+                          </div>
+                          <div class="fc-input fc-input--lg">
+                            <label class="fc-input__label" for="pg-pay-cvc">CVC</label>
+                            <div class="fc-input__control">
+                              <input class="fc-input__field" id="pg-pay-cvc" type="text" inputmode="numeric" autocomplete="cc-csc" maxlength="4" value="123">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="pg-pay-feedback" hidden style="margin-top: 1rem;">
+                        <div class="fc-alert fc-alert--error" id="pg-pay-alert" role="alert">
+                          <p class="fc-alert__title" id="pg-pay-alert-title">Payment declined</p>
+                          <p class="fc-alert__message" id="pg-pay-alert-message">Check the card details and try again.</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="fc-card__footer" style="flex-direction: column; align-items: stretch; gap: 0.75rem;">
+                      <button class="fc-button fc-button--primary fc-button--lg" id="pg-pay-submit" type="button" style="width: 100%;">Pay ₦25,000.00</button>
+                      <label class="control-checkbox" style="font-size: 0.85rem; color: var(--fc-color-content-secondary);">
+                        <input type="checkbox" id="pg-pay-decline">
+                        <span>Simulate a declined card</span>
+                      </label>
+                      <p class="pg-checkout__secure">
+                        <span class="fc-status-indicator fc-status-indicator--success fc-status-indicator--sm">
+                          <span class="fc-status-indicator__dot" aria-hidden="true"></span>
+                          <span>Secured by Paystack</span>
+                        </span>
+                        <span>·</span>
+                        <span>Test data only</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-tabs__content" id="pg-replica-panel-dashboard" role="tabpanel" aria-labelledby="pg-replica-tab-dashboard" hidden>
+              <div class="pg-replica">
+                <div class="pg-replica__topbar">
+                  <strong>Stripe</strong>
+                  <span class="fc-badge fc-badge--success">Live</span>
+                </div>
+                <div class="pg-dashboard">
+                  <div class="pg-dashboard__side">
+                    <div class="fc-balance-card">
+                      <div class="fc-balance-card__header">
+                        <span class="fc-balance-card__title">Available balance</span>
+                        <span class="fc-balance-card__account">•••• 4242</span>
+                      </div>
+                      <div class="fc-balance-card__amount">
+                        <span class="fc-amount-display fc-amount-display--lg fc-amount-display--default">
+                          <span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">12,480.00</span>
+                        </span>
+                      </div>
+                      <div class="fc-balance-card__footer">
+                        <span class="fc-status-indicator fc-status-indicator--success fc-status-indicator--sm">
+                          <span class="fc-status-indicator__dot" aria-hidden="true"></span>
+                          <span>Updated just now</span>
+                        </span>
+                        <span class="fc-badge fc-badge--default">USD</span>
+                      </div>
+                    </div>
+
+                    <div class="fc-card">
+                      <div class="fc-card__header">
+                        <p class="fc-card__title">This month</p>
+                        <p class="fc-card__description">Volume and payouts</p>
+                      </div>
+                      <div class="fc-card__body">
+                        <div class="pg-metric"><span>Payments</span><strong>1,284</strong></div>
+                        <div class="pg-metric"><span>Refunds</span><strong>12</strong></div>
+                        <div class="pg-metric">
+                          <span>Net volume</span>
+                          <span class="fc-amount-display fc-amount-display--md fc-amount-display--positive">
+                            <span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">24,180.00</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pg-dashboard__main">
+                    <div class="fc-card">
+                      <div class="fc-card__header">
+                        <p class="fc-card__title">Recent payments</p>
+                        <p class="fc-card__description">Latest charges across all products</p>
+                        <select class="control-select pg-dashboard__filter" id="pg-dash-filter" aria-label="Filter payments">
+                          <option value="all" selected>All statuses</option>
+                          <option value="succeeded">Succeeded</option>
+                          <option value="pending">Pending</option>
+                          <option value="refunded">Refunded</option>
+                          <option value="failed">Failed</option>
+                        </select>
+                      </div>
+                      <div class="fc-card__body">
+                        <div class="fc-table-container">
+                          <table class="fc-table">
+                            <thead class="fc-table__header">
+                              <tr>
+                                <th class="fc-table__th" scope="col">Customer</th>
+                                <th class="fc-table__th" scope="col">Status</th>
+                                <th class="fc-table__th pg-table-amount" scope="col">Amount</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="fc-table__row" data-status="succeeded">
+                                <td class="fc-table__td">Ada Lovelace</td>
+                                <td class="fc-table__td"><span class="fc-badge fc-badge--success">Succeeded</span></td>
+                                <td class="fc-table__td pg-table-amount"><span class="fc-amount-display fc-amount-display--md fc-amount-display--default"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">250.00</span></span></td>
+                              </tr>
+                              <tr class="fc-table__row" data-status="pending">
+                                <td class="fc-table__td">Grace Hopper</td>
+                                <td class="fc-table__td"><span class="fc-badge fc-badge--warning">Pending</span></td>
+                                <td class="fc-table__td pg-table-amount"><span class="fc-amount-display fc-amount-display--md fc-amount-display--default"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">1,200.00</span></span></td>
+                              </tr>
+                              <tr class="fc-table__row" data-status="succeeded">
+                                <td class="fc-table__td">Alan Turing</td>
+                                <td class="fc-table__td"><span class="fc-badge fc-badge--success">Succeeded</span></td>
+                                <td class="fc-table__td pg-table-amount"><span class="fc-amount-display fc-amount-display--md fc-amount-display--default"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">84.00</span></span></td>
+                              </tr>
+                              <tr class="fc-table__row" data-status="refunded">
+                                <td class="fc-table__td">Katherine Johnson</td>
+                                <td class="fc-table__td"><span class="fc-badge fc-badge--info">Refunded</span></td>
+                                <td class="fc-table__td pg-table-amount"><span class="fc-amount-display fc-amount-display--md fc-amount-display--default"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">42.50</span></span></td>
+                              </tr>
+                              <tr class="fc-table__row" data-status="failed">
+                                <td class="fc-table__td">Linus Torvalds</td>
+                                <td class="fc-table__td"><span class="fc-badge fc-badge--error">Failed</span></td>
+                                <td class="fc-table__td pg-table-amount"><span class="fc-amount-display fc-amount-display--md fc-amount-display--default"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">16.00</span></span></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <p class="pg-hint" id="pg-dash-count">Showing 5 payments</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-tabs__content" id="pg-replica-panel-invest" role="tabpanel" aria-labelledby="pg-replica-tab-invest" hidden>
+              <div class="pg-replica">
+                <div class="pg-replica__topbar">
+                  <strong>Bamboo</strong>
+                  <span class="fc-status-indicator fc-status-indicator--success fc-status-indicator--md">
+                    <span class="fc-status-indicator__dot" aria-hidden="true"></span>
+                    <span>Market open</span>
+                  </span>
+                </div>
+                <div class="pg-invest">
+                  <div class="fc-card">
+                    <div class="fc-card__header">
+                      <div class="pg-invest__hero">
+                        <div>
+                          <p class="fc-card__title">Portfolio value</p>
+                          <span class="fc-amount-display fc-amount-display--lg fc-amount-display--default pg-invest__value">
+                            <span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">8,420.16</span>
+                          </span>
+                          <p class="fc-card__description pg-invest__delta">
+                            <span class="fc-amount-display fc-amount-display--sm fc-amount-display--positive">
+                              <span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">124.32</span>
+                            </span>
+                            <span>today (+1.5%)</span>
+                          </p>
+                        </div>
+                        <span class="fc-badge fc-badge--success">+1.5%</span>
+                      </div>
+                    </div>
+                    <div class="fc-card__body">
+                      <div class="pg-invest__actions">
+                        <button class="fc-button fc-button--primary fc-button--sm" type="button">Buy</button>
+                        <button class="fc-button fc-button--secondary fc-button--sm" type="button">Sell</button>
+                        <select class="control-select" id="pg-invest-filter" aria-label="Filter holdings">
+                          <option value="all" selected>All holdings</option>
+                          <option value="up">Gainers</option>
+                          <option value="down">Losers</option>
+                        </select>
+                      </div>
+                      <div class="pg-invest__list" id="pg-invest-list">
+                        <div class="fc-transaction-item" data-trend="up">
+                          <div class="fc-transaction-item__lead">
+                            <div class="fc-transaction-item__icon"><span class="pg-ticker" aria-hidden="true">AAPL</span></div>
+                            <div class="fc-transaction-item__content">
+                              <span class="fc-transaction-item__title">Apple</span>
+                              <span class="fc-transaction-item__subtitle">AAPL · 12.4 shares</span>
+                            </div>
+                          </div>
+                          <div class="fc-transaction-item__trail">
+                            <span class="fc-amount-display fc-amount-display--md fc-amount-display--positive"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">2,140.50</span></span>
+                            <span class="fc-status-indicator fc-status-indicator--success fc-status-indicator--sm"><span class="fc-status-indicator__dot" aria-hidden="true"></span><span>+2.4%</span></span>
+                          </div>
+                        </div>
+                        <div class="fc-transaction-item" data-trend="down">
+                          <div class="fc-transaction-item__lead">
+                            <div class="fc-transaction-item__icon"><span class="pg-ticker" aria-hidden="true">TSLA</span></div>
+                            <div class="fc-transaction-item__content">
+                              <span class="fc-transaction-item__title">Tesla</span>
+                              <span class="fc-transaction-item__subtitle">TSLA · 3.1 shares</span>
+                            </div>
+                          </div>
+                          <div class="fc-transaction-item__trail">
+                            <span class="fc-amount-display fc-amount-display--md fc-amount-display--negative"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">1,842.00</span></span>
+                            <span class="fc-status-indicator fc-status-indicator--error fc-status-indicator--sm"><span class="fc-status-indicator__dot" aria-hidden="true"></span><span>−1.2%</span></span>
+                          </div>
+                        </div>
+                        <div class="fc-transaction-item" data-trend="up">
+                          <div class="fc-transaction-item__lead">
+                            <div class="fc-transaction-item__icon"><span class="pg-ticker" aria-hidden="true">VOO</span></div>
+                            <div class="fc-transaction-item__content">
+                              <span class="fc-transaction-item__title">Vanguard S&amp;P 500</span>
+                              <span class="fc-transaction-item__subtitle">VOO · 8.2 shares</span>
+                            </div>
+                          </div>
+                          <div class="fc-transaction-item__trail">
+                            <span class="fc-amount-display fc-amount-display--md fc-amount-display--positive"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">3,460.80</span></span>
+                            <span class="fc-status-indicator fc-status-indicator--success fc-status-indicator--sm"><span class="fc-status-indicator__dot" aria-hidden="true"></span><span>+0.8%</span></span>
+                          </div>
+                        </div>
+                        <div class="fc-transaction-item" data-trend="up">
+                          <div class="fc-transaction-item__lead">
+                            <div class="fc-transaction-item__icon"><span class="pg-ticker" aria-hidden="true">BTC</span></div>
+                            <div class="fc-transaction-item__content">
+                              <span class="fc-transaction-item__title">Bitcoin</span>
+                              <span class="fc-transaction-item__subtitle">BTC · 0.042 BTC</span>
+                            </div>
+                          </div>
+                          <div class="fc-transaction-item__trail">
+                            <span class="fc-amount-display fc-amount-display--md fc-amount-display--positive"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">977.00</span></span>
+                            <span class="fc-status-indicator fc-status-indicator--success fc-status-indicator--sm"><span class="fc-status-indicator__dot" aria-hidden="true"></span><span>+3.1%</span></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="fc-card">
+                    <div class="fc-card__header">
+                      <p class="fc-card__title">Recent activity</p>
+                      <p class="fc-card__description">Trades and dividends</p>
+                    </div>
+                    <div class="fc-card__body">
+                      <div class="pg-invest__list">
+                        <div class="fc-transaction-item">
+                          <div class="fc-transaction-item__lead">
+                            <div class="fc-transaction-item__icon"><span class="pg-ticker" aria-hidden="true">B</span></div>
+                            <div class="fc-transaction-item__content">
+                              <span class="fc-transaction-item__title">Bought AAPL</span>
+                              <span class="fc-transaction-item__subtitle">Today · Market order</span>
+                            </div>
+                          </div>
+                          <div class="fc-transaction-item__trail">
+                            <span class="fc-amount-display fc-amount-display--md fc-amount-display--negative"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">120.00</span></span>
+                            <span class="fc-badge fc-badge--success">Filled</span>
+                          </div>
+                        </div>
+                        <div class="fc-transaction-item">
+                          <div class="fc-transaction-item__lead">
+                            <div class="fc-transaction-item__icon"><span class="pg-ticker" aria-hidden="true">D</span></div>
+                            <div class="fc-transaction-item__content">
+                              <span class="fc-transaction-item__title">VOO dividend</span>
+                              <span class="fc-transaction-item__subtitle">Yesterday · Paid</span>
+                            </div>
+                          </div>
+                          <div class="fc-transaction-item__trail">
+                            <span class="fc-amount-display fc-amount-display--md fc-amount-display--positive"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">18.40</span></span>
+                            <span class="fc-badge fc-badge--success">Paid</span>
+                          </div>
+                        </div>
+                        <div class="fc-transaction-item">
+                          <div class="fc-transaction-item__lead">
+                            <div class="fc-transaction-item__icon"><span class="pg-ticker" aria-hidden="true">S</span></div>
+                            <div class="fc-transaction-item__content">
+                              <span class="fc-transaction-item__title">Sold TSLA</span>
+                              <span class="fc-transaction-item__subtitle">28 Oct · Limit order</span>
+                            </div>
+                          </div>
+                          <div class="fc-transaction-item__trail">
+                            <span class="fc-amount-display fc-amount-display--md fc-amount-display--positive"><span class="fc-amount-display__currency">$</span><span class="fc-amount-display__value">310.00</span></span>
+                            <span class="fc-badge fc-badge--success">Filled</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-button-heading">
+          <h2 id="pg-button-heading">Button</h2>
+          <p class="pg-section__intro">Variant, size and disabled are driven by the real Button classes and size tokens.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage">
+              <button id="pg-button" class="fc-button fc-button--primary" type="button">Continue</button>
+            </div>
+            <div class="playground__controls">
+              <h3>Props &amp; controls</h3>
+              <div class="control-group">
+                <label for="pg-button-label">Label</label>
+                <input class="control-text" id="pg-button-label" type="text" value="Continue">
+              </div>
+              <div class="control-group">
+                <label for="pg-button-variant">Variant</label>
+                <select class="control-select" id="pg-button-variant">
+                  <option value="primary" selected>Primary</option>
+                  <option value="secondary">Secondary</option>
+                  <option value="ghost">Ghost</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="pg-button-size">Size</label>
+                <select class="control-select" id="pg-button-size">
+                  <option value="sm">Small · 32px</option>
+                  <option value="md" selected>Medium · 40px</option>
+                  <option value="lg">Large · 48px</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label class="control-checkbox">
+                  <input id="pg-button-disabled" type="checkbox">
+                  <span>Disabled</span>
+                </label>
+              </div>
+              <p class="pg-hint">Loading is adapter-only; the canonical button CSS has no loading state. <code id="pg-button-classes">fc-button fc-button--primary</code></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-input-heading">
+          <h2 id="pg-input-heading">Input</h2>
+          <p class="pg-section__intro">Sizes, validation and disabled semantics come straight from <code>input.css</code>.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage">
+              <div class="fc-input" id="pg-input" style="width: 100%; max-width: 320px;">
+                <label class="fc-input__label" for="pg-input-field">Email</label>
+                <div class="fc-input__control">
+                  <input class="fc-input__field" id="pg-input-field" type="email" placeholder="you@example.com" aria-describedby="pg-input-message">
+                </div>
+                <p class="fc-input__message" id="pg-input-message">We only use this for account notices.</p>
+              </div>
+            </div>
+            <div class="playground__controls">
+              <h3>Props &amp; controls</h3>
+              <div class="control-group">
+                <label for="pg-input-size">Size</label>
+                <select class="control-select" id="pg-input-size">
+                  <option value="sm">Small · 32px</option>
+                  <option value="md" selected>Medium · 40px</option>
+                  <option value="lg">Large · 48px</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label class="control-checkbox">
+                  <input id="pg-input-error" type="checkbox">
+                  <span>Error</span>
+                </label>
+              </div>
+              <div class="control-group">
+                <label class="control-checkbox">
+                  <input id="pg-input-disabled" type="checkbox">
+                  <span>Disabled</span>
+                </label>
+              </div>
+              <p class="pg-hint">Loading is adapter-only; the canonical input CSS has no loading state. <code id="pg-input-classes">fc-input</code></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-currency-heading">
+          <h2 id="pg-currency-heading">Currency</h2>
+          <p class="pg-section__intro">The full size and state matrix: sm / md / lg plus error, disabled and loading from <code>currency.css</code>.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage">
+              <div class="fc-currency" id="pg-currency" style="width: 100%; max-width: 320px;">
+                <label class="fc-currency__label" for="pg-currency-field">Amount</label>
+                <div class="fc-currency__control">
+                  <span class="fc-currency__prefix" aria-hidden="true">$</span>
+                  <input class="fc-currency__field" id="pg-currency-field" type="text" inputmode="decimal" value="1,250.00" aria-describedby="pg-currency-message">
+                </div>
+                <p class="fc-currency__message" id="pg-currency-message">Available balance $4,820.00</p>
+              </div>
+            </div>
+            <div class="playground__controls">
+              <h3>Props &amp; controls</h3>
+              <div class="control-group">
+                <label for="pg-currency-size">Size</label>
+                <select class="control-select" id="pg-currency-size">
+                  <option value="sm">Small · 32px</option>
+                  <option value="md" selected>Medium · 40px</option>
+                  <option value="lg">Large · 48px</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="pg-currency-state">State</label>
+                <select class="control-select" id="pg-currency-state">
+                  <option value="default" selected>Default</option>
+                  <option value="error">Error</option>
+                  <option value="disabled">Disabled</option>
+                  <option value="loading">Loading</option>
+                </select>
+              </div>
+              <p class="pg-hint"><code id="pg-currency-classes">fc-currency</code></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-alert-heading">
+          <h2 id="pg-alert-heading">Alert</h2>
+          <p class="pg-section__intro">Four feedback tones and editable copy.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage">
+              <div class="fc-alert fc-alert--info" id="pg-alert" role="status" style="width: 100%; max-width: 420px;">
+                <p class="fc-alert__title" id="pg-alert-title">Heads up</p>
+                <p class="fc-alert__message" id="pg-alert-message">Your statement is ready to download.</p>
+              </div>
+            </div>
+            <div class="playground__controls">
+              <h3>Props &amp; controls</h3>
+              <div class="control-group">
+                <label for="pg-alert-tone">Tone</label>
+                <select class="control-select" id="pg-alert-tone">
+                  <option value="info" selected>Info</option>
+                  <option value="success">Success</option>
+                  <option value="warning">Warning</option>
+                  <option value="error">Error</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="pg-alert-title-input">Title</label>
+                <input class="control-text" id="pg-alert-title-input" type="text" value="Heads up">
+              </div>
+              <div class="control-group">
+                <label for="pg-alert-message-input">Message</label>
+                <input class="control-text" id="pg-alert-message-input" type="text" value="Your statement is ready to download.">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-tabs-heading">
+          <h2 id="pg-tabs-heading">Tabs</h2>
+          <p class="pg-section__intro">The tab triggers are real buttons. Click or use the arrow keys to switch panels.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage">
+              <div class="fc-tabs pg-tabs-demo" id="pg-tabs">
+                <div class="fc-tabs__list" role="tablist" aria-label="Account sections">
+                  <button class="fc-tabs__trigger fc-tabs__trigger--active" type="button" role="tab" id="pg-tab-overview" data-state="active" aria-selected="true" aria-controls="pg-tab-panel" data-panel="Overview content: balances, recent activity and account status.">Overview</button>
+                  <button class="fc-tabs__trigger" type="button" role="tab" id="pg-tab-activity" data-state="inactive" aria-selected="false" aria-controls="pg-tab-panel" data-panel="Activity content: every card, transfer and direct debit.">Activity</button>
+                  <button class="fc-tabs__trigger" type="button" role="tab" id="pg-tab-settings" data-state="inactive" aria-selected="false" aria-controls="pg-tab-panel" data-panel="Settings content: alerts, limits and trust devices.">Settings</button>
+                </div>
+                <div class="fc-tabs__content" id="pg-tab-panel" role="tabpanel" aria-labelledby="pg-tab-overview" tabindex="0">
+                  Overview content: balances, recent activity and account status.
+                </div>
+              </div>
+            </div>
+            <div class="playground__controls">
+              <h3>How it works</h3>
+              <p class="pg-hint" style="margin-top: 0;">The active trigger gets <code>data-state="active"</code> and <code>fc-tabs__trigger--active</code>. Focus is handled by <code>:focus-visible</code>.</p>
+              <p class="pg-hint">Tab list background, radius, padding and trigger type all resolve from <code>--fc-tabs-*</code>.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-switch-heading">
+          <h2 id="pg-switch-heading">Switch</h2>
+          <p class="pg-section__intro">A native switch button. Click it, or drive it from the controls.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage">
+              <div class="fc-switch-wrapper">
+                <button class="fc-switch" id="pg-switch" type="button" role="switch" aria-checked="false" aria-labelledby="pg-switch-label">
+                  <span class="fc-switch__thumb"></span>
+                </button>
+                <span class="fc-switch__label" id="pg-switch-label">Enable alerts</span>
+              </div>
+            </div>
+            <div class="playground__controls">
+              <h3>Props &amp; controls</h3>
+              <div class="control-group">
+                <label class="control-checkbox">
+                  <input id="pg-switch-checked" type="checkbox">
+                  <span>Checked</span>
+                </label>
+              </div>
+              <div class="control-group">
+                <label class="control-checkbox">
+                  <input id="pg-switch-disabled" type="checkbox">
+                  <span>Disabled</span>
+                </label>
+              </div>
+              <p class="pg-hint">Checked sets <code>aria-checked="true"</code> and <code>fc-switch--checked</code>. Focus uses <code>--fc-switch-focus-*</code>.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-checkbox-heading">
+          <h2 id="pg-checkbox-heading">Checkbox</h2>
+          <p class="pg-section__intro">Checked, error and disabled are native input states styled by <code>checkbox.css</code>.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage">
+              <div class="fc-checkbox" id="pg-checkbox">
+                <label class="fc-checkbox__body" for="pg-checkbox-input">
+                  <span class="fc-checkbox__control">
+                    <input class="fc-checkbox__field" id="pg-checkbox-input" type="checkbox" aria-describedby="pg-checkbox-message">
+                    <span class="fc-checkbox__box" aria-hidden="true">
+                      <svg class="fc-checkbox__icon" viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"></polyline></svg>
+                    </span>
+                  </span>
+                  <span class="fc-checkbox__label" id="pg-checkbox-label">Email receipts</span>
+                </label>
+                <p class="fc-checkbox__message" id="pg-checkbox-message">We only send account notices.</p>
+              </div>
+            </div>
+            <div class="playground__controls">
+              <h3>Props &amp; controls</h3>
+              <div class="control-group">
+                <label class="control-checkbox">
+                  <input id="pg-checkbox-checked" type="checkbox">
+                  <span>Checked</span>
+                </label>
+              </div>
+              <div class="control-group">
+                <label class="control-checkbox">
+                  <input id="pg-checkbox-error" type="checkbox">
+                  <span>Error</span>
+                </label>
+              </div>
+              <div class="control-group">
+                <label class="control-checkbox">
+                  <input id="pg-checkbox-disabled" type="checkbox">
+                  <span>Disabled</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-otp-heading">
+          <h2 id="pg-otp-heading">One-time code</h2>
+          <p class="pg-section__intro">Six native digit cells with auto-advance, error and disabled states.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage pg-stage--otp">
+              <div class="fc-otp" id="pg-otp">
+                <span class="fc-otp__label" id="pg-otp-label">Verification code</span>
+                <div class="fc-otp__cells">
+                  <span class="fc-otp__cell-wrapper"><input class="fc-otp__cell" type="text" inputmode="numeric" maxlength="1" value="4" aria-labelledby="pg-otp-label"></span>
+                  <span class="fc-otp__cell-wrapper"><input class="fc-otp__cell" type="text" inputmode="numeric" maxlength="1" value="8" aria-labelledby="pg-otp-label"></span>
+                  <span class="fc-otp__cell-wrapper"><input class="fc-otp__cell" type="text" inputmode="numeric" maxlength="1" value="2" aria-labelledby="pg-otp-label"></span>
+                  <span class="fc-otp__cell-wrapper"><input class="fc-otp__cell" type="text" inputmode="numeric" maxlength="1" value="1" aria-labelledby="pg-otp-label"></span>
+                  <span class="fc-otp__cell-wrapper"><input class="fc-otp__cell" type="text" inputmode="numeric" maxlength="1" value="9" aria-labelledby="pg-otp-label"></span>
+                  <span class="fc-otp__cell-wrapper"><input class="fc-otp__cell" type="text" inputmode="numeric" maxlength="1" value="6" aria-labelledby="pg-otp-label"></span>
+                </div>
+                <p class="fc-otp__message" id="pg-otp-message">Enter the 6-digit code.</p>
+              </div>
+            </div>
+            <div class="playground__controls">
+              <h3>Props &amp; controls</h3>
+              <div class="control-group">
+                <label for="pg-otp-state">State</label>
+                <select class="control-select" id="pg-otp-state">
+                  <option value="default" selected>Default</option>
+                  <option value="error">Error</option>
+                  <option value="disabled">Disabled</option>
+                </select>
+              </div>
+              <p class="pg-hint">Error sets <code>aria-invalid="true"</code> on every cell. Disabled suppresses the focus ring.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-card-heading">
+          <h2 id="pg-card-heading">Card + Badge</h2>
+          <p class="pg-section__intro">A real card composition with a tonal badge and a real Button. Edit the copy.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage">
+              <div class="fc-card pg-card-demo">
+                <div class="fc-card__header">
+                  <p class="fc-card__title" id="pg-card-title">Transfer review</p>
+                  <p class="fc-card__description" id="pg-card-description">A £1,250.00 transfer to Alex Rivera.</p>
+                </div>
+                <div class="fc-card__body">
+                  <p style="margin: 0;">Arrives within one business day.</p>
+                </div>
+                <div class="fc-card__footer">
+                  <span class="fc-badge fc-badge--success" id="pg-card-badge">Pending</span>
+                  <button class="fc-button fc-button--secondary fc-button--sm" type="button">Manage</button>
+                </div>
+              </div>
+            </div>
+            <div class="playground__controls">
+              <h3>Props &amp; controls</h3>
+              <div class="control-group">
+                <label for="pg-card-title-input">Title</label>
+                <input class="control-text" id="pg-card-title-input" type="text" value="Transfer review">
+              </div>
+              <div class="control-group">
+                <label for="pg-card-description-input">Description</label>
+                <input class="control-text" id="pg-card-description-input" type="text" value="A £1,250.00 transfer to Alex Rivera.">
+              </div>
+              <div class="control-group">
+                <label for="pg-card-badge-tone">Badge tone</label>
+                <select class="control-select" id="pg-card-badge-tone">
+                  <option value="default">Default</option>
+                  <option value="success" selected>Success</option>
+                  <option value="warning">Warning</option>
+                  <option value="error">Error</option>
+                  <option value="info">Info</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-table-heading">
+          <h2 id="pg-table-heading">Table</h2>
+          <p class="pg-section__intro">Header, rows and cells use the canonical table classes. Hover a row to see the token-driven background.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage pg-stage--table">
+              <div class="fc-table-container">
+                <table class="fc-table">
+                  <thead class="fc-table__header">
+                    <tr>
+                      <th class="fc-table__th" scope="col">Description</th>
+                      <th class="fc-table__th" scope="col">Date</th>
+                      <th class="fc-table__th pg-table-amount" scope="col">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="fc-table__row">
+                      <td class="fc-table__td">Coffee shop</td>
+                      <td class="fc-table__td">Today</td>
+                      <td class="fc-table__td pg-table-amount">−$4.50</td>
+                    </tr>
+                    <tr class="fc-table__row">
+                      <td class="fc-table__td">Salary</td>
+                      <td class="fc-table__td">1 Nov</td>
+                      <td class="fc-table__td pg-table-amount">+$2,400.00</td>
+                    </tr>
+                    <tr class="fc-table__row">
+                      <td class="fc-table__td">Groceries</td>
+                      <td class="fc-table__td">31 Oct</td>
+                      <td class="fc-table__td pg-table-amount">−$86.20</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="playground__controls">
+              <h3>How it works</h3>
+              <p class="pg-hint" style="margin-top: 0;">Rows use <code>fc-table__row</code>; hover resolves <code>--fc-table-row-hover-background</code>.</p>
+              <p class="pg-hint">The table has one size. Numeric columns are right-aligned for scanability.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="pg-section" aria-labelledby="pg-badge-heading">
+          <h2 id="pg-badge-heading">Badge</h2>
+          <p class="pg-section__intro">Tone is the only axis in the canonical CSS.</p>
+          <div class="playground">
+            <div class="playground__stage pg-stage">
+              <span class="fc-badge fc-badge--default" id="pg-badge">Default</span>
+            </div>
+            <div class="playground__controls">
+              <h3>Props &amp; controls</h3>
+              <div class="control-group">
+                <label for="pg-badge-tone">Tone</label>
+                <select class="control-select" id="pg-badge-tone">
+                  <option value="default" selected>Default</option>
+                  <option value="success">Success</option>
+                  <option value="warning">Warning</option>
+                  <option value="error">Error</option>
+                  <option value="info">Info</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Sorleed · UI Infrastructure for high-integrity interfaces.</p>
+      <p><a href="https://github.com/sorleed/sorleed">GitHub</a> · MIT License</p>
+    </div>
+  </footer>
+
+  <script src="assets/site.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      // Button ---------------------------------------------------------------
+      var button = byId("pg-button");
+      var buttonLabel = byId("pg-button-label");
+      var buttonVariant = byId("pg-button-variant");
+      var buttonSize = byId("pg-button-size");
+      var buttonDisabled = byId("pg-button-disabled");
+      var buttonClasses = byId("pg-button-classes");
+
+      function renderButton() {
+        var variant = buttonVariant.value;
+        var size = buttonSize.value;
+        button.textContent = buttonLabel.value || "Button";
+        button.className = "fc-button fc-button--" + variant;
+        if (size !== "md") button.classList.add("fc-button--" + size);
+        button.disabled = buttonDisabled.checked;
+        buttonClasses.textContent = button.className + (button.disabled ? " disabled" : "");
+      }
+
+      [buttonLabel, buttonVariant, buttonSize, buttonDisabled].forEach(function (control) {
+        control.addEventListener("input", renderButton);
+        control.addEventListener("change", renderButton);
+      });
+
+      // Input ----------------------------------------------------------------
+      var inputWrap = byId("pg-input");
+      var inputSize = byId("pg-input-size");
+      var inputError = byId("pg-input-error");
+      var inputDisabled = byId("pg-input-disabled");
+      var inputField = byId("pg-input-field");
+      var inputMessage = byId("pg-input-message");
+      var inputClasses = byId("pg-input-classes");
+
+      function renderInput() {
+        var size = inputSize.value;
+        var error = inputError.checked;
+        inputWrap.className = "fc-input";
+        if (size !== "md") inputWrap.classList.add("fc-input--" + size);
+        inputField.disabled = inputDisabled.checked;
+        if (error) {
+          inputField.setAttribute("aria-invalid", "true");
+          inputMessage.classList.add("fc-input__message--error");
+          inputMessage.textContent = "Enter a valid email address.";
+        } else {
+          inputField.removeAttribute("aria-invalid");
+          inputMessage.classList.remove("fc-input__message--error");
+          inputMessage.textContent = "We only use this for account notices.";
+        }
+        inputClasses.textContent = inputWrap.className;
+      }
+
+      [inputSize, inputError, inputDisabled].forEach(function (control) {
+        control.addEventListener("change", renderInput);
+      });
+
+      // Currency -------------------------------------------------------------
+      var currency = byId("pg-currency");
+      var currencySize = byId("pg-currency-size");
+      var currencyState = byId("pg-currency-state");
+      var currencyField = byId("pg-currency-field");
+      var currencyMessage = byId("pg-currency-message");
+      var currencyClasses = byId("pg-currency-classes");
+
+      function renderCurrency() {
+        var size = currencySize.value;
+        var state = currencyState.value;
+        currency.className = "fc-currency";
+        if (size !== "md") currency.classList.add("fc-currency--" + size);
+        if (state === "loading") currency.classList.add("fc-currency--loading");
+        currencyField.disabled = state === "disabled" || state === "loading";
+        if (state === "loading") currencyField.setAttribute("aria-busy", "true");
+        else currencyField.removeAttribute("aria-busy");
+        if (state === "error") {
+          currencyField.setAttribute("aria-invalid", "true");
+          currencyMessage.classList.add("fc-currency__message--error");
+          currencyMessage.textContent = "Enter an amount of at least 10.00.";
+        } else {
+          currencyField.removeAttribute("aria-invalid");
+          currencyMessage.classList.remove("fc-currency__message--error");
+          currencyMessage.textContent = "Available balance $4,820.00";
+        }
+        currencyClasses.textContent = currency.className;
+      }
+
+      [currencySize, currencyState].forEach(function (control) {
+        control.addEventListener("change", renderCurrency);
+      });
+
+      // Alert ----------------------------------------------------------------
+      var alert = byId("pg-alert");
+      var alertTone = byId("pg-alert-tone");
+      var alertTitle = byId("pg-alert-title");
+      var alertMessage = byId("pg-alert-message");
+      var alertTitleInput = byId("pg-alert-title-input");
+      var alertMessageInput = byId("pg-alert-message-input");
+
+      function renderAlert() {
+        alert.className = "fc-alert fc-alert--" + alertTone.value;
+        alertTitle.textContent = alertTitleInput.value || "Alert";
+        alertMessage.textContent = alertMessageInput.value;
+      }
+
+      [alertTone, alertTitleInput, alertMessageInput].forEach(function (control) {
+        control.addEventListener("input", renderAlert);
+        control.addEventListener("change", renderAlert);
+      });
+
+      // Tabs -----------------------------------------------------------------
+      var tabs = byId("pg-tabs");
+      var tabTriggers = Array.prototype.slice.call(tabs.querySelectorAll(".fc-tabs__trigger"));
+      var tabPanel = byId("pg-tab-panel");
+
+      function activateTab(trigger) {
+        tabTriggers.forEach(function (candidate) {
+          var active = candidate === trigger;
+          candidate.classList.toggle("fc-tabs__trigger--active", active);
+          candidate.setAttribute("data-state", active ? "active" : "inactive");
+          candidate.setAttribute("aria-selected", String(active));
+        });
+        tabPanel.textContent = trigger.getAttribute("data-panel");
+        tabPanel.setAttribute("aria-labelledby", trigger.id);
+      }
+
+      tabTriggers.forEach(function (trigger) {
+        trigger.addEventListener("click", function () {
+          activateTab(trigger);
+        });
+        trigger.addEventListener("keydown", function (event) {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          var index = tabTriggers.indexOf(trigger);
+          var next = event.key === "ArrowRight" ? index + 1 : index - 1;
+          if (next < 0) next = tabTriggers.length - 1;
+          if (next >= tabTriggers.length) next = 0;
+          tabTriggers[next].focus();
+          activateTab(tabTriggers[next]);
+        });
+      });
+
+      // Switch ---------------------------------------------------------------
+      var switchControl = byId("pg-switch");
+      var switchChecked = byId("pg-switch-checked");
+      var switchDisabled = byId("pg-switch-disabled");
+
+      function renderSwitch() {
+        var checked = switchChecked.checked;
+        switchControl.setAttribute("aria-checked", String(checked));
+        switchControl.classList.toggle("fc-switch--checked", checked);
+        switchControl.disabled = switchDisabled.checked;
+      }
+
+      switchControl.addEventListener("click", function () {
+        if (switchControl.disabled) return;
+        switchChecked.checked = !switchChecked.checked;
+        renderSwitch();
+      });
+
+      [switchChecked, switchDisabled].forEach(function (control) {
+        control.addEventListener("change", renderSwitch);
+      });
+
+      // Checkbox -------------------------------------------------------------
+      var checkbox = byId("pg-checkbox");
+      var checkboxInput = byId("pg-checkbox-input");
+      var checkboxMessage = byId("pg-checkbox-message");
+      var checkboxChecked = byId("pg-checkbox-checked");
+      var checkboxError = byId("pg-checkbox-error");
+      var checkboxDisabled = byId("pg-checkbox-disabled");
+
+      function renderCheckbox() {
+        checkboxInput.checked = checkboxChecked.checked;
+        checkboxInput.disabled = checkboxDisabled.checked;
+        if (checkboxError.checked) {
+          checkboxInput.setAttribute("aria-invalid", "true");
+          checkboxMessage.classList.add("fc-checkbox__message--error");
+          checkboxMessage.textContent = "Accept the terms to continue.";
+        } else {
+          checkboxInput.removeAttribute("aria-invalid");
+          checkboxMessage.classList.remove("fc-checkbox__message--error");
+          checkboxMessage.textContent = "We only send account notices.";
+        }
+      }
+
+      checkboxInput.addEventListener("change", function () {
+        checkboxChecked.checked = checkboxInput.checked;
+      });
+
+      [checkboxChecked, checkboxError, checkboxDisabled].forEach(function (control) {
+        control.addEventListener("change", renderCheckbox);
+      });
+
+      // OTP ------------------------------------------------------------------
+      var otp = byId("pg-otp");
+      var otpState = byId("pg-otp-state");
+      var otpMessage = byId("pg-otp-message");
+      var otpCells = Array.prototype.slice.call(otp.querySelectorAll(".fc-otp__cell"));
+
+      function renderOtp() {
+        var state = otpState.value;
+        otpCells.forEach(function (cell) {
+          cell.disabled = state === "disabled";
+          if (state === "error") cell.setAttribute("aria-invalid", "true");
+          else cell.removeAttribute("aria-invalid");
+        });
+        if (state === "error") {
+          otpMessage.classList.add("fc-otp__message--error");
+          otpMessage.textContent = "That code is incorrect. Try again.";
+        } else {
+          otpMessage.classList.remove("fc-otp__message--error");
+          otpMessage.textContent = "Enter the 6-digit code.";
+        }
+      }
+
+      otpCells.forEach(function (cell, index) {
+        cell.addEventListener("input", function () {
+          cell.value = cell.value.slice(-1).replace(/[^0-9]/g, "");
+          if (cell.value && index < otpCells.length - 1) otpCells[index + 1].focus();
+        });
+        cell.addEventListener("keydown", function (event) {
+          if (event.key === "Backspace" && !cell.value && index > 0) otpCells[index - 1].focus();
+        });
+      });
+
+      otpState.addEventListener("change", renderOtp);
+
+      // Card + badge ---------------------------------------------------------
+      var cardTitle = byId("pg-card-title");
+      var cardDescription = byId("pg-card-description");
+      var cardBadge = byId("pg-card-badge");
+      var cardTitleInput = byId("pg-card-title-input");
+      var cardDescriptionInput = byId("pg-card-description-input");
+      var cardBadgeTone = byId("pg-card-badge-tone");
+
+      function renderCard() {
+        cardTitle.textContent = cardTitleInput.value || "Card title";
+        cardDescription.textContent = cardDescriptionInput.value;
+        cardBadge.className = "fc-badge fc-badge--" + cardBadgeTone.value;
+        cardBadge.textContent = cardBadgeTone.options[cardBadgeTone.selectedIndex].text;
+      }
+
+      [cardTitleInput, cardDescriptionInput, cardBadgeTone].forEach(function (control) {
+        control.addEventListener("input", renderCard);
+        control.addEventListener("change", renderCard);
+      });
+
+      // Badge ----------------------------------------------------------------
+      var badge = byId("pg-badge");
+      var badgeTone = byId("pg-badge-tone");
+
+      function renderBadge() {
+        badge.className = "fc-badge fc-badge--" + badgeTone.value;
+        badge.textContent = badgeTone.options[badgeTone.selectedIndex].text;
+      }
+
+      badgeTone.addEventListener("change", renderBadge);
+
+      // Fintech replicas ----------------------------------------------------
+      var replicaTabs = byId("pg-replica-tabs");
+      var replicaTriggers = Array.prototype.slice.call(
+        replicaTabs.querySelectorAll(".fc-tabs__trigger")
+      );
+
+      function activateReplica(trigger) {
+        replicaTriggers.forEach(function (candidate) {
+          var active = candidate === trigger;
+          candidate.classList.toggle("fc-tabs__trigger--active", active);
+          candidate.setAttribute("data-state", active ? "active" : "inactive");
+          candidate.setAttribute("aria-selected", String(active));
+          var panel = byId(candidate.getAttribute("aria-controls"));
+          if (panel) panel.hidden = !active;
+        });
+      }
+
+      replicaTriggers.forEach(function (trigger) {
+        trigger.addEventListener("click", function () {
+          activateReplica(trigger);
+        });
+        trigger.addEventListener("keydown", function (event) {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          var index = replicaTriggers.indexOf(trigger);
+          var next = event.key === "ArrowRight" ? index + 1 : index - 1;
+          if (next < 0) next = replicaTriggers.length - 1;
+          if (next >= replicaTriggers.length) next = 0;
+          replicaTriggers[next].focus();
+          activateReplica(replicaTriggers[next]);
+        });
+      });
+
+      // Paystack-style checkout
+      var payCard = byId("pg-pay-card");
+      var payExpiry = byId("pg-pay-expiry");
+      var payCvc = byId("pg-pay-cvc");
+      var payCardError = byId("pg-pay-card-error");
+      var payFeedback = byId("pg-pay-feedback");
+      var payAlert = byId("pg-pay-alert");
+      var payAlertTitle = byId("pg-pay-alert-title");
+      var payAlertMessage = byId("pg-pay-alert-message");
+      var paySubmit = byId("pg-pay-submit");
+      var payDecline = byId("pg-pay-decline");
+
+      function formatCardNumber(value) {
+        var digits = value.replace(/\D/g, "").slice(0, 16);
+        return digits.replace(/(.{4})/g, "$1 ").trim();
+      }
+
+      function formatExpiry(value) {
+        var digits = value.replace(/\D/g, "").slice(0, 4);
+        if (digits.length <= 2) return digits;
+        return digits.slice(0, 2) + " / " + digits.slice(2);
+      }
+
+      payCard.addEventListener("input", function () {
+        payCard.value = formatCardNumber(payCard.value);
+        payCard.removeAttribute("aria-invalid");
+        payCardError.hidden = true;
+      });
+      payExpiry.addEventListener("input", function () {
+        payExpiry.value = formatExpiry(payExpiry.value);
+        payExpiry.removeAttribute("aria-invalid");
+      });
+      payCvc.addEventListener("input", function () {
+        payCvc.value = payCvc.value.replace(/\D/g, "").slice(0, 4);
+        payCvc.removeAttribute("aria-invalid");
+      });
+
+      paySubmit.addEventListener("click", function () {
+        var declined = payDecline.checked;
+        payFeedback.hidden = false;
+        payAlert.className = "fc-alert " + (declined ? "fc-alert--error" : "fc-alert--success");
+        payAlertTitle.textContent = declined ? "Payment declined" : "Payment successful";
+        payAlertMessage.textContent = declined
+          ? "The test card was declined. Check the details and try again."
+          : "₦25,000.00 paid. A receipt was sent to ada@example.com.";
+        [payCard, payExpiry, payCvc].forEach(function (field) {
+          if (declined) field.setAttribute("aria-invalid", "true");
+          else field.removeAttribute("aria-invalid");
+        });
+        payCardError.hidden = !declined;
+        paySubmit.textContent = declined ? "Try payment again" : "Payment successful";
+      });
+
+      // Stripe-style dashboard filter
+      var dashFilter = byId("pg-dash-filter");
+      var dashRows = Array.prototype.slice.call(
+        document.querySelectorAll("#pg-replica-panel-dashboard .fc-table__row")
+      );
+
+      function renderDashboard() {
+        var value = dashFilter.value;
+        var shown = 0;
+        dashRows.forEach(function (row) {
+          var visible = value === "all" || row.getAttribute("data-status") === value;
+          row.hidden = !visible;
+          if (visible) shown += 1;
+        });
+        byId("pg-dash-count").textContent =
+          "Showing " + shown + " payment" + (shown === 1 ? "" : "s");
+      }
+
+      dashFilter.addEventListener("change", renderDashboard);
+
+      // Bamboo-style investment filter
+      var investFilter = byId("pg-invest-filter");
+      var holdings = Array.prototype.slice.call(
+        document.querySelectorAll("#pg-invest-list .fc-transaction-item")
+      );
+
+      function renderInvestments() {
+        var value = investFilter.value;
+        holdings.forEach(function (holding) {
+          var visible =
+            value === "all" || holding.getAttribute("data-trend") === value;
+          holding.hidden = !visible;
+        });
+      }
+
+      investFilter.addEventListener("change", renderInvestments);
+
+      // Initial paint --------------------------------------------------------
+      renderButton();
+      renderInput();
+      renderCurrency();
+      renderAlert();
+      renderSwitch();
+      renderCheckbox();
+      renderOtp();
+      renderCard();
+      renderBadge();
+    })();
+  </script>
+</body>
+</html>

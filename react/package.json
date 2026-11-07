@@ -1,6 +1,6 @@
 {
   "name": "@sorleed/react",
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.7",
   "description": "Weft React component library",
   "type": "module",
   "main": "./dist/index.js",

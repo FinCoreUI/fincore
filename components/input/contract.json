@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "status": "draft",
     "componentVersion": "0.1.0",
-    "summary": "FinCore's single-line text field: label + control + helper, four mutually exclusive Figma states, an independent keyboard-focus ring and 28 component tokens. Validation is owned by the consuming application, not the component. Implemented as framework-agnostic CSS with native HTML reference markup; no runtime package or adapter.",
+    "summary": "FinCore's single-line text field: label + control + helper, four mutually exclusive Figma states, an independent keyboard-focus ring and 38 component tokens. Validation is owned by the consuming application, not the component. Implemented as framework-agnostic CSS with native HTML reference markup; no runtime package or adapter.",
     "maturity": "implemented; framework-agnostic CSS + native HTML; no runtime package",
     "lastUpdated": "2026-10-26",
     "canonical": {
@@ -568,8 +568,8 @@
       "type": "\"sm\" | \"md\" | \"lg\"",
       "default": "\"md\"",
       "required": false,
-      "description": "Controls the size variant (sm, md, lg) in component adapter.",
-      "notes": "Applies corresponding size modifier class."
+      "description": "Controls the size variant (sm, md, lg). Maps to the fc-input--{size} modifier and the input.*-{size} tokens.",
+      "notes": "md uses the unsuffixed default tokens; sm is 32px high and lg 48px. Colour, state precedence and focus treatment are unchanged."
     },
     {
       "prop": "loading",
@@ -1248,6 +1248,116 @@
           "Hover",
           "Error",
           "Disabled"
+        ]
+      },
+      {
+        "name": "input.height-sm",
+        "type": "dimension",
+        "cssVar": "--fc-input-height-sm",
+        "alias": "size.control.sm",
+        "resolved": "32px",
+        "role": "Control height (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "input.padding-x-sm",
+        "type": "dimension",
+        "cssVar": "--fc-input-padding-x-sm",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Horizontal padding (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "input.radius-sm",
+        "type": "dimension",
+        "cssVar": "--fc-input-radius-sm",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Corner radius (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "input.font-size-sm",
+        "type": "dimension",
+        "cssVar": "--fc-input-font-size-sm",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Value and label font size (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "input.line-height-sm",
+        "type": "dimension",
+        "cssVar": "--fc-input-line-height-sm",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Value and label line height (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "input.height-lg",
+        "type": "dimension",
+        "cssVar": "--fc-input-height-lg",
+        "alias": "size.control.lg",
+        "resolved": "48px",
+        "role": "Control height (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "input.padding-x-lg",
+        "type": "dimension",
+        "cssVar": "--fc-input-padding-x-lg",
+        "alias": "space.4",
+        "resolved": "16px",
+        "role": "Horizontal padding (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "input.radius-lg",
+        "type": "dimension",
+        "cssVar": "--fc-input-radius-lg",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Corner radius (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "input.font-size-lg",
+        "type": "dimension",
+        "cssVar": "--fc-input-font-size-lg",
+        "alias": "font.size.md",
+        "resolved": "16px",
+        "role": "Value and label font size (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "input.line-height-lg",
+        "type": "dimension",
+        "cssVar": "--fc-input-line-height-lg",
+        "alias": "font.line-height.md",
+        "resolved": "24px",
+        "role": "Value and label line height (lg)",
+        "usedBy": [
+          "Size=lg"
         ]
       }
     ],
@@ -2147,7 +2257,7 @@
         "id": "tokens-count",
         "given": "This contract.",
         "when": "The dependency list is compared with tokens/tokens.json.",
-        "then": "All 28 input.* dependencies exist, resolve to the stated values, and map to the stated --fc-* CSS variables."
+        "then": "All 38 input.* dependencies exist, resolve to the stated values, and map to the stated --fc-* CSS variables."
       },
       {
         "id": "tokens-state-binding",
@@ -2334,7 +2444,7 @@
     ],
     "rules": [
       "Render the full field: label, single-line control, helper/error row. Do not reduce it to a bare input.",
-      "Use only the 28 input.* tokens listed in this contract. Never consume primitives or Semantic tokens directly.",
+      "Use only the 38 input.* tokens listed in this contract. Never consume primitives or Semantic tokens directly.",
       "Derive State from disabled and errorMessage. Precedence: Disabled > Error > Hover > Default.",
       "Derive Focused from :focus-visible, except when disabled.",
       "Derive Filled and placeholder visibility from the controlled value; never expose those booleans as props.",
@@ -2366,7 +2476,7 @@
       "Label association, placeholder separation, aria-invalid, error/helper description and announcement pass an accessibility audit.",
       "Type, inputMode, autoComplete, required and disabled semantics match the field's purpose.",
       "Keyboard Tab order, native entry, Enter submission and disabled tab removal pass.",
-      "The 28 token dependencies resolve to the values in this contract and match the generated CSS variables.",
+      "The 38 token dependencies resolve to the values in this contract and match the generated CSS variables.",
       "The 41 gated contrast pairs pass on the five supported surfaces; inverse remains unsupported.",
       "No unsupported type, state, icon, validation logic or fixed 320px width is present.",
       "The illustrative composition example, if used, is adapted rather than copied as production code."

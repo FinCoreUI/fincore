@@ -106,6 +106,36 @@
   display: none;
 }
 
+/*
+ * Size variants change geometry and typography only. Colour, state precedence
+ * and the focus overlay stay identical across sm, md and lg.
+ */
+.fc-button--sm {
+  min-height: var(--fc-button-height-sm);
+  padding-block: calc((var(--fc-button-height-sm) - var(--fc-button-line-height-sm)) / 2);
+  padding-inline: var(--fc-button-padding-x-sm);
+  border-radius: var(--fc-button-radius-sm);
+  font-size: var(--fc-button-font-size-sm);
+  line-height: var(--fc-button-line-height-sm);
+}
+
+.fc-button--sm::after {
+  border-radius: calc(var(--fc-button-radius-sm) + var(--fc-button-focus-offset));
+}
+
+.fc-button--lg {
+  min-height: var(--fc-button-height-lg);
+  padding-block: calc((var(--fc-button-height-lg) - var(--fc-button-line-height-lg)) / 2);
+  padding-inline: var(--fc-button-padding-x-lg);
+  border-radius: var(--fc-button-radius-lg);
+  font-size: var(--fc-button-font-size-lg);
+  line-height: var(--fc-button-line-height-lg);
+}
+
+.fc-button--lg::after {
+  border-radius: calc(var(--fc-button-radius-lg) + var(--fc-button-focus-offset));
+}
+
 /* Preserve a visible boundary and focus indicator with system colours. */
 @media (forced-colors: active) {
   .fc-button {

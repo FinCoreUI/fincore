@@ -615,6 +615,116 @@
         "usedBy": [
           "Default"
         ]
+      },
+      {
+        "name": "currency.height-sm",
+        "type": "dimension",
+        "cssVar": "--fc-currency-height-sm",
+        "alias": "size.control.sm",
+        "resolved": "32px",
+        "role": "Control height (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "currency.padding-x-sm",
+        "type": "dimension",
+        "cssVar": "--fc-currency-padding-x-sm",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Horizontal padding (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "currency.radius-sm",
+        "type": "dimension",
+        "cssVar": "--fc-currency-radius-sm",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Corner radius (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "currency.font-size-sm",
+        "type": "dimension",
+        "cssVar": "--fc-currency-font-size-sm",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Value and label font size (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "currency.line-height-sm",
+        "type": "dimension",
+        "cssVar": "--fc-currency-line-height-sm",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Value and label line height (sm)",
+        "usedBy": [
+          "Size=sm"
+        ]
+      },
+      {
+        "name": "currency.height-lg",
+        "type": "dimension",
+        "cssVar": "--fc-currency-height-lg",
+        "alias": "size.control.lg",
+        "resolved": "48px",
+        "role": "Control height (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "currency.padding-x-lg",
+        "type": "dimension",
+        "cssVar": "--fc-currency-padding-x-lg",
+        "alias": "space.4",
+        "resolved": "16px",
+        "role": "Horizontal padding (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "currency.radius-lg",
+        "type": "dimension",
+        "cssVar": "--fc-currency-radius-lg",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Corner radius (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "currency.font-size-lg",
+        "type": "dimension",
+        "cssVar": "--fc-currency-font-size-lg",
+        "alias": "font.size.md",
+        "resolved": "16px",
+        "role": "Value and label font size (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
+      },
+      {
+        "name": "currency.line-height-lg",
+        "type": "dimension",
+        "cssVar": "--fc-currency-line-height-lg",
+        "alias": "font.line-height.md",
+        "resolved": "24px",
+        "role": "Value and label line height (lg)",
+        "usedBy": [
+          "Size=lg"
+        ]
       }
     ],
     "stateMapping": [

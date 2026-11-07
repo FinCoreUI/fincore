@@ -17,7 +17,7 @@ test("Currency contract is present and valid", () => {
   assert.equal(contract.contract.id, "fincore.currency");
   assert.equal(contract.contract.name, "Currency");
   assert.ok(Array.isArray(contract.tokens.dependencies));
-  assert.equal(contract.tokens.dependencies.length, 30, "Currency contract specifies 30 tokens");
+  assert.equal(contract.tokens.dependencies.length, 40, "Currency contract specifies 40 tokens");
 
   // Every token dependency is in currency.* namespace
   for (const dep of contract.tokens.dependencies) {

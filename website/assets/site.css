@@ -596,23 +596,10 @@ tr:last-child td {
   border-color: var(--fc-color-border-strong, #a1a1aa);
 }
 
-/* Component Size Modifiers */
-.fc-button--sm {
-  min-height: 32px;
-  padding-block: 4px;
-  padding-inline: 12px;
-  font-size: 13px;
-  line-height: 18px;
-}
-
-.fc-button--lg {
-  min-height: 48px;
-  padding-block: 12px;
-  padding-inline: 20px;
-  font-size: 16px;
-  line-height: 24px;
-}
-
+/*
+ * Loading indicators for the legacy per-component demos. Button and Input
+ * loading are adapter-only; the canonical component CSS does not define them.
+ */
 .fc-button--loading {
   position: relative;
   color: transparent !important;
@@ -643,18 +630,6 @@ tr:last-child td {
   to {
     transform: rotate(360deg);
   }
-}
-
-.fc-input--sm .fc-input__field {
-  min-height: 32px;
-  font-size: 13px;
-  padding-block: 4px;
-}
-
-.fc-input--lg .fc-input__field {
-  min-height: 48px;
-  font-size: 16px;
-  padding-block: 10px;
 }
 
 .fc-input--loading .fc-input__control::before {

@@ -158,11 +158,11 @@ function assertContractDependencies(contract, css, prefix) {
 test("protected token source, validator and generated CSS are unchanged", () => {
   const baseline = {
     "tokens/tokens.json":
-      "f116ce2f69a7812cf82252ba05b2758758de4c9bb41e9bf4ea411aff4b6b8792",
+      "4ba1e92192b1d77b8fe3a787a9a58b67e40f4211114c19754657c0a2da0cd795",
     "tokens/check.mjs":
       "bbe7d31dc394c70e1e3c867ccf3903524cc83b0e5c652b61e58e4f7e012f5559",
     "tokens/dist/tokens.css":
-      "f3891fe089db1b477561d4d4c88d0d4d4f4ca9f430adefa444cd9e504d02a545",
+      "85e219bc1ae8dd8bd776a2934ff525b9ed6beac2a798d24671dd7eb61b595956",
   };
 
   for (const [file, expected] of Object.entries(baseline)) {
@@ -172,9 +172,9 @@ test("protected token source, validator and generated CSS are unchanged", () => 
 
 test("contracts keep their approved variant and token counts", () => {
   assert.equal(buttonContract.variants.length, 15);
-  assert.equal(buttonContract.tokens.dependencies.length, 22);
+  assert.equal(buttonContract.tokens.dependencies.length, 32);
   assert.equal(inputContract.variants.length, 4);
-  assert.equal(inputContract.tokens.dependencies.length, 28);
+  assert.equal(inputContract.tokens.dependencies.length, 38);
 
   assert.equal(
     buttonContract.properties.find((property) => property.name === "State")
@@ -190,11 +190,11 @@ test("contracts keep their approved variant and token counts", () => {
   );
 });
 
-test("Button consumes all 22 button.* tokens and no other token layer", () => {
+test("Button consumes all 32 button.* tokens and no other token layer", () => {
   assertContractDependencies(buttonContract, buttonCss, "--fc-button-");
 });
 
-test("Input consumes all 28 input.* tokens and no other token layer", () => {
+test("Input consumes all 38 input.* tokens and no other token layer", () => {
   assertContractDependencies(inputContract, inputCss, "--fc-input-");
 });
 

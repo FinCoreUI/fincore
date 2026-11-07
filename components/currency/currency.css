@@ -167,14 +167,36 @@
 
 
 /* Size variants */
-.fc-currency--sm .fc-currency__field {
-  min-height: calc(var(--fc-currency-height) - var(--fc-currency-label-gap));
-  padding-block: calc((var(--fc-currency-height) - var(--fc-currency-label-gap) - var(--fc-currency-line-height)) / 2);
+.fc-currency--sm .fc-currency__control {
+  min-height: var(--fc-currency-height-sm);
+  padding-inline: var(--fc-currency-padding-x-sm);
+  border-radius: var(--fc-currency-radius-sm);
 }
 
-.fc-currency--lg .fc-currency__field {
-  min-height: calc(var(--fc-currency-height) + var(--fc-currency-label-gap));
-  padding-block: calc((var(--fc-currency-height) + var(--fc-currency-label-gap) - var(--fc-currency-line-height)) / 2);
+.fc-currency--sm .fc-currency__label,
+.fc-currency--sm .fc-currency__field,
+.fc-currency--sm .fc-currency__prefix,
+.fc-currency--sm .fc-currency__suffix {
+  font-size: var(--fc-currency-font-size-sm);
+  line-height: var(--fc-currency-line-height-sm);
+}
+
+.fc-currency--lg .fc-currency__control {
+  min-height: var(--fc-currency-height-lg);
+  padding-inline: var(--fc-currency-padding-x-lg);
+  border-radius: var(--fc-currency-radius-lg);
+}
+
+.fc-currency--lg .fc-currency__label,
+.fc-currency--lg .fc-currency__field,
+.fc-currency--lg .fc-currency__prefix,
+.fc-currency--lg .fc-currency__suffix {
+  font-size: var(--fc-currency-font-size-lg);
+  line-height: var(--fc-currency-line-height-lg);
+}
+
+.fc-currency--lg .fc-currency__control::after {
+  border-radius: calc(var(--fc-currency-radius-lg) + var(--fc-currency-focus-offset));
 }
 
 /* Loading state */

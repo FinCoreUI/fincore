@@ -1,6 +1,6 @@
 {
   "name": "@sorleed/cli",
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.7",
   "description": "Source-distribution CLI for Weft components",
   "type": "module",
   "bin": {

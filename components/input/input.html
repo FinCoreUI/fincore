@@ -39,6 +39,42 @@
       </div>
     </section>
 
+    <section aria-labelledby="input-sizes">
+      <h2 id="input-sizes">Sizes</h2>
+      <p>
+        Size modifiers change field geometry and typography only. Colour, state
+        precedence and the focus ring are unchanged; <code>md</code> is the default.
+      </p>
+
+      <div class="fc-input fc-input--sm">
+        <label class="fc-input__label" for="nickname">Nickname</label>
+        <div class="fc-input__control">
+          <input
+            class="fc-input__field"
+            id="nickname"
+            name="nickname"
+            type="text"
+            autocomplete="nickname"
+            placeholder="e.g. Ada"
+          >
+        </div>
+      </div>
+
+      <div class="fc-input fc-input--lg">
+        <label class="fc-input__label" for="transfer-reference">Transfer reference</label>
+        <div class="fc-input__control">
+          <input
+            class="fc-input__field"
+            id="transfer-reference"
+            name="transferReference"
+            type="text"
+            autocomplete="off"
+            placeholder="e.g. INV-4821"
+          >
+        </div>
+      </div>
+    </section>
+
     <section aria-labelledby="input-error">
       <h2 id="input-error">Error after failed validation</h2>
       <p>

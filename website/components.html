@@ -31,6 +31,7 @@
         <ul>
           <li><a href="getting-started.html" data-page="start">Getting started</a></li>
           <li><a href="components.html" data-page="components" aria-current="page">Components</a></li>
+          <li><a href="playground.html" data-page="playground">Playground</a></li>
           <li><a href="tokens.html" data-page="tokens">Tokens</a></li>
           <li><a href="examples.html" data-page="examples">Examples</a></li>
         </ul>
@@ -84,6 +85,7 @@
       <div class="content">
         <h1>Components</h1>
         <p class="lede">Complete suite of 28 canonical FinCore components. Full contract validation, dark theme, and size/loading variant support. Each one has a contract, canonical CSS, native reference markup and a React adapter.</p>
+        <p class="callout"><strong>New:</strong> <a href="playground.html">Open the interactive playground →</a> to change size, variant and state, and switch between light and dark themes using the real component CSS.</p>
 
         <h2 id="button">Button</h2>
         <p>A native <code>&lt;button&gt;</code>. Defaults to <code>type="button"</code> and the primary variant. <a href="components/button.html"><strong>Open Interactive Button Playground →</strong></a></p>
@@ -286,7 +288,8 @@
 
         <h2 id="shared">Shared rules</h2>
         <ul>
-          <li>Native elements only. No custom listbox or hidden input tricks.</li>
+          <li>Native elements only for forms and actions. No custom listbox or hidden input tricks.</li>
+          <li>Tabs, Tooltip, Popover, and Drawer leverage headless Radix UI primitives for robust WAI-ARIA and roving keyboard navigation.</li>
           <li>Every field has a programmatic label.</li>
           <li>Focus is an additive overlay, visible for keyboard and pointer focus.</li>
           <li>Disabled wins over hover, error and focus.</li>

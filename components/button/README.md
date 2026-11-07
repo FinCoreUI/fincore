@@ -336,7 +336,7 @@ It is illustrative only. No production form or component package exists.
 | Button that calls a router | Breaks link semantics | Use a link |
 | `aria-disabled="true"` only | Remains focusable and clickable | Use `disabled` |
 | `button:focus { outline: none; }` | Removes the only focus indicator | Render the 2px ring with `:focus-visible` |
-| A 32px-high button with 4px radius | Only one size exists; risks the 24px target | Keep token geometry; add a size contract first |
+| A 32px-high button with 4px radius | Hardcodes geometry and bypasses the size tokens | Use `size="sm"`; it is 32px high with a 6px radius and 12px padding |
 | Two Primary buttons: “Save” and “Save and close” | Competing primary actions | One Primary, the alternative as Secondary/Ghost |
 
 More invalid and valid examples are in [`contract.json`](./contract.json).

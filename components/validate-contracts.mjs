@@ -349,15 +349,15 @@ const cssFromFile = new Set(
 // ---------------------------------------------------------------------------
 
 const EXPECTED = {
-  "fincore.button": { dependencies: 22, variants: 15, properties: 3 },
-  "fincore.input": { dependencies: 28, variants: 4, properties: 10 },
+  "fincore.button": { dependencies: 32, variants: 15, properties: 3 },
+  "fincore.input": { dependencies: 38, variants: 4, properties: 10 },
   "fincore.phone-input": { dependencies: 15, variants: 1, properties: 1 },
   "fincore.select": { dependencies: 27, variants: 1, properties: 1 },
   "fincore.checkbox": { dependencies: 27, variants: 1, properties: 1 },
   "fincore.radio-group": { dependencies: 31, variants: 1, properties: 1 },
   "fincore.textarea": { dependencies: 29, variants: 1, properties: 1 },
   "fincore.otp": { dependencies: 27, variants: 1, properties: 1 },
-  "fincore.currency": { dependencies: 30, variants: 1, properties: 1 },
+  "fincore.currency": { dependencies: 40, variants: 1, properties: 1 },
   "fincore.cvv": { dependencies: 29, variants: 1, properties: 1 },
   "fincore.date-picker": { dependencies: 30, variants: 1, properties: 1 },
   "fincore.card": { dependencies: 15, variants: 1, properties: 1 },

@@ -135,6 +135,141 @@ const templateManifest = [
     source: path.resolve(repoRoot, "components/alert/alert.css"),
     dest: path.resolve(templatesDir, "styles/alert.css")
   },
+  // tabs
+  {
+    source: path.resolve(repoRoot, "react/tabs/index.tsx"),
+    dest: path.resolve(templatesDir, "components/tabs/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/tabs/tabs.css"),
+    dest: path.resolve(templatesDir, "styles/tabs.css")
+  },
+  // table
+  {
+    source: path.resolve(repoRoot, "react/table/index.tsx"),
+    dest: path.resolve(templatesDir, "components/table/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/table/table.css"),
+    dest: path.resolve(templatesDir, "styles/table.css")
+  },
+  // badge
+  {
+    source: path.resolve(repoRoot, "react/badge/index.tsx"),
+    dest: path.resolve(templatesDir, "components/badge/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/badge/badge.css"),
+    dest: path.resolve(templatesDir, "styles/badge.css")
+  },
+  // switch
+  {
+    source: path.resolve(repoRoot, "react/switch/index.tsx"),
+    dest: path.resolve(templatesDir, "components/switch/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/switch/switch.css"),
+    dest: path.resolve(templatesDir, "styles/switch.css")
+  },
+  // tooltip
+  {
+    source: path.resolve(repoRoot, "react/tooltip/index.tsx"),
+    dest: path.resolve(templatesDir, "components/tooltip/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/tooltip/tooltip.css"),
+    dest: path.resolve(templatesDir, "styles/tooltip.css")
+  },
+  // popover
+  {
+    source: path.resolve(repoRoot, "react/popover/index.tsx"),
+    dest: path.resolve(templatesDir, "components/popover/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/popover/popover.css"),
+    dest: path.resolve(templatesDir, "styles/popover.css")
+  },
+  // drawer
+  {
+    source: path.resolve(repoRoot, "react/drawer/index.tsx"),
+    dest: path.resolve(templatesDir, "components/drawer/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/drawer/drawer.css"),
+    dest: path.resolve(templatesDir, "styles/drawer.css")
+  },
+  // divider
+  {
+    source: path.resolve(repoRoot, "react/divider/index.tsx"),
+    dest: path.resolve(templatesDir, "components/divider/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/divider/divider.css"),
+    dest: path.resolve(templatesDir, "styles/divider.css")
+  },
+  // transaction-item
+  {
+    source: path.resolve(repoRoot, "react/transaction-item/index.tsx"),
+    dest: path.resolve(templatesDir, "components/transaction-item/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/transaction-item/transaction-item.css"),
+    dest: path.resolve(templatesDir, "styles/transaction-item.css")
+  },
+  // balance-card
+  {
+    source: path.resolve(repoRoot, "react/balance-card/index.tsx"),
+    dest: path.resolve(templatesDir, "components/balance-card/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/balance-card/balance-card.css"),
+    dest: path.resolve(templatesDir, "styles/balance-card.css")
+  },
+  // amount-display
+  {
+    source: path.resolve(repoRoot, "react/amount-display/index.tsx"),
+    dest: path.resolve(templatesDir, "components/amount-display/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/amount-display/amount-display.css"),
+    dest: path.resolve(templatesDir, "styles/amount-display.css")
+  },
+  // status-indicator
+  {
+    source: path.resolve(repoRoot, "react/status-indicator/index.tsx"),
+    dest: path.resolve(templatesDir, "components/status-indicator/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/status-indicator/status-indicator.css"),
+    dest: path.resolve(templatesDir, "styles/status-indicator.css")
+  },
+  // stack
+  {
+    source: path.resolve(repoRoot, "react/stack/index.tsx"),
+    dest: path.resolve(templatesDir, "components/stack/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/stack/stack.css"),
+    dest: path.resolve(templatesDir, "styles/stack.css")
+  },
+  // inline
+  {
+    source: path.resolve(repoRoot, "react/inline/index.tsx"),
+    dest: path.resolve(templatesDir, "components/inline/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/inline/inline.css"),
+    dest: path.resolve(templatesDir, "styles/inline.css")
+  },
+  // container
+  {
+    source: path.resolve(repoRoot, "react/container/index.tsx"),
+    dest: path.resolve(templatesDir, "components/container/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/container/container.css"),
+    dest: path.resolve(templatesDir, "styles/container.css")
+  },
   // Shared types
   {
     source: path.resolve(repoRoot, "react/types/index.ts"),

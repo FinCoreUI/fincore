@@ -30,6 +30,19 @@ semantic versioning.
 - Resolved `tsup` and `esbuild` advisories by upgrading to `tsup` 8.4.0 and
   pinning `esbuild` 0.25.12.
 
+## [0.1.0-alpha.3] — 2026-11-07
+
+### Added
+
+- Added 17 new components expanding the canonical catalog to 28 components:
+  - Containers & feedback: Card, Alert, Tabs, Table, Badge, Switch.
+  - Floating overlays: Tooltip, Popover, Drawer, Divider.
+  - Fintech primitives: TransactionItem, BalanceCard, AmountDisplay, StatusIndicator.
+  - Layout primitives: Stack, Inline, Container.
+- Expanded token layer to 652 tokens with full contract coverage and WCAG 2.2 AA contrast compliance.
+- Interactive documentation playgrounds for Card, Alert, and Tabs on the documentation website.
+- End-to-end CLI distribution templates, registry mappings, and zero-dependency unit tests for all 28 components.
+
 ## [0.1.0-alpha.2] — 2026-11-06
 
 ### Added

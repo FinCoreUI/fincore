@@ -1,0 +1,19 @@
+/*
+ * FinCore Popover — contextual floating card.
+ * Consumes only --fc-popover-* component tokens from tokens/dist/tokens.css.
+ */
+
+.fc-popover {
+  box-sizing: border-box;
+  background-color: var(--fc-popover-background);
+  color: var(--fc-popover-foreground);
+  border: var(--fc-popover-border-width) solid var(--fc-popover-border);
+  border-radius: var(--fc-popover-radius);
+  padding: var(--fc-popover-padding);
+  font-size: var(--fc-popover-font-size);
+  line-height: var(--fc-popover-line-height);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  max-width: 320px;
+}
+

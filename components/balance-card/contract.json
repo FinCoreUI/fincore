@@ -1,0 +1,440 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.balance-card",
+    "name": "BalanceCard",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0",
+    "summary": "FinCore BalanceCard: component using only balance-card.* tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-07",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring canonical patterns for Divider."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the Divider field anatomy: label, control container with native date input, calendar trigger styling, and helper/error row.",
+      "Apply only divider.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay around the control wrapper when focused.",
+      "Support native date picker interaction and min/max date limits."
+    ],
+    "application": [
+      "Supply the label, selected date value, and optional min/max range constraints.",
+      "Own validation: decide when an entered date is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Currency in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Date of birth, transaction date filters, payment scheduled dates, statement periods, and maturity dates."
+    ],
+    "inappropriate": [
+      {
+        "use": "Free-form text input or non-date numeric values.",
+        "reason": "Divider is tailored specifically for standardized ISO date formats (YYYY-MM-DD).",
+        "alternative": "Use Input."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Control wrapper: flex container housing the native date field and calendar indicator.",
+      "Field: 40px height, formatted date entry.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Title",
+      "figmaType": "TEXT",
+      "figmaDefault": "Balance title",
+      "required": true,
+      "description": "BalanceCard Title.",
+      "translation": "direct",
+      "production": {
+        "prop": "title",
+        "type": "string",
+        "default": "\"Balance title\"",
+        "required": true,
+        "derived": false,
+        "notes": "BalanceCard Title"
+      }
+    }
+  ],
+  "codeOnlyProperties": [],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "notes": "Default balance-card",
+      "tokens": [
+        "balance-card.padding",
+        "balance-card.border-radius",
+        "balance-card.border-width",
+        "balance-card.border-color",
+        "balance-card.background",
+        "balance-card.gap",
+        "balance-card.title-font-size",
+        "balance-card.title-line-height",
+        "balance-card.title-font-weight",
+        "balance-card.title-color",
+        "balance-card.account-font-size",
+        "balance-card.account-color"
+      ]
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "BalanceCard styles consume only component tokens in the balance-card.* namespace.",
+    "dependencies": [
+      {
+        "name": "balance-card.padding",
+        "type": "dimension",
+        "cssVar": "--fc-balance-card-padding",
+        "alias": "space.6",
+        "resolved": "24px",
+        "role": "Token for balance-card.padding",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.border-radius",
+        "type": "dimension",
+        "cssVar": "--fc-balance-card-border-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Token for balance-card.border-radius",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-balance-card-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Token for balance-card.border-width",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.border-color",
+        "type": "color",
+        "cssVar": "--fc-balance-card-border-color",
+        "alias": "color.border.subtle",
+        "resolved": "#E4E4E7",
+        "role": "Token for balance-card.border-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.background",
+        "type": "color",
+        "cssVar": "--fc-balance-card-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "Token for balance-card.background",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.gap",
+        "type": "dimension",
+        "cssVar": "--fc-balance-card-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Token for balance-card.gap",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.title-font-size",
+        "type": "dimension",
+        "cssVar": "--fc-balance-card-title-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Token for balance-card.title-font-size",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.title-line-height",
+        "type": "dimension",
+        "cssVar": "--fc-balance-card-title-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Token for balance-card.title-line-height",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.title-font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-balance-card-title-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Token for balance-card.title-font-weight",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.title-color",
+        "type": "color",
+        "cssVar": "--fc-balance-card-title-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "Token for balance-card.title-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.account-font-size",
+        "type": "dimension",
+        "cssVar": "--fc-balance-card-account-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Token for balance-card.account-font-size",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "balance-card.account-color",
+        "type": "color",
+        "cssVar": "--fc-balance-card-account-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "Token for balance-card.account-color",
+        "usedBy": [
+          "Component element"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "balance-card.border-color",
+        "border": null,
+        "foreground": null,
+        "placeholder": null,
+        "label": null,
+        "helper": null,
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Hardcoded values",
+      "Primitive tokens directly",
+      "Non-balance-card component tokens"
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Control is 40px high, meeting target requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Input field has programmatic label association.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "balance-card.border-color",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "light": 7
+        },
+        "status": "pass",
+        "notes": "Meets WCAG AA threshold"
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-currency",
+      "configuration": "Currency input without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "amount-input",
+        "given": "an enabled currency input",
+        "when": "amount is typed",
+        "then": "value is formatted as currency."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled currency input",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "currency css",
+        "when": "inspected",
+        "then": "only currency.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible around control wrapper."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Currency in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/currency/currency.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only currency.* tokens in Currency code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native currency input",
+        "language": "html",
+        "code": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amount\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amount\" /><span class=\"fc-currency__suffix\">USD</span></div></div>",
+        "explanation": "Valid currency composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled currency input",
+        "language": "html",
+        "code": "<input class=\"fc-currency__field\" />",
+        "explanation": "Missing container, control wrapper, prefix and label."
+      }
+    ]
+  }
+}

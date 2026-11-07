@@ -1,0 +1,440 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.amount-display",
+    "name": "AmountDisplay",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0",
+    "summary": "FinCore AmountDisplay: component using only amount-display.* tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-07",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring canonical patterns for Divider."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the Divider field anatomy: label, control container with native date input, calendar trigger styling, and helper/error row.",
+      "Apply only divider.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay around the control wrapper when focused.",
+      "Support native date picker interaction and min/max date limits."
+    ],
+    "application": [
+      "Supply the label, selected date value, and optional min/max range constraints.",
+      "Own validation: decide when an entered date is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Currency in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Date of birth, transaction date filters, payment scheduled dates, statement periods, and maturity dates."
+    ],
+    "inappropriate": [
+      {
+        "use": "Free-form text input or non-date numeric values.",
+        "reason": "Divider is tailored specifically for standardized ISO date formats (YYYY-MM-DD).",
+        "alternative": "Use Input."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Control wrapper: flex container housing the native date field and calendar indicator.",
+      "Field: 40px height, formatted date entry.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Amount",
+      "figmaType": "TEXT",
+      "figmaDefault": "0.00",
+      "required": true,
+      "description": "AmountDisplay Amount.",
+      "translation": "direct",
+      "production": {
+        "prop": "amount",
+        "type": "string",
+        "default": "\"0.00\"",
+        "required": true,
+        "derived": false,
+        "notes": "AmountDisplay Amount"
+      }
+    }
+  ],
+  "codeOnlyProperties": [],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "notes": "Default amount-display",
+      "tokens": [
+        "amount-display.font-size-sm",
+        "amount-display.line-height-sm",
+        "amount-display.font-size-md",
+        "amount-display.line-height-md",
+        "amount-display.font-size-lg",
+        "amount-display.line-height-lg",
+        "amount-display.positive-color",
+        "amount-display.negative-color",
+        "amount-display.default-color",
+        "amount-display.font-weight",
+        "amount-display.currency-font-weight",
+        "amount-display.currency-color"
+      ]
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "AmountDisplay styles consume only component tokens in the amount-display.* namespace.",
+    "dependencies": [
+      {
+        "name": "amount-display.font-size-sm",
+        "type": "dimension",
+        "cssVar": "--fc-amount-display-font-size-sm",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Token for amount-display.font-size-sm",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.line-height-sm",
+        "type": "dimension",
+        "cssVar": "--fc-amount-display-line-height-sm",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Token for amount-display.line-height-sm",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.font-size-md",
+        "type": "dimension",
+        "cssVar": "--fc-amount-display-font-size-md",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Token for amount-display.font-size-md",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.line-height-md",
+        "type": "dimension",
+        "cssVar": "--fc-amount-display-line-height-md",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Token for amount-display.line-height-md",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.font-size-lg",
+        "type": "dimension",
+        "cssVar": "--fc-amount-display-font-size-lg",
+        "alias": "space.6",
+        "resolved": "24px",
+        "role": "Token for amount-display.font-size-lg",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.line-height-lg",
+        "type": "dimension",
+        "cssVar": "--fc-amount-display-line-height-lg",
+        "alias": "space.6",
+        "resolved": "24px",
+        "role": "Token for amount-display.line-height-lg",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.positive-color",
+        "type": "color",
+        "cssVar": "--fc-amount-display-positive-color",
+        "alias": "color.feedback.success-foreground",
+        "resolved": "#166534",
+        "role": "Token for amount-display.positive-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.negative-color",
+        "type": "color",
+        "cssVar": "--fc-amount-display-negative-color",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "Token for amount-display.negative-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.default-color",
+        "type": "color",
+        "cssVar": "--fc-amount-display-default-color",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Token for amount-display.default-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-amount-display-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Token for amount-display.font-weight",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.currency-font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-amount-display-currency-font-weight",
+        "alias": "font.weight.regular",
+        "resolved": 400,
+        "role": "Token for amount-display.currency-font-weight",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "amount-display.currency-color",
+        "type": "color",
+        "cssVar": "--fc-amount-display-currency-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "Token for amount-display.currency-color",
+        "usedBy": [
+          "Component element"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "amount-display.positive-color",
+        "border": null,
+        "foreground": null,
+        "placeholder": null,
+        "label": null,
+        "helper": null,
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Hardcoded values",
+      "Primitive tokens directly",
+      "Non-amount-display component tokens"
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Control is 40px high, meeting target requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Input field has programmatic label association.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "amount-display.positive-color",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "light": 7
+        },
+        "status": "pass",
+        "notes": "Meets WCAG AA threshold"
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-currency",
+      "configuration": "Currency input without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "amount-input",
+        "given": "an enabled currency input",
+        "when": "amount is typed",
+        "then": "value is formatted as currency."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled currency input",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "currency css",
+        "when": "inspected",
+        "then": "only currency.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible around control wrapper."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Currency in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/currency/currency.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only currency.* tokens in Currency code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native currency input",
+        "language": "html",
+        "code": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amount\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amount\" /><span class=\"fc-currency__suffix\">USD</span></div></div>",
+        "explanation": "Valid currency composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled currency input",
+        "language": "html",
+        "code": "<input class=\"fc-currency__field\" />",
+        "explanation": "Missing container, control wrapper, prefix and label."
+      }
+    ]
+  }
+}

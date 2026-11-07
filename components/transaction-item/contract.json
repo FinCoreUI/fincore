@@ -1,0 +1,476 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.transaction-item",
+    "name": "TransactionItem",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0",
+    "summary": "FinCore TransactionItem: component using only transaction-item.* tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-07",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring canonical patterns for Divider."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the Divider field anatomy: label, control container with native date input, calendar trigger styling, and helper/error row.",
+      "Apply only divider.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay around the control wrapper when focused.",
+      "Support native date picker interaction and min/max date limits."
+    ],
+    "application": [
+      "Supply the label, selected date value, and optional min/max range constraints.",
+      "Own validation: decide when an entered date is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Currency in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Date of birth, transaction date filters, payment scheduled dates, statement periods, and maturity dates."
+    ],
+    "inappropriate": [
+      {
+        "use": "Free-form text input or non-date numeric values.",
+        "reason": "Divider is tailored specifically for standardized ISO date formats (YYYY-MM-DD).",
+        "alternative": "Use Input."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Control wrapper: flex container housing the native date field and calendar indicator.",
+      "Field: 40px height, formatted date entry.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Title",
+      "figmaType": "TEXT",
+      "figmaDefault": "Transaction title",
+      "required": true,
+      "description": "TransactionItem Title.",
+      "translation": "direct",
+      "production": {
+        "prop": "title",
+        "type": "string",
+        "default": "\"Transaction title\"",
+        "required": true,
+        "derived": false,
+        "notes": "TransactionItem Title"
+      }
+    }
+  ],
+  "codeOnlyProperties": [],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "notes": "Default transaction-item",
+      "tokens": [
+        "transaction-item.padding-y",
+        "transaction-item.padding-x",
+        "transaction-item.border-radius",
+        "transaction-item.gap",
+        "transaction-item.background-hover",
+        "transaction-item.icon-size",
+        "transaction-item.icon-background",
+        "transaction-item.icon-radius",
+        "transaction-item.title-font-size",
+        "transaction-item.title-line-height",
+        "transaction-item.title-font-weight",
+        "transaction-item.title-color",
+        "transaction-item.subtitle-font-size",
+        "transaction-item.subtitle-line-height",
+        "transaction-item.subtitle-color"
+      ]
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "TransactionItem styles consume only component tokens in the transaction-item.* namespace.",
+    "dependencies": [
+      {
+        "name": "transaction-item.padding-y",
+        "type": "dimension",
+        "cssVar": "--fc-transaction-item-padding-y",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Token for transaction-item.padding-y",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-transaction-item-padding-x",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Token for transaction-item.padding-x",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.border-radius",
+        "type": "dimension",
+        "cssVar": "--fc-transaction-item-border-radius",
+        "alias": "radius.md",
+        "resolved": "6px",
+        "role": "Token for transaction-item.border-radius",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.gap",
+        "type": "dimension",
+        "cssVar": "--fc-transaction-item-gap",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Token for transaction-item.gap",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.background-hover",
+        "type": "color",
+        "cssVar": "--fc-transaction-item-background-hover",
+        "alias": "color.surface.subtle",
+        "resolved": "#F4F4F5",
+        "role": "Token for transaction-item.background-hover",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.icon-size",
+        "type": "dimension",
+        "cssVar": "--fc-transaction-item-icon-size",
+        "alias": "size.control.md",
+        "resolved": "40px",
+        "role": "Token for transaction-item.icon-size",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.icon-background",
+        "type": "color",
+        "cssVar": "--fc-transaction-item-icon-background",
+        "alias": "color.surface.subtle",
+        "resolved": "#F4F4F5",
+        "role": "Token for transaction-item.icon-background",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.icon-radius",
+        "type": "dimension",
+        "cssVar": "--fc-transaction-item-icon-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Token for transaction-item.icon-radius",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.title-font-size",
+        "type": "dimension",
+        "cssVar": "--fc-transaction-item-title-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Token for transaction-item.title-font-size",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.title-line-height",
+        "type": "dimension",
+        "cssVar": "--fc-transaction-item-title-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Token for transaction-item.title-line-height",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.title-font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-transaction-item-title-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Token for transaction-item.title-font-weight",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.title-color",
+        "type": "color",
+        "cssVar": "--fc-transaction-item-title-color",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Token for transaction-item.title-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.subtitle-font-size",
+        "type": "dimension",
+        "cssVar": "--fc-transaction-item-subtitle-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Token for transaction-item.subtitle-font-size",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.subtitle-line-height",
+        "type": "dimension",
+        "cssVar": "--fc-transaction-item-subtitle-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Token for transaction-item.subtitle-line-height",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "transaction-item.subtitle-color",
+        "type": "color",
+        "cssVar": "--fc-transaction-item-subtitle-color",
+        "alias": "color.content.helper",
+        "resolved": "#52525B",
+        "role": "Token for transaction-item.subtitle-color",
+        "usedBy": [
+          "Component element"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "transaction-item.background-hover",
+        "border": null,
+        "foreground": null,
+        "placeholder": null,
+        "label": null,
+        "helper": null,
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Hardcoded values",
+      "Primitive tokens directly",
+      "Non-transaction-item component tokens"
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Control is 40px high, meeting target requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Input field has programmatic label association.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "transaction-item.background-hover",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "light": 7
+        },
+        "status": "pass",
+        "notes": "Meets WCAG AA threshold"
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-currency",
+      "configuration": "Currency input without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "amount-input",
+        "given": "an enabled currency input",
+        "when": "amount is typed",
+        "then": "value is formatted as currency."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled currency input",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "currency css",
+        "when": "inspected",
+        "then": "only currency.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible around control wrapper."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Currency in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/currency/currency.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only currency.* tokens in Currency code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native currency input",
+        "language": "html",
+        "code": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amount\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amount\" /><span class=\"fc-currency__suffix\">USD</span></div></div>",
+        "explanation": "Valid currency composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled currency input",
+        "language": "html",
+        "code": "<input class=\"fc-currency__field\" />",
+        "explanation": "Missing container, control wrapper, prefix and label."
+      }
+    ]
+  }
+}

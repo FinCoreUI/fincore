@@ -1,6 +1,6 @@
 # FinCore components
 
-FinCore's Button and Input are **production CSS plus native HTML**. They ship no
+FinCore provides a comprehensive suite of 28 production CSS plus native HTML components. They ship no
 JavaScript runtime, package, bundler or build step. The application owns
 filtering, validation, error presentation, submission and focus management.
 

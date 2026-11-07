@@ -1,0 +1,67 @@
+/*
+ * FinCore Switch — boolean toggle control.
+ * Consumes only --fc-switch-* component tokens from tokens/dist/tokens.css.
+ */
+
+.fc-switch-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fc-switch-label-gap);
+  cursor: pointer;
+  user-select: none;
+}
+
+.fc-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: var(--fc-switch-width);
+  height: var(--fc-switch-height);
+  padding: var(--fc-switch-padding);
+  background-color: var(--fc-switch-background-off);
+  border: var(--fc-switch-border-width) solid var(--fc-switch-border-color);
+  border-radius: var(--fc-switch-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.fc-switch[aria-checked="true"],
+.fc-switch--checked {
+  background-color: var(--fc-switch-background-on);
+  border-color: var(--fc-switch-background-on);
+}
+
+.fc-switch__thumb {
+  display: block;
+  width: var(--fc-switch-thumb-size);
+  height: var(--fc-switch-thumb-size);
+  background-color: var(--fc-switch-thumb-background);
+  border-radius: var(--fc-switch-thumb-radius);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+  transform: translateX(0);
+}
+
+.fc-switch[aria-checked="true"] .fc-switch__thumb,
+.fc-switch--checked .fc-switch__thumb {
+  transform: translateX(calc(var(--fc-switch-width) - var(--fc-switch-thumb-size) - (2 * var(--fc-switch-padding)) - (2 * var(--fc-switch-border-width))));
+}
+
+.fc-switch:focus-visible {
+  outline: var(--fc-switch-focus-width) solid var(--fc-switch-focus-color);
+  outline-offset: var(--fc-switch-focus-offset);
+}
+
+.fc-switch:disabled,
+.fc-switch[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fc-switch__label {
+  color: var(--fc-switch-label-color);
+  font-size: var(--fc-switch-label-font-size);
+  line-height: var(--fc-switch-label-line-height);
+}
+

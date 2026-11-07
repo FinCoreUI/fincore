@@ -1,0 +1,56 @@
+/*
+ * FinCore Table — accessible financial data table.
+ * Consumes only --fc-table-* component tokens from tokens/dist/tokens.css.
+ */
+
+.fc-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: var(--fc-table-border-width) solid var(--fc-table-border-color);
+  border-radius: 8px;
+}
+
+.fc-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.fc-table__header {
+  background-color: var(--fc-table-header-background);
+}
+
+.fc-table__th {
+  padding-inline: var(--fc-table-header-padding-x);
+  padding-block: var(--fc-table-header-padding-y);
+  color: var(--fc-table-header-color);
+  font-size: var(--fc-table-header-font-size);
+  line-height: var(--fc-table-header-line-height);
+  font-weight: var(--fc-table-header-font-weight);
+  border-bottom: var(--fc-table-border-width) solid var(--fc-table-border-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fc-table__row {
+  border-bottom: var(--fc-table-border-width) solid var(--fc-table-border-color);
+  transition: background-color 0.15s ease-in-out;
+}
+
+.fc-table__row:last-child {
+  border-bottom: 0;
+}
+
+.fc-table__row:hover {
+  background-color: var(--fc-table-row-hover-background);
+}
+
+.fc-table__td {
+  padding-inline: var(--fc-table-cell-padding-x);
+  padding-block: var(--fc-table-cell-padding-y);
+  color: var(--fc-table-cell-color);
+  font-size: var(--fc-table-cell-font-size);
+  line-height: var(--fc-table-cell-line-height);
+}
+

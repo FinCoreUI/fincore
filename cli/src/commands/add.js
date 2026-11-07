@@ -7,6 +7,21 @@ import { cvvRegistry } from '../registry/cvv.js';
 import { datePickerRegistry } from '../registry/date-picker.js';
 import { cardRegistry } from '../registry/card.js';
 import { alertRegistry } from '../registry/alert.js';
+import { tabsRegistry } from '../registry/tabs.js';
+import { tableRegistry } from '../registry/table.js';
+import { badgeRegistry } from '../registry/badge.js';
+import { switchRegistry } from '../registry/switch.js';
+import { tooltipRegistry } from '../registry/tooltip.js';
+import { popoverRegistry } from '../registry/popover.js';
+import { drawerRegistry } from '../registry/drawer.js';
+import { dividerRegistry } from '../registry/divider.js';
+import { transactionItemRegistry } from '../registry/transaction-item.js';
+import { balanceCardRegistry } from '../registry/balance-card.js';
+import { amountDisplayRegistry } from '../registry/amount-display.js';
+import { statusIndicatorRegistry } from '../registry/status-indicator.js';
+import { stackRegistry } from '../registry/stack.js';
+import { inlineRegistry } from '../registry/inline.js';
+import { containerRegistry } from '../registry/container.js';
 import { inputRegistry } from '../registry/input.js';
 import { otpRegistry } from '../registry/otp.js';
 import { passwordInputRegistry } from '../registry/password-input.js';
@@ -24,6 +39,21 @@ function getRegistry(component) {
   if (component === 'date-picker' || component === 'datepicker') return datePickerRegistry;
   if (component === 'card') return cardRegistry;
   if (component === 'alert') return alertRegistry;
+  if (component === 'tabs') return tabsRegistry;
+  if (component === 'table') return tableRegistry;
+  if (component === 'badge') return badgeRegistry;
+  if (component === 'switch') return switchRegistry;
+  if (component === 'tooltip') return tooltipRegistry;
+  if (component === 'popover') return popoverRegistry;
+  if (component === 'drawer') return drawerRegistry;
+  if (component === 'divider') return dividerRegistry;
+  if (component === 'transaction-item' || component === 'transactionitem') return transactionItemRegistry;
+  if (component === 'balance-card' || component === 'balancecard') return balanceCardRegistry;
+  if (component === 'amount-display' || component === 'amountdisplay') return amountDisplayRegistry;
+  if (component === 'status-indicator' || component === 'statusindicator') return statusIndicatorRegistry;
+  if (component === 'stack') return stackRegistry;
+  if (component === 'inline') return inlineRegistry;
+  if (component === 'container') return containerRegistry;
   if (component === 'input') return inputRegistry;
   if (component === 'otp') return otpRegistry;
   if (component === 'password-input' || component === 'passwordinput') return passwordInputRegistry;
@@ -51,13 +81,13 @@ export async function addCommand(args) {
   if (!component) {
     console.error('Error: Component name required');
     console.error('Usage: weft add <component> [--dir <path>] [--dry-run]');
-    console.error('Components: alert, button, card, checkbox, currency, cvv, date-picker, input, otp, password-input, phone-input, radio-group, select, textarea');
+    console.error('Components: alert, badge, button, card, checkbox, currency, cvv, date-picker, input, otp, password-input, phone-input, radio-group, select, switch, table, tabs, textarea');
     process.exit(1);
   }
   
   const registry = getRegistry(component);
   if (!registry) {
-    console.error(`Error: Unknown component "${component}". Only "alert", "button", "card", "checkbox", "currency", "cvv", "date-picker", "input", "otp", "password-input", "phone-input", "radio-group", "select", and "textarea" are supported in this version.`);
+    console.error(`Error: Unknown component "${component}". Only "alert", "badge", "button", "card", "checkbox", "currency", "cvv", "date-picker", "input", "otp", "password-input", "phone-input", "radio-group", "select", "switch", "table", "tabs", and "textarea" are supported in this version.`);
     process.exit(1);
   }
   

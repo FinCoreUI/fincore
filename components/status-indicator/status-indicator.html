@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore Status Indicator — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./status-indicator.css">
+</head>
+<body>
+  <main>
+    <h1>Status Indicator reference markup</h1>
+    <div style="display: flex; flex-direction: column; gap: 1rem; padding: 2rem;">
+      <div class="fc-status-indicator fc-status-indicator--md fc-status-indicator--success">
+        <span class="fc-status-indicator__dot fc-status-indicator-dot" aria-hidden="true"></span>
+        <span class="fc-status-indicator__label fc-status-indicator-label">Completed</span>
+      </div>
+      <div class="fc-status-indicator fc-status-indicator--md fc-status-indicator--warning">
+        <span class="fc-status-indicator__dot fc-status-indicator-dot" aria-hidden="true"></span>
+        <span class="fc-status-indicator__label fc-status-indicator-label">Pending</span>
+      </div>
+      <div class="fc-status-indicator fc-status-indicator--md fc-status-indicator--error">
+        <span class="fc-status-indicator__dot fc-status-indicator-dot" aria-hidden="true"></span>
+        <span class="fc-status-indicator__label fc-status-indicator-label">Failed</span>
+      </div>
+      <div class="fc-status-indicator fc-status-indicator--sm fc-status-indicator--info">
+        <span class="fc-status-indicator__dot fc-status-indicator-dot" aria-hidden="true"></span>
+        <span class="fc-status-indicator__label fc-status-indicator-label">Processing</span>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+

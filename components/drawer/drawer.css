@@ -1,0 +1,56 @@
+/*
+ * FinCore Drawer — sliding overlay container.
+ * Consumes only --fc-drawer-* component tokens from tokens/dist/tokens.css.
+ */
+
+.fc-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--fc-drawer-overlay-background);
+  opacity: 0.5;
+  z-index: 50;
+}
+
+.fc-drawer {
+  position: fixed;
+  inset-block: 0;
+  right: 0;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--fc-drawer-background);
+  color: var(--fc-drawer-foreground);
+  border-left: var(--fc-drawer-border-width) solid var(--fc-drawer-border);
+  padding: var(--fc-drawer-padding);
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+  z-index: 51;
+}
+
+.fc-drawer__header {
+  display: flex;
+  flex-direction: column;
+  margin-block-end: var(--fc-drawer-header-gap);
+}
+
+.fc-drawer__title {
+  margin: 0;
+  font-size: var(--fc-drawer-title-font-size);
+  line-height: var(--fc-drawer-title-line-height);
+  font-weight: var(--fc-drawer-title-font-weight);
+}
+
+.fc-drawer__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.fc-drawer__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-block-start: var(--fc-drawer-footer-gap);
+}
+

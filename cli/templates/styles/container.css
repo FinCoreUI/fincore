@@ -1,0 +1,25 @@
+.fc-container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.fc-container--sm {
+  max-width: 640px;
+  padding-left: var(--fc-container-padding-x-sm);
+  padding-right: var(--fc-container-padding-x-sm);
+}
+
+.fc-container--md {
+  max-width: 1024px;
+  padding-left: var(--fc-container-padding-x-md);
+  padding-right: var(--fc-container-padding-x-md);
+}
+
+.fc-container--lg {
+  max-width: 1280px;
+  padding-left: var(--fc-container-padding-x-lg);
+  padding-right: var(--fc-container-padding-x-lg);
+}
+

@@ -587,3 +587,221 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "
    */
   className?: string;
 }
+
+/**
+ * Props for Tabs component (powered by Radix UI Tabs primitive).
+ */
+export interface TabsProps {
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+  orientation?: "horizontal" | "vertical";
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export interface TabsListProps extends React.HTMLAttributes<HTMLDivElement> {
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export interface TabsTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  value: string;
+  disabled?: boolean;
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export interface TabsContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  value: string;
+  children?: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * Props for Table component.
+ */
+export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export interface TableHeaderProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export type BadgeVariant = "default" | "success" | "warning" | "error" | "info";
+
+/**
+ * Props for Badge component.
+ */
+export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  variant?: BadgeVariant;
+  children?: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * Props for Switch component.
+ */
+export interface SwitchProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange"> {
+  checked?: boolean;
+  defaultChecked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+  label?: React.ReactNode;
+  disabled?: boolean;
+  className?: string;
+  id?: string;
+}
+
+/**
+ * Props for Tooltip component (powered by Radix UI Tooltip primitive).
+ */
+export interface TooltipProps {
+  content: React.ReactNode;
+  children: React.ReactElement;
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
+  delayDuration?: number;
+  className?: string;
+}
+
+/**
+ * Props for Popover component (powered by Radix UI Popover primitive).
+ */
+export interface PopoverProps {
+  trigger: React.ReactElement;
+  children: React.ReactNode;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
+  className?: string;
+}
+
+/**
+ * Props for Drawer component (powered by Radix UI Dialog primitive).
+ */
+export interface DrawerProps {
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  children?: React.ReactNode;
+  footer?: React.ReactNode;
+  className?: string;
+}
+
+export type DividerOrientation = "horizontal" | "vertical";
+
+/**
+ * Props for Divider component.
+ */
+export interface DividerProps extends React.HTMLAttributes<HTMLHRElement> {
+  orientation?: DividerOrientation;
+  className?: string;
+}
+
+/**
+ * Props for TransactionItem component.
+ */
+export interface TransactionItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
+  amount?: React.ReactNode;
+  icon?: React.ReactNode;
+  trail?: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * Props for BalanceCard component.
+ */
+export interface BalanceCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+  title: React.ReactNode;
+  account?: React.ReactNode;
+  amount: React.ReactNode;
+  footer?: React.ReactNode;
+  className?: string;
+}
+
+export type AmountDisplaySize = "sm" | "md" | "lg";
+export type AmountDisplayVariant = "positive" | "negative" | "default";
+
+/**
+ * Props for AmountDisplay component.
+ */
+export interface AmountDisplayProps extends React.HTMLAttributes<HTMLSpanElement> {
+  value: React.ReactNode;
+  currency?: React.ReactNode;
+  size?: AmountDisplaySize;
+  variant?: AmountDisplayVariant;
+  className?: string;
+}
+
+export type StatusIndicatorStatus = "success" | "warning" | "error" | "info" | "neutral";
+export type StatusIndicatorSize = "sm" | "md" | "lg";
+
+/**
+ * Props for StatusIndicator component.
+ */
+export interface StatusIndicatorProps extends React.HTMLAttributes<HTMLSpanElement> {
+  status?: StatusIndicatorStatus;
+  size?: StatusIndicatorSize;
+  label?: React.ReactNode;
+  className?: string;
+}
+
+export type LayoutGap = "xs" | "sm" | "md" | "lg" | "xl";
+
+/**
+ * Props for Stack component (vertical layout primitive).
+ */
+export interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
+  gap?: LayoutGap;
+  className?: string;
+  as?: React.ElementType;
+}
+
+/**
+ * Props for Inline component (horizontal layout primitive).
+ */
+export interface InlineProps extends React.HTMLAttributes<HTMLDivElement> {
+  gap?: LayoutGap;
+  className?: string;
+  as?: React.ElementType;
+}
+
+export type ContainerSize = "sm" | "md" | "lg";
+
+/**
+ * Props for Container component (max-width container primitive).
+ */
+export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  size?: ContainerSize;
+  className?: string;
+  as?: React.ElementType;
+}

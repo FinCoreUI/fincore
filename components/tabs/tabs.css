@@ -1,0 +1,60 @@
+/*
+ * FinCore Tabs — accessible tabbed interfaces.
+ * Consumes only --fc-tabs-* component tokens from tokens/dist/tokens.css.
+ */
+
+.fc-tabs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.fc-tabs__list {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--fc-tabs-background);
+  border-radius: var(--fc-tabs-radius);
+  padding: var(--fc-tabs-padding);
+  gap: var(--fc-tabs-gap);
+  width: fit-content;
+}
+
+.fc-tabs__trigger {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding-inline: var(--fc-tabs-trigger-padding-x);
+  padding-block: var(--fc-tabs-trigger-padding-y);
+  border-radius: var(--fc-tabs-trigger-radius);
+  color: var(--fc-tabs-trigger-color);
+  font-size: var(--fc-tabs-trigger-font-size);
+  line-height: var(--fc-tabs-trigger-line-height);
+  font-weight: var(--fc-tabs-trigger-font-weight);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease-in-out;
+}
+
+.fc-tabs__trigger:hover {
+  color: var(--fc-tabs-trigger-color-active);
+}
+
+.fc-tabs__trigger[data-state="active"],
+.fc-tabs__trigger--active {
+  background-color: var(--fc-tabs-trigger-background-active);
+  color: var(--fc-tabs-trigger-color-active);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.fc-tabs__trigger:focus-visible {
+  outline: 2px solid var(--fc-tabs-trigger-color-active);
+  outline-offset: 1px;
+}
+
+.fc-tabs__content {
+  padding-block: var(--fc-tabs-content-padding-y);
+  outline: none;
+}
+

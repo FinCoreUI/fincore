@@ -1,0 +1,21 @@
+/*
+ * FinCore Tooltip — accessible advisory hint.
+ * Consumes only --fc-tooltip-* component tokens from tokens/dist/tokens.css.
+ */
+
+.fc-tooltip {
+  box-sizing: border-box;
+  background-color: var(--fc-tooltip-background);
+  color: var(--fc-tooltip-foreground);
+  border-radius: var(--fc-tooltip-radius);
+  padding-inline: var(--fc-tooltip-padding-x);
+  padding-block: var(--fc-tooltip-padding-y);
+  font-size: var(--fc-tooltip-font-size);
+  line-height: var(--fc-tooltip-line-height);
+  font-weight: var(--fc-tooltip-font-weight);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  max-width: 260px;
+  word-wrap: break-word;
+}
+

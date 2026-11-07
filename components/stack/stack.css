@@ -1,0 +1,26 @@
+.fc-stack {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.fc-stack--gap-xs {
+  gap: var(--fc-stack-gap-xs);
+}
+
+.fc-stack--gap-sm {
+  gap: var(--fc-stack-gap-sm);
+}
+
+.fc-stack--gap-md {
+  gap: var(--fc-stack-gap-md);
+}
+
+.fc-stack--gap-lg {
+  gap: var(--fc-stack-gap-lg);
+}
+
+.fc-stack--gap-xl {
+  gap: var(--fc-stack-gap-xl);
+}
+

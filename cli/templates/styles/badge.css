@@ -1,0 +1,50 @@
+/*
+ * FinCore Badge — status and indicator pill.
+ * Consumes only --fc-badge-* component tokens from tokens/dist/tokens.css.
+ */
+
+.fc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: var(--fc-badge-radius);
+  padding-inline: var(--fc-badge-padding-x);
+  padding-block: var(--fc-badge-padding-y);
+  font-size: var(--fc-badge-font-size);
+  line-height: var(--fc-badge-line-height);
+  font-weight: var(--fc-badge-font-weight);
+  white-space: nowrap;
+}
+
+/* Default / Neutral */
+.fc-badge,
+.fc-badge--default {
+  background-color: var(--fc-badge-default-background);
+  color: var(--fc-badge-default-foreground);
+}
+
+/* Success */
+.fc-badge--success {
+  background-color: var(--fc-badge-success-background);
+  color: var(--fc-badge-success-foreground);
+}
+
+/* Warning */
+.fc-badge--warning {
+  background-color: var(--fc-badge-warning-background);
+  color: var(--fc-badge-warning-foreground);
+}
+
+/* Error */
+.fc-badge--error {
+  background-color: var(--fc-badge-error-background);
+  color: var(--fc-badge-error-foreground);
+}
+
+/* Info */
+.fc-badge--info {
+  background-color: var(--fc-badge-info-background);
+  color: var(--fc-badge-info-foreground);
+}
+

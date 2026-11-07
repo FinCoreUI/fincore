@@ -34,6 +34,21 @@ const CONTRACT_PATHS = [
   join(ROOT, "components", "date-picker", "contract.json"),
   join(ROOT, "components", "card", "contract.json"),
   join(ROOT, "components", "alert", "contract.json"),
+  join(ROOT, "components", "tabs", "contract.json"),
+  join(ROOT, "components", "table", "contract.json"),
+  join(ROOT, "components", "badge", "contract.json"),
+  join(ROOT, "components", "switch", "contract.json"),
+  join(ROOT, "components", "tooltip", "contract.json"),
+  join(ROOT, "components", "popover", "contract.json"),
+  join(ROOT, "components", "drawer", "contract.json"),
+  join(ROOT, "components", "divider", "contract.json"),
+  join(ROOT, "components", "transaction-item", "contract.json"),
+  join(ROOT, "components", "balance-card", "contract.json"),
+  join(ROOT, "components", "amount-display", "contract.json"),
+  join(ROOT, "components", "status-indicator", "contract.json"),
+  join(ROOT, "components", "stack", "contract.json"),
+  join(ROOT, "components", "inline", "contract.json"),
+  join(ROOT, "components", "container", "contract.json"),
 ];
 const MARKDOWN_PATHS = [
   join(ROOT, "components", "button", "README.md"),
@@ -347,6 +362,21 @@ const EXPECTED = {
   "fincore.date-picker": { dependencies: 30, variants: 1, properties: 1 },
   "fincore.card": { dependencies: 15, variants: 1, properties: 1 },
   "fincore.alert": { dependencies: 19, variants: 1, properties: 1 },
+  "fincore.tabs": { dependencies: 14, variants: 1, properties: 1 },
+  "fincore.table": { dependencies: 15, variants: 1, properties: 1 },
+  "fincore.badge": { dependencies: 16, variants: 1, properties: 1 },
+  "fincore.switch": { dependencies: 18, variants: 1, properties: 1 },
+  "fincore.tooltip": { dependencies: 8, variants: 1, properties: 1 },
+  "fincore.popover": { dependencies: 8, variants: 1, properties: 1 },
+  "fincore.drawer": { dependencies: 11, variants: 1, properties: 1 },
+  "fincore.divider": { dependencies: 4, variants: 1, properties: 1 },
+  "fincore.transaction-item": { dependencies: 15, variants: 1, properties: 1 },
+  "fincore.balance-card": { dependencies: 12, variants: 1, properties: 1 },
+  "fincore.amount-display": { dependencies: 12, variants: 1, properties: 1 },
+  "fincore.status-indicator": { dependencies: 12, variants: 1, properties: 1 },
+  "fincore.stack": { dependencies: 5, variants: 1, properties: 1 },
+  "fincore.inline": { dependencies: 5, variants: 1, properties: 1 },
+  "fincore.container": { dependencies: 3, variants: 1, properties: 1 },
 };
 
 const contracts = [];
@@ -552,6 +582,51 @@ for (const entry of contracts) {
     "fincore.alert": {
       Message: { type: "TEXT", default: "Alert message" },
     },
+    "fincore.tabs": {
+      Value: { type: "TEXT", default: "tab-1" },
+    },
+    "fincore.table": {
+      Data: { type: "TEXT", default: "Table data" },
+    },
+    "fincore.badge": {
+      Text: { type: "TEXT", default: "Status" },
+    },
+    "fincore.switch": {
+      Checked: { type: "TEXT", default: "false" },
+    },
+    "fincore.tooltip": {
+      Content: { type: "TEXT", default: "Tooltip text" },
+    },
+    "fincore.popover": {
+      Content: { type: "TEXT", default: "Popover content" },
+    },
+    "fincore.drawer": {
+      Title: { type: "TEXT", default: "Drawer title" },
+    },
+    "fincore.divider": {
+      Orientation: { type: "TEXT", default: "horizontal" },
+    },
+    "fincore.transaction-item": {
+      Title: { type: "TEXT", default: "Transaction title" },
+    },
+    "fincore.balance-card": {
+      Title: { type: "TEXT", default: "Balance title" },
+    },
+    "fincore.amount-display": {
+      Amount: { type: "TEXT", default: "0.00" },
+    },
+    "fincore.status-indicator": {
+      Status: { type: "TEXT", default: "Active" },
+    },
+    "fincore.stack": {
+      Gap: { type: "TEXT", default: "md" },
+    },
+    "fincore.inline": {
+      Gap: { type: "TEXT", default: "md" },
+    },
+    "fincore.container": {
+      Size: { type: "TEXT", default: "md" },
+    },
   };
 
   const EXPECTED_VARIANT_IDS = {
@@ -584,6 +659,21 @@ for (const entry of contracts) {
     "fincore.date-picker": ["0:0"],
     "fincore.card": ["0:0"],
     "fincore.alert": ["0:0"],
+    "fincore.tabs": ["0:0"],
+    "fincore.table": ["0:0"],
+    "fincore.badge": ["0:0"],
+    "fincore.switch": ["0:0"],
+    "fincore.tooltip": ["0:0"],
+    "fincore.popover": ["0:0"],
+    "fincore.drawer": ["0:0"],
+    "fincore.divider": ["0:0"],
+    "fincore.transaction-item": ["0:0"],
+    "fincore.balance-card": ["0:0"],
+    "fincore.amount-display": ["0:0"],
+    "fincore.status-indicator": ["0:0"],
+    "fincore.stack": ["0:0"],
+    "fincore.inline": ["0:0"],
+    "fincore.container": ["0:0"],
   };
 
   if (expected) {
@@ -706,7 +796,37 @@ for (const entry of contracts) {
                               ? "card."
                               : id === "fincore.alert"
                                 ? "alert."
-                                : null;
+                                : id === "fincore.tabs"
+                                  ? "tabs."
+                                  : id === "fincore.table"
+                                    ? "table."
+                                    : id === "fincore.badge"
+                                      ? "badge."
+                                      : id === "fincore.switch"
+                                        ? "switch."
+                                        : id === "fincore.tooltip"
+                                          ? "tooltip."
+                                          : id === "fincore.popover"
+                                            ? "popover."
+                                            : id === "fincore.drawer"
+                                              ? "drawer."
+                                              : id === "fincore.divider"
+                                                ? "divider."
+                                                : id === "fincore.transaction-item"
+                                                  ? "transaction-item."
+                                                  : id === "fincore.balance-card"
+                                                    ? "balance-card."
+                                                    : id === "fincore.amount-display"
+                                                      ? "amount-display."
+                                                      : id === "fincore.status-indicator"
+                                                        ? "status-indicator."
+                                                        : id === "fincore.stack"
+                                                          ? "stack."
+                                                          : id === "fincore.inline"
+                                                            ? "inline."
+                                                            : id === "fincore.container"
+                                                              ? "container."
+                                                              : null;
     if (!prefix || !dependency.name.startsWith(prefix)) {
       problems.push(
         `${relative}: dependency ${dependency.name} is not a ${prefix ? prefix + "*" : "component"}* component token`,
@@ -1053,8 +1173,8 @@ for (const entry of contracts) {
 
 {
   const problems = [];
-  if (contracts.length !== 13) {
-    problems.push(`expected 13 contracts, found ${contracts.length}`);
+  if (contracts.length !== 28) {
+    problems.push(`expected 28 contracts, found ${contracts.length}`);
   }
   const versions = new Set(contracts.map((entry) => entry.contract.contract?.version));
   if (versions.size > 1) {

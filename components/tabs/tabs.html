@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore Tabs — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./tabs.css">
+</head>
+<body>
+  <main>
+    <h1>Tabs reference markup</h1>
+    <div class="fc-tabs">
+      <div class="fc-tabs__list" role="tablist" aria-orientation="horizontal">
+        <button class="fc-tabs__trigger fc-tabs__trigger--active" role="tab" aria-selected="true" id="tab-1" aria-controls="panel-1" tabindex="0">
+          Account
+        </button>
+        <button class="fc-tabs__trigger" role="tab" aria-selected="false" id="tab-2" aria-controls="panel-2" tabindex="-1">
+          Security
+        </button>
+        <button class="fc-tabs__trigger" role="tab" aria-selected="false" id="tab-3" aria-controls="panel-3" tabindex="-1">
+          Billing
+        </button>
+      </div>
+      <div class="fc-tabs__content" role="tabpanel" id="panel-1" aria-labelledby="tab-1">
+        <p>Account settings and profile information.</p>
+      </div>
+      <div class="fc-tabs__content" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>
+        <p>Security preferences and 2FA credentials.</p>
+      </div>
+      <div class="fc-tabs__content" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden>
+        <p>Payment methods and invoices.</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+

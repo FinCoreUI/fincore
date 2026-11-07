@@ -29,6 +29,126 @@ const PAIRS = [
     canonical: "components/alert/alert.css",
   },
   {
+    template: "components/tabs/index.tsx",
+    canonical: "react/tabs/index.tsx",
+  },
+  {
+    template: "styles/tabs.css",
+    canonical: "components/tabs/tabs.css",
+  },
+  {
+    template: "components/table/index.tsx",
+    canonical: "react/table/index.tsx",
+  },
+  {
+    template: "styles/table.css",
+    canonical: "components/table/table.css",
+  },
+  {
+    template: "components/badge/index.tsx",
+    canonical: "react/badge/index.tsx",
+  },
+  {
+    template: "styles/badge.css",
+    canonical: "components/badge/badge.css",
+  },
+  {
+    template: "components/switch/index.tsx",
+    canonical: "react/switch/index.tsx",
+  },
+  {
+    template: "styles/switch.css",
+    canonical: "components/switch/switch.css",
+  },
+  {
+    template: "components/tooltip/index.tsx",
+    canonical: "react/tooltip/index.tsx",
+  },
+  {
+    template: "styles/tooltip.css",
+    canonical: "components/tooltip/tooltip.css",
+  },
+  {
+    template: "components/popover/index.tsx",
+    canonical: "react/popover/index.tsx",
+  },
+  {
+    template: "styles/popover.css",
+    canonical: "components/popover/popover.css",
+  },
+  {
+    template: "components/drawer/index.tsx",
+    canonical: "react/drawer/index.tsx",
+  },
+  {
+    template: "styles/drawer.css",
+    canonical: "components/drawer/drawer.css",
+  },
+  {
+    template: "components/divider/index.tsx",
+    canonical: "react/divider/index.tsx",
+  },
+  {
+    template: "styles/divider.css",
+    canonical: "components/divider/divider.css",
+  },
+  {
+    template: "components/transaction-item/index.tsx",
+    canonical: "react/transaction-item/index.tsx",
+  },
+  {
+    template: "styles/transaction-item.css",
+    canonical: "components/transaction-item/transaction-item.css",
+  },
+  {
+    template: "components/balance-card/index.tsx",
+    canonical: "react/balance-card/index.tsx",
+  },
+  {
+    template: "styles/balance-card.css",
+    canonical: "components/balance-card/balance-card.css",
+  },
+  {
+    template: "components/amount-display/index.tsx",
+    canonical: "react/amount-display/index.tsx",
+  },
+  {
+    template: "styles/amount-display.css",
+    canonical: "components/amount-display/amount-display.css",
+  },
+  {
+    template: "components/status-indicator/index.tsx",
+    canonical: "react/status-indicator/index.tsx",
+  },
+  {
+    template: "styles/status-indicator.css",
+    canonical: "components/status-indicator/status-indicator.css",
+  },
+  {
+    template: "components/stack/index.tsx",
+    canonical: "react/stack/index.tsx",
+  },
+  {
+    template: "styles/stack.css",
+    canonical: "components/stack/stack.css",
+  },
+  {
+    template: "components/inline/index.tsx",
+    canonical: "react/inline/index.tsx",
+  },
+  {
+    template: "styles/inline.css",
+    canonical: "components/inline/inline.css",
+  },
+  {
+    template: "components/container/index.tsx",
+    canonical: "react/container/index.tsx",
+  },
+  {
+    template: "styles/container.css",
+    canonical: "components/container/container.css",
+  },
+  {
     template: "components/card/index.tsx",
     canonical: "react/card/index.tsx",
   },

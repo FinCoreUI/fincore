@@ -1,0 +1,44 @@
+.fc-amount-display {
+  display: inline-flex;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+  box-sizing: border-box;
+}
+
+.fc-amount-display--sm {
+  font-size: var(--fc-amount-display-font-size-sm);
+  line-height: var(--fc-amount-display-line-height-sm);
+}
+
+.fc-amount-display--md {
+  font-size: var(--fc-amount-display-font-size-md);
+  line-height: var(--fc-amount-display-line-height-md);
+}
+
+.fc-amount-display--lg {
+  font-size: var(--fc-amount-display-font-size-lg);
+  line-height: var(--fc-amount-display-line-height-lg);
+}
+
+.fc-amount-display--positive {
+  color: var(--fc-amount-display-positive-color);
+}
+
+.fc-amount-display--negative {
+  color: var(--fc-amount-display-negative-color);
+}
+
+.fc-amount-display--default {
+  color: var(--fc-amount-display-default-color);
+}
+
+.fc-amount-display__value {
+  font-weight: var(--fc-amount-display-font-weight);
+}
+
+.fc-amount-display__currency {
+  font-weight: var(--fc-amount-display-currency-font-weight);
+  color: var(--fc-amount-display-currency-color);
+  margin-right: 0.25ch;
+}
+

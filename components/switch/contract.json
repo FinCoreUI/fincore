@@ -1,0 +1,598 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.switch",
+    "name": "Switch",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0",
+    "summary": "FinCore native Switch: accessible boolean toggle control using only switch.* tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring canonical patterns for Switch."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the Switch field anatomy: label, control container with native date input, calendar trigger styling, and helper/error row.",
+      "Apply only switch.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay around the control wrapper when focused.",
+      "Support native date picker interaction and min/max date limits."
+    ],
+    "application": [
+      "Supply the label, selected date value, and optional min/max range constraints.",
+      "Own validation: decide when an entered date is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Currency in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Date of birth, transaction date filters, payment scheduled dates, statement periods, and maturity dates."
+    ],
+    "inappropriate": [
+      {
+        "use": "Free-form text input or non-date numeric values.",
+        "reason": "Switch is tailored specifically for standardized ISO date formats (YYYY-MM-DD).",
+        "alternative": "Use Input."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Control wrapper: flex container housing the native date field and calendar indicator.",
+      "Field: 40px height, formatted date entry.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [
+      {
+        "property": "width",
+        "value": "48px",
+        "token": "switch.width"
+      },
+      {
+        "property": "height",
+        "value": "24px",
+        "token": "switch.height"
+      },
+      {
+        "property": "radius",
+        "value": "8px",
+        "token": "switch.radius"
+      },
+      {
+        "property": "thumb size",
+        "value": "16px",
+        "token": "switch.thumb-size"
+      }
+    ],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Checked",
+      "figmaType": "TEXT",
+      "figmaDefault": "false",
+      "required": true,
+      "description": "Switch toggle state.",
+      "translation": "direct",
+      "production": {
+        "prop": "checked",
+        "type": "boolean",
+        "default": null,
+        "required": false,
+        "derived": false,
+        "notes": "Controlled checked state"
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "id",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Stable id used for the label association and message references.",
+      "notes": "Generated if omitted."
+    },
+    {
+      "prop": "prefix",
+      "type": "string",
+      "default": "\"$\"",
+      "required": false,
+      "description": "Currency prefix symbol.",
+      "notes": "Defaults to \"$\"."
+    },
+    {
+      "prop": "suffix",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Currency suffix code, e.g., \"USD\".",
+      "notes": "Optional currency ISO code."
+    },
+    {
+      "prop": "value",
+      "type": "string | number",
+      "default": null,
+      "required": false,
+      "description": "Controlled amount value.",
+      "notes": "Formatted or numeric amount."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and displays error message.",
+      "notes": "Application owns error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Replaced by error message."
+    },
+    {
+      "prop": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "required": false,
+      "description": "Controls the size variant (sm, md, lg).",
+      "notes": "Applies corresponding size modifier class."
+    },
+    {
+      "prop": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Applies loading state and sets aria-busy=\"true\".",
+      "notes": "Suppresses interactions while loading."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "switch.width",
+        "switch.height",
+        "switch.radius",
+        "switch.padding",
+        "switch.thumb-size",
+        "switch.thumb-radius",
+        "switch.thumb-background",
+        "switch.background-off",
+        "switch.background-on",
+        "switch.border-color",
+        "switch.border-width",
+        "switch.focus-color",
+        "switch.focus-width",
+        "switch.focus-offset",
+        "switch.label-color",
+        "switch.label-font-size",
+        "switch.label-line-height",
+        "switch.label-gap"
+      ],
+      "notes": "Default switch toggle"
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "Switch styles consume only component tokens in the switch.* namespace.",
+    "dependencies": [
+      {
+        "name": "switch.width",
+        "type": "dimension",
+        "cssVar": "--fc-switch-width",
+        "alias": "space.12",
+        "resolved": "48px",
+        "role": "Token for switch.width",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.height",
+        "type": "dimension",
+        "cssVar": "--fc-switch-height",
+        "alias": "space.6",
+        "resolved": "24px",
+        "role": "Token for switch.height",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.radius",
+        "type": "dimension",
+        "cssVar": "--fc-switch-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Token for switch.radius",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.padding",
+        "type": "dimension",
+        "cssVar": "--fc-switch-padding",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Token for switch.padding",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.thumb-size",
+        "type": "dimension",
+        "cssVar": "--fc-switch-thumb-size",
+        "alias": "space.4",
+        "resolved": "16px",
+        "role": "Token for switch.thumb-size",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.thumb-radius",
+        "type": "dimension",
+        "cssVar": "--fc-switch-thumb-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Token for switch.thumb-radius",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.thumb-background",
+        "type": "color",
+        "cssVar": "--fc-switch-thumb-background",
+        "alias": "color.surface.default",
+        "resolved": "#FFFFFF",
+        "role": "Token for switch.thumb-background",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.background-off",
+        "type": "color",
+        "cssVar": "--fc-switch-background-off",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "Token for switch.background-off",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.background-on",
+        "type": "color",
+        "cssVar": "--fc-switch-background-on",
+        "alias": "color.action.primary",
+        "resolved": "#2563EB",
+        "role": "Token for switch.background-on",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.border-color",
+        "type": "color",
+        "cssVar": "--fc-switch-border-color",
+        "alias": "color.border.default",
+        "resolved": "#D4D4D8",
+        "role": "Token for switch.border-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-switch-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Token for switch.border-width",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.focus-color",
+        "type": "color",
+        "cssVar": "--fc-switch-focus-color",
+        "alias": "color.border.focus",
+        "resolved": "#2563EB",
+        "role": "Token for switch.focus-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.focus-width",
+        "type": "dimension",
+        "cssVar": "--fc-switch-focus-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Token for switch.focus-width",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.focus-offset",
+        "type": "dimension",
+        "cssVar": "--fc-switch-focus-offset",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Token for switch.focus-offset",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.label-color",
+        "type": "color",
+        "cssVar": "--fc-switch-label-color",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Token for switch.label-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.label-font-size",
+        "type": "dimension",
+        "cssVar": "--fc-switch-label-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Token for switch.label-font-size",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.label-line-height",
+        "type": "dimension",
+        "cssVar": "--fc-switch-label-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Token for switch.label-line-height",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "switch.label-gap",
+        "type": "dimension",
+        "cssVar": "--fc-switch-label-gap",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Token for switch.label-gap",
+        "usedBy": [
+          "Component element"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "switch.background-off",
+        "border": "switch.border-color",
+        "foreground": "switch.thumb-background",
+        "placeholder": null,
+        "label": "switch.label-color",
+        "helper": null,
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Hardcoded values",
+      "Primitive tokens directly",
+      "Non-switch component tokens"
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Control is 40px high, meeting target requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Input field has programmatic label association.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "switch.label-color",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "light": 17.72
+        },
+        "status": "pass",
+        "notes": "Switch label text on surface"
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-currency",
+      "configuration": "Currency input without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "amount-input",
+        "given": "an enabled currency input",
+        "when": "amount is typed",
+        "then": "value is formatted as currency."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled currency input",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "currency css",
+        "when": "inspected",
+        "then": "only currency.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible around control wrapper."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Currency in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/currency/currency.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only currency.* tokens in Currency code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native currency input",
+        "language": "html",
+        "code": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amount\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amount\" /><span class=\"fc-currency__suffix\">USD</span></div></div>",
+        "explanation": "Valid currency composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled currency input",
+        "language": "html",
+        "code": "<input class=\"fc-currency__field\" />",
+        "explanation": "Missing container, control wrapper, prefix and label."
+      }
+    ]
+  }
+}

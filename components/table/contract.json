@@ -1,0 +1,567 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.table",
+    "name": "Table",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0",
+    "summary": "FinCore native Table: tabular financial data presentation using only table.* tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring canonical patterns for Table."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the Table field anatomy: label, control container with native date input, calendar trigger styling, and helper/error row.",
+      "Apply only table.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay around the control wrapper when focused.",
+      "Support native date picker interaction and min/max date limits."
+    ],
+    "application": [
+      "Supply the label, selected date value, and optional min/max range constraints.",
+      "Own validation: decide when an entered date is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Currency in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Date of birth, transaction date filters, payment scheduled dates, statement periods, and maturity dates."
+    ],
+    "inappropriate": [
+      {
+        "use": "Free-form text input or non-date numeric values.",
+        "reason": "Table is tailored specifically for standardized ISO date formats (YYYY-MM-DD).",
+        "alternative": "Use Input."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Control wrapper: flex container housing the native date field and calendar indicator.",
+      "Field: 40px height, formatted date entry.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [
+      {
+        "property": "border width",
+        "value": "1px",
+        "token": "table.border-width"
+      },
+      {
+        "property": "header padding x",
+        "value": "16px",
+        "token": "table.header-padding-x"
+      },
+      {
+        "property": "header padding y",
+        "value": "12px",
+        "token": "table.header-padding-y"
+      },
+      {
+        "property": "cell padding x",
+        "value": "16px",
+        "token": "table.cell-padding-x"
+      },
+      {
+        "property": "cell padding y",
+        "value": "12px",
+        "token": "table.cell-padding-y"
+      }
+    ],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Data",
+      "figmaType": "TEXT",
+      "figmaDefault": "Table data",
+      "required": true,
+      "description": "Table row content.",
+      "translation": "direct",
+      "production": {
+        "prop": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "derived": false,
+        "notes": "Table body rows"
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "id",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Stable id used for the label association and message references.",
+      "notes": "Generated if omitted."
+    },
+    {
+      "prop": "prefix",
+      "type": "string",
+      "default": "\"$\"",
+      "required": false,
+      "description": "Currency prefix symbol.",
+      "notes": "Defaults to \"$\"."
+    },
+    {
+      "prop": "suffix",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Currency suffix code, e.g., \"USD\".",
+      "notes": "Optional currency ISO code."
+    },
+    {
+      "prop": "value",
+      "type": "string | number",
+      "default": null,
+      "required": false,
+      "description": "Controlled amount value.",
+      "notes": "Formatted or numeric amount."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and displays error message.",
+      "notes": "Application owns error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Replaced by error message."
+    },
+    {
+      "prop": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "required": false,
+      "description": "Controls the size variant (sm, md, lg).",
+      "notes": "Applies corresponding size modifier class."
+    },
+    {
+      "prop": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Applies loading state and sets aria-busy=\"true\".",
+      "notes": "Suppresses interactions while loading."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "table.border-color",
+        "table.border-width",
+        "table.header-background",
+        "table.header-color",
+        "table.header-font-size",
+        "table.header-line-height",
+        "table.header-font-weight",
+        "table.header-padding-x",
+        "table.header-padding-y",
+        "table.cell-color",
+        "table.cell-font-size",
+        "table.cell-line-height",
+        "table.cell-padding-x",
+        "table.cell-padding-y",
+        "table.row-hover-background"
+      ],
+      "notes": "Default table layout"
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "Table styles consume only component tokens in the table.* namespace.",
+    "dependencies": [
+      {
+        "name": "table.border-color",
+        "type": "color",
+        "cssVar": "--fc-table-border-color",
+        "alias": "color.border.subtle",
+        "resolved": "#E4E4E7",
+        "role": "Token for table.border-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.border-width",
+        "type": "dimension",
+        "cssVar": "--fc-table-border-width",
+        "alias": "size.border.width",
+        "resolved": "1px",
+        "role": "Token for table.border-width",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.header-background",
+        "type": "color",
+        "cssVar": "--fc-table-header-background",
+        "alias": "color.surface.subtle",
+        "resolved": "#F4F4F5",
+        "role": "Token for table.header-background",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.header-color",
+        "type": "color",
+        "cssVar": "--fc-table-header-color",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "Token for table.header-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.header-font-size",
+        "type": "dimension",
+        "cssVar": "--fc-table-header-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Token for table.header-font-size",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.header-line-height",
+        "type": "dimension",
+        "cssVar": "--fc-table-header-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Token for table.header-line-height",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.header-font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-table-header-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Token for table.header-font-weight",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.header-padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-table-header-padding-x",
+        "alias": "space.4",
+        "resolved": "16px",
+        "role": "Token for table.header-padding-x",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.header-padding-y",
+        "type": "dimension",
+        "cssVar": "--fc-table-header-padding-y",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Token for table.header-padding-y",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.cell-color",
+        "type": "color",
+        "cssVar": "--fc-table-cell-color",
+        "alias": "color.content.primary",
+        "resolved": "#18181B",
+        "role": "Token for table.cell-color",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.cell-font-size",
+        "type": "dimension",
+        "cssVar": "--fc-table-cell-font-size",
+        "alias": "font.size.sm",
+        "resolved": "14px",
+        "role": "Token for table.cell-font-size",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.cell-line-height",
+        "type": "dimension",
+        "cssVar": "--fc-table-cell-line-height",
+        "alias": "font.line-height.sm",
+        "resolved": "20px",
+        "role": "Token for table.cell-line-height",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.cell-padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-table-cell-padding-x",
+        "alias": "space.4",
+        "resolved": "16px",
+        "role": "Token for table.cell-padding-x",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.cell-padding-y",
+        "type": "dimension",
+        "cssVar": "--fc-table-cell-padding-y",
+        "alias": "space.3",
+        "resolved": "12px",
+        "role": "Token for table.cell-padding-y",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "table.row-hover-background",
+        "type": "color",
+        "cssVar": "--fc-table-row-hover-background",
+        "alias": "color.surface.subtle",
+        "resolved": "#F4F4F5",
+        "role": "Token for table.row-hover-background",
+        "usedBy": [
+          "Component element"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "table.header-background",
+        "border": "table.border-color",
+        "foreground": "table.cell-color",
+        "placeholder": null,
+        "label": null,
+        "helper": null,
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Hardcoded values",
+      "Primitive tokens directly",
+      "Non-table component tokens"
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Control is 40px high, meeting target requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Input field has programmatic label association.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "table.cell-color",
+        "background": "color.surface.default",
+        "minimum": 4.5,
+        "ratios": {
+          "light": 17.72
+        },
+        "status": "pass",
+        "notes": "Cell text on surface"
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-currency",
+      "configuration": "Currency input without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "amount-input",
+        "given": "an enabled currency input",
+        "when": "amount is typed",
+        "then": "value is formatted as currency."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled currency input",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "currency css",
+        "when": "inspected",
+        "then": "only currency.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible around control wrapper."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Currency in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/currency/currency.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only currency.* tokens in Currency code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native currency input",
+        "language": "html",
+        "code": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amount\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amount\" /><span class=\"fc-currency__suffix\">USD</span></div></div>",
+        "explanation": "Valid currency composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled currency input",
+        "language": "html",
+        "code": "<input class=\"fc-currency__field\" />",
+        "explanation": "Missing container, control wrapper, prefix and label."
+      }
+    ]
+  }
+}

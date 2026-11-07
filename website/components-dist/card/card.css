@@ -1,0 +1,49 @@
+/*
+ * FinCore Card — production styles for a container card.
+ * Contract: components/card/contract.json (1.0.0)
+ *
+ * Consumes only --fc-card-* component tokens from tokens/dist/tokens.css.
+ */
+
+.fc-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--fc-card-background);
+  color: var(--fc-card-foreground);
+  border: var(--fc-card-border-width) solid var(--fc-card-border);
+  border-radius: var(--fc-card-radius);
+  padding: var(--fc-card-padding);
+}
+
+.fc-card__header {
+  display: flex;
+  flex-direction: column;
+  margin-block-end: var(--fc-card-header-gap);
+}
+
+.fc-card__title {
+  margin: 0;
+  color: var(--fc-card-title-color);
+  font-size: var(--fc-card-title-font-size);
+  font-weight: var(--fc-card-title-font-weight);
+  line-height: var(--fc-card-title-line-height);
+}
+
+.fc-card__description {
+  margin: 0;
+  color: var(--fc-card-description-color);
+  font-size: var(--fc-card-description-font-size);
+  line-height: var(--fc-card-description-line-height);
+}
+
+.fc-card__body {
+  flex: 1 1 auto;
+}
+
+.fc-card__footer {
+  display: flex;
+  align-items: center;
+  margin-block-start: var(--fc-card-footer-gap);
+}
+

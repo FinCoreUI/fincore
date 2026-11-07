@@ -1,0 +1,45 @@
+.fc-balance-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--fc-balance-card-padding);
+  border-radius: var(--fc-balance-card-border-radius);
+  border: var(--fc-balance-card-border-width) solid var(--fc-balance-card-border-color);
+  background: var(--fc-balance-card-background);
+  gap: var(--fc-balance-card-gap);
+  box-sizing: border-box;
+}
+
+.fc-balance-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fc-balance-card-gap);
+}
+
+.fc-balance-card__title {
+  margin: 0;
+  font-size: var(--fc-balance-card-title-font-size);
+  line-height: var(--fc-balance-card-title-line-height);
+  font-weight: var(--fc-balance-card-title-font-weight);
+  color: var(--fc-balance-card-title-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fc-balance-card__account {
+  font-size: var(--fc-balance-card-account-font-size);
+  color: var(--fc-balance-card-account-color);
+}
+
+.fc-balance-card__amount {
+  display: flex;
+  align-items: baseline;
+}
+
+.fc-balance-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--fc-balance-card-gap);
+}
+

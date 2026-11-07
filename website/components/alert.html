@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <title>Alert Component — Sorleed</title>
+  <meta name="description" content="Sorleed Alert component: interactive playground, props, accessibility, and canonical CSS tokens.">
+  <link rel="stylesheet" href="../tokens-dist/tokens.css">
+  <link rel="stylesheet" href="../components-dist/alert/alert.css">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-page="components">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="../index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">🌙 Dark mode</button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="../getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="../components.html" data-page="components" aria-current="page">Components</a></li>
+          <li><a href="../tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="../examples.html" data-page="examples">Examples</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="Components navigation">
+        <h2>Components</h2>
+        <ul>
+          <li><a href="button.html">Button</a></li>
+          <li><a href="input.html">Input</a></li>
+          <li><a href="card.html">Card</a></li>
+          <li><a href="alert.html" class="is-active" aria-current="page"><strong>Alert</strong></a></li>
+          <li><a href="tabs.html">Tabs</a></li>
+          <li><a href="../components.html">All 28 Components →</a></li>
+        </ul>
+      </aside>
+
+      <article class="content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../components.html">Components</a></li>
+            <li aria-current="page">Alert</li>
+          </ol>
+        </nav>
+
+        <h1>Alert</h1>
+        <p class="lead">Prominent notification banner communicating status, warning, and feedback information.</p>
+
+        <section class="playground-section" aria-labelledby="playground-heading">
+          <h2 id="playground-heading">Interactive Playground</h2>
+          <div class="playground" id="alert-playground">
+            <div class="playground__preview" id="alert-preview">
+              <div class="fc-alert fc-alert--info" id="target-alert" role="alert" style="width: 100%; max-width: 480px;">
+                <span id="target-message">Your payment was processed successfully.</span>
+              </div>
+            </div>
+
+            <div class="playground__controls">
+              <div class="control-group">
+                <label for="ctrl-variant">Variant</label>
+                <select id="ctrl-variant">
+                  <option value="info">Info</option>
+                  <option value="success">Success</option>
+                  <option value="warning">Warning</option>
+                  <option value="error">Error</option>
+                </select>
+              </div>
+
+              <div class="control-group">
+                <label for="ctrl-msg">Message</label>
+                <input id="ctrl-msg" type="text" value="Your payment was processed successfully.">
+              </div>
+            </div>
+
+            <div class="playground__code">
+              <h3>Live Code Snippet</h3>
+              <pre><code id="alert-code-snippet" class="language-html"></code></pre>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <script src="../assets/site.js"></script>
+  <script>
+    (function () {
+      const variantSelect = document.getElementById('ctrl-variant');
+      const msgInput = document.getElementById('ctrl-msg');
+      const alertEl = document.getElementById('target-alert');
+      const msgEl = document.getElementById('target-message');
+      const snippet = document.getElementById('alert-code-snippet');
+
+      function update() {
+        const variant = variantSelect.value;
+        const msg = msgInput.value;
+
+        alertEl.className = `fc-alert fc-alert--${variant}`;
+        msgEl.textContent = msg;
+
+        snippet.textContent =
+`<div class="fc-alert fc-alert--${variant}" role="alert">
+  ${msg}
+</div>`;
+      }
+
+      variantSelect.addEventListener('change', update);
+      msgInput.addEventListener('input', update);
+      update();
+    })();
+  </script>
+</body>
+</html>
+

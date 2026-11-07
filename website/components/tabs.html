@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <title>Tabs Component — Sorleed</title>
+  <meta name="description" content="Sorleed Tabs component: interactive playground, props, accessibility, and canonical CSS tokens.">
+  <link rel="stylesheet" href="../tokens-dist/tokens.css">
+  <link rel="stylesheet" href="../components-dist/tabs/tabs.css">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-page="components">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="../index.html">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span>Sorleed</span>
+        <span class="brand__sub">UI Infrastructure</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">🌙 Dark mode</button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
+      <nav class="site-nav" id="site-nav" data-nav aria-label="Primary">
+        <ul>
+          <li><a href="../getting-started.html" data-page="start">Getting started</a></li>
+          <li><a href="../components.html" data-page="components" aria-current="page">Components</a></li>
+          <li><a href="../tokens.html" data-page="tokens">Tokens</a></li>
+          <li><a href="../examples.html" data-page="examples">Examples</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page page--with-sidebar">
+      <aside class="sidebar" aria-label="Components navigation">
+        <h2>Components</h2>
+        <ul>
+          <li><a href="button.html">Button</a></li>
+          <li><a href="input.html">Input</a></li>
+          <li><a href="card.html">Card</a></li>
+          <li><a href="alert.html">Alert</a></li>
+          <li><a href="tabs.html" class="is-active" aria-current="page"><strong>Tabs</strong></a></li>
+          <li><a href="../components.html">All 28 Components →</a></li>
+        </ul>
+      </aside>
+
+      <article class="content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../components.html">Components</a></li>
+            <li aria-current="page">Tabs</li>
+          </ol>
+        </nav>
+
+        <h1>Tabs</h1>
+        <p class="lead">Layered content containers organized by accessible tab panels.</p>
+
+        <section class="playground-section" aria-labelledby="playground-heading">
+          <h2 id="playground-heading">Interactive Playground</h2>
+          <div class="playground" id="tabs-playground">
+            <div class="playground__preview" id="tabs-preview">
+              <div class="fc-tabs" style="width: 100%; max-width: 480px;">
+                <div class="fc-tabs__list" role="tablist">
+                  <button type="button" class="fc-tabs__trigger" role="tab" id="tab-btn-1" aria-selected="true" data-state="active">Overview</button>
+                  <button type="button" class="fc-tabs__trigger" role="tab" id="tab-btn-2" aria-selected="false" data-state="inactive">Activity</button>
+                  <button type="button" class="fc-tabs__trigger" role="tab" id="tab-btn-3" aria-selected="false" data-state="inactive">Settings</button>
+                </div>
+                <div class="fc-tabs__content" id="panel-1" style="display: block; padding-top: 1rem;">
+                  <p>Account overview balance and summary information.</p>
+                </div>
+                <div class="fc-tabs__content" id="panel-2" style="display: none; padding-top: 1rem;">
+                  <p>Recent transactions and settlement history.</p>
+                </div>
+                <div class="fc-tabs__content" id="panel-3" style="display: none; padding-top: 1rem;">
+                  <p>Notification preferences and security keys.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="playground__controls">
+              <p>Click the tab triggers above to switch active panels.</p>
+            </div>
+
+            <div class="playground__code">
+              <h3>Live Code Snippet</h3>
+              <pre><code id="tabs-code-snippet" class="language-html"></code></pre>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <script src="../assets/site.js"></script>
+  <script>
+    (function () {
+      const tabs = [
+        { id: '1', name: 'Overview' },
+        { id: '2', name: 'Activity' },
+        { id: '3', name: 'Settings' }
+      ];
+      let activeId = '1';
+      const snippet = document.getElementById('tabs-code-snippet');
+
+      function update() {
+        tabs.forEach(t => {
+          const btn = document.getElementById('tab-btn-' + t.id);
+          const panel = document.getElementById('panel-' + t.id);
+          const isActive = t.id === activeId;
+          btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          btn.setAttribute('data-state', isActive ? 'active' : 'inactive');
+          panel.style.display = isActive ? 'block' : 'none';
+        });
+
+        snippet.textContent =
+`<div class="fc-tabs">
+  <div class="fc-tabs__list" role="tablist">
+    <button class="fc-tabs__trigger" data-state="${activeId === '1' ? 'active' : 'inactive'}">Overview</button>
+    <button class="fc-tabs__trigger" data-state="${activeId === '2' ? 'active' : 'inactive'}">Activity</button>
+    <button class="fc-tabs__trigger" data-state="${activeId === '3' ? 'active' : 'inactive'}">Settings</button>
+  </div>
+  <div class="fc-tabs__content">...</div>
+</div>`;
+      }
+
+      tabs.forEach(t => {
+        document.getElementById('tab-btn-' + t.id).addEventListener('click', () => {
+          activeId = t.id;
+          update();
+        });
+      });
+
+      update();
+    })();
+  </script>
+</body>
+</html>
+

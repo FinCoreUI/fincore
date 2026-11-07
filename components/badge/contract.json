@@ -1,0 +1,569 @@
+{
+  "$schema": "../contract.schema.json",
+  "contract": {
+    "id": "fincore.badge",
+    "name": "Badge",
+    "version": "1.0.0",
+    "status": "draft",
+    "componentVersion": "0.1.0",
+    "summary": "FinCore native Badge: indicator pill with status variants using only badge.* tokens.",
+    "maturity": "implemented; framework-agnostic CSS + native HTML; no Figma source",
+    "lastUpdated": "2026-11-06",
+    "canonical": {
+      "figma": null,
+      "tokens": "tokens/tokens.json",
+      "css": "tokens/dist/tokens.css",
+      "evidence": [
+        "Local construction mirroring canonical patterns for Badge."
+      ]
+    }
+  },
+  "responsibilities": {
+    "component": [
+      "Render the Badge field anatomy: label, control container with native date input, calendar trigger styling, and helper/error row.",
+      "Apply only badge.* component tokens for colour, geometry and typography.",
+      "Resolve Disabled > Error > Hover > Default for the control surface and border.",
+      "Render the focus ring as an independent overlay around the control wrapper when focused.",
+      "Support native date picker interaction and min/max date limits."
+    ],
+    "application": [
+      "Supply the label, selected date value, and optional min/max range constraints.",
+      "Own validation: decide when an entered date is invalid and what the error says.",
+      "Set aria-invalid and connect the error or helper message with aria-describedby."
+    ],
+    "figmaOnly": [
+      "No Figma component set exists for Currency in v0.1; there are no design-time properties to translate."
+    ]
+  },
+  "use": {
+    "intended": [
+      "Date of birth, transaction date filters, payment scheduled dates, statement periods, and maturity dates."
+    ],
+    "inappropriate": [
+      {
+        "use": "Free-form text input or non-date numeric values.",
+        "reason": "Badge is tailored specifically for standardized ISO date formats (YYYY-MM-DD).",
+        "alternative": "Use Input."
+      }
+    ]
+  },
+  "anatomy": {
+    "structure": [
+      "Field: vertical stack of label, control wrapper and helper/error message.",
+      "Control wrapper: flex container housing the native date field and calendar indicator.",
+      "Field: 40px height, formatted date entry.",
+      "Message: 12/16, weight 400, helper.color or text-error."
+    ],
+    "geometry": [
+      {
+        "property": "corner radius",
+        "value": "8px",
+        "token": "badge.radius"
+      },
+      {
+        "property": "padding x",
+        "value": "8px",
+        "token": "badge.padding-x"
+      },
+      {
+        "property": "padding y",
+        "value": "4px",
+        "token": "badge.padding-y"
+      }
+    ],
+    "literals": []
+  },
+  "properties": [
+    {
+      "name": "Text",
+      "figmaType": "TEXT",
+      "figmaDefault": "Status",
+      "required": true,
+      "description": "Badge text label.",
+      "translation": "direct",
+      "production": {
+        "prop": "children",
+        "type": "ReactNode",
+        "default": null,
+        "required": false,
+        "derived": false,
+        "notes": "Badge label"
+      }
+    }
+  ],
+  "codeOnlyProperties": [
+    {
+      "prop": "id",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Stable id used for the label association and message references.",
+      "notes": "Generated if omitted."
+    },
+    {
+      "prop": "prefix",
+      "type": "string",
+      "default": "\"$\"",
+      "required": false,
+      "description": "Currency prefix symbol.",
+      "notes": "Defaults to \"$\"."
+    },
+    {
+      "prop": "suffix",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Currency suffix code, e.g., \"USD\".",
+      "notes": "Optional currency ISO code."
+    },
+    {
+      "prop": "value",
+      "type": "string | number",
+      "default": null,
+      "required": false,
+      "description": "Controlled amount value.",
+      "notes": "Formatted or numeric amount."
+    },
+    {
+      "prop": "errorMessage",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "When non-empty, sets aria-invalid and displays error message.",
+      "notes": "Application owns error copy."
+    },
+    {
+      "prop": "helperText",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Supporting copy shown when there is no error.",
+      "notes": "Replaced by error message."
+    },
+    {
+      "prop": "size",
+      "type": "\"sm\" | \"md\" | \"lg\"",
+      "default": "\"md\"",
+      "required": false,
+      "description": "Controls the size variant (sm, md, lg).",
+      "notes": "Applies corresponding size modifier class."
+    },
+    {
+      "prop": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Applies loading state and sets aria-busy=\"true\".",
+      "notes": "Suppresses interactions while loading."
+    }
+  ],
+  "variants": [
+    {
+      "name": "Default",
+      "figmaNodeId": "0:0",
+      "tokens": [
+        "badge.radius",
+        "badge.padding-x",
+        "badge.padding-y",
+        "badge.font-size",
+        "badge.line-height",
+        "badge.font-weight",
+        "badge.default-background",
+        "badge.default-foreground",
+        "badge.success-background",
+        "badge.success-foreground",
+        "badge.warning-background",
+        "badge.warning-foreground",
+        "badge.error-background",
+        "badge.error-foreground",
+        "badge.info-background",
+        "badge.info-foreground"
+      ],
+      "notes": "Default badge"
+    }
+  ],
+  "stateModel": {
+    "axes": [
+      {
+        "name": "State",
+        "kind": "variant",
+        "values": [
+          "Default",
+          "Hover",
+          "Error",
+          "Disabled"
+        ]
+      }
+    ],
+    "validCombinations": [
+      {
+        "combination": "Default",
+        "supported": true,
+        "result": "White fill, control border, normal label."
+      },
+      {
+        "combination": "Hover",
+        "supported": true,
+        "result": "Hover border boundary."
+      },
+      {
+        "combination": "Error",
+        "supported": true,
+        "result": "Error border and error message."
+      },
+      {
+        "combination": "Disabled",
+        "supported": true,
+        "result": "Muted fill, muted border, muted label; no interaction."
+      }
+    ],
+    "precedence": [
+      "State precedence: Disabled > Error > Hover > Default.",
+      "Focus is orthogonal to State in Default, Hover and Error.",
+      "Disabled suppresses focus entirely."
+    ],
+    "conflicts": [
+      "Error + Hover is not modelled. Error border persists."
+    ],
+    "notes": [
+      "Focus ring is an overlay, not a state."
+    ]
+  },
+  "tokens": {
+    "rule": "Badge styles consume only component tokens in the badge.* namespace.",
+    "dependencies": [
+      {
+        "name": "badge.radius",
+        "type": "dimension",
+        "cssVar": "--fc-badge-radius",
+        "alias": "radius.lg",
+        "resolved": "8px",
+        "role": "Token for badge.radius",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.padding-x",
+        "type": "dimension",
+        "cssVar": "--fc-badge-padding-x",
+        "alias": "space.2",
+        "resolved": "8px",
+        "role": "Token for badge.padding-x",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.padding-y",
+        "type": "dimension",
+        "cssVar": "--fc-badge-padding-y",
+        "alias": "space.1",
+        "resolved": "4px",
+        "role": "Token for badge.padding-y",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.font-size",
+        "type": "dimension",
+        "cssVar": "--fc-badge-font-size",
+        "alias": "font.size.xs",
+        "resolved": "12px",
+        "role": "Token for badge.font-size",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.line-height",
+        "type": "dimension",
+        "cssVar": "--fc-badge-line-height",
+        "alias": "font.line-height.xs",
+        "resolved": "16px",
+        "role": "Token for badge.line-height",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.font-weight",
+        "type": "fontWeight",
+        "cssVar": "--fc-badge-font-weight",
+        "alias": "font.weight.medium",
+        "resolved": 500,
+        "role": "Token for badge.font-weight",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.default-background",
+        "type": "color",
+        "cssVar": "--fc-badge-default-background",
+        "alias": "color.surface.muted",
+        "resolved": "#E4E4E7",
+        "role": "Token for badge.default-background",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.default-foreground",
+        "type": "color",
+        "cssVar": "--fc-badge-default-foreground",
+        "alias": "color.content.secondary",
+        "resolved": "#3F3F46",
+        "role": "Token for badge.default-foreground",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.success-background",
+        "type": "color",
+        "cssVar": "--fc-badge-success-background",
+        "alias": "color.feedback.success-background",
+        "resolved": "#F0FDF4",
+        "role": "Token for badge.success-background",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.success-foreground",
+        "type": "color",
+        "cssVar": "--fc-badge-success-foreground",
+        "alias": "color.feedback.success-foreground",
+        "resolved": "#166534",
+        "role": "Token for badge.success-foreground",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.warning-background",
+        "type": "color",
+        "cssVar": "--fc-badge-warning-background",
+        "alias": "color.feedback.warning-background",
+        "resolved": "#FFFBEB",
+        "role": "Token for badge.warning-background",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.warning-foreground",
+        "type": "color",
+        "cssVar": "--fc-badge-warning-foreground",
+        "alias": "color.feedback.warning-foreground",
+        "resolved": "#92400E",
+        "role": "Token for badge.warning-foreground",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.error-background",
+        "type": "color",
+        "cssVar": "--fc-badge-error-background",
+        "alias": "color.feedback.error-background",
+        "resolved": "#FEF2F2",
+        "role": "Token for badge.error-background",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.error-foreground",
+        "type": "color",
+        "cssVar": "--fc-badge-error-foreground",
+        "alias": "color.feedback.error-foreground",
+        "resolved": "#991B1B",
+        "role": "Token for badge.error-foreground",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.info-background",
+        "type": "color",
+        "cssVar": "--fc-badge-info-background",
+        "alias": "color.feedback.info-background",
+        "resolved": "#EFF6FF",
+        "role": "Token for badge.info-background",
+        "usedBy": [
+          "Component element"
+        ]
+      },
+      {
+        "name": "badge.info-foreground",
+        "type": "color",
+        "cssVar": "--fc-badge-info-foreground",
+        "alias": "color.feedback.info-foreground",
+        "resolved": "#1E40AF",
+        "role": "Token for badge.info-foreground",
+        "usedBy": [
+          "Component element"
+        ]
+      }
+    ],
+    "stateMapping": [
+      {
+        "state": "Default",
+        "background": "badge.default-background",
+        "border": null,
+        "foreground": "badge.default-foreground",
+        "placeholder": null,
+        "label": null,
+        "helper": null,
+        "ring": null
+      }
+    ],
+    "forbidden": [
+      "Hardcoded values",
+      "Primitive tokens directly",
+      "Non-badge component tokens"
+    ]
+  },
+  "accessibility": {
+    "design": [
+      {
+        "id": "target-size",
+        "requirement": "Control is 40px high, meeting target requirements.",
+        "verification": "Inspect layout."
+      }
+    ],
+    "production": [
+      {
+        "id": "label-association",
+        "requirement": "Input field has programmatic label association.",
+        "verification": "Inspect accessible name in tree."
+      }
+    ],
+    "contrast": [
+      {
+        "role": "text",
+        "foreground": "badge.default-foreground",
+        "background": "badge.default-background",
+        "minimum": 4.5,
+        "ratios": {
+          "light": 4.52
+        },
+        "status": "pass",
+        "notes": "Badge text on background"
+      }
+    ]
+  },
+  "customisation": {
+    "allowed": [
+      "Layout wrappers for positioning."
+    ],
+    "forbidden": [
+      "Overriding token values directly per instance."
+    ],
+    "themeOverrides": [
+      "Must be performed at token layer."
+    ]
+  },
+  "composition": {
+    "canonical": [
+      "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+    ],
+    "forbidden": [
+      "Do not nest inside interactive elements."
+    ],
+    "example": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amt\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amt\" /></div></div>"
+  },
+  "invalidConfigurations": [
+    {
+      "id": "unlabelled-currency",
+      "configuration": "Currency input without label.",
+      "why": "Missing accessible name.",
+      "correct": "Always supply a label."
+    }
+  ],
+  "tests": {
+    "visual": [
+      {
+        "id": "states",
+        "given": "Default, Hover, Error and Disabled states",
+        "when": "rendered",
+        "then": "styles match tokens."
+      }
+    ],
+    "behaviour": [
+      {
+        "id": "amount-input",
+        "given": "an enabled currency input",
+        "when": "amount is typed",
+        "then": "value is formatted as currency."
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessible-name",
+        "given": "a labelled currency input",
+        "when": "inspected",
+        "then": "label is accessible name."
+      }
+    ],
+    "tokens": [
+      {
+        "id": "token-only",
+        "given": "currency css",
+        "when": "inspected",
+        "then": "only currency.* tokens used."
+      }
+    ],
+    "regression": [
+      {
+        "id": "focus-visible",
+        "given": "keyboard focus",
+        "when": "focused",
+        "then": "focus ring overlay is visible around control wrapper."
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "id": "no-figma-source",
+      "limitation": "No Figma component set exists for Currency in v0.1.",
+      "impact": "Canonical specification based on token and CSS code.",
+      "mitigation": "Design parity will be verified when Figma set is published."
+    }
+  ],
+  "aiGuidance": {
+    "readOrder": [
+      "Read this contract, then components/currency/currency.css, then tokens/tokens.json."
+    ],
+    "rules": [
+      "Use only currency.* tokens in Currency code."
+    ],
+    "uncertaintyPolicy": [
+      "Request contract updates for missing properties."
+    ],
+    "definitionOfDone": [
+      "All states implemented with token fidelity."
+    ]
+  },
+  "examples": {
+    "valid": [
+      {
+        "title": "Labelled native currency input",
+        "language": "html",
+        "code": "<div class=\"fc-currency\"><label class=\"fc-currency__label\" for=\"amount\">Amount</label><div class=\"fc-currency__control\"><span class=\"fc-currency__prefix\">$</span><input class=\"fc-currency__field\" id=\"amount\" /><span class=\"fc-currency__suffix\">USD</span></div></div>",
+        "explanation": "Valid currency composition."
+      }
+    ],
+    "invalid": [
+      {
+        "title": "Unlabelled currency input",
+        "language": "html",
+        "code": "<input class=\"fc-currency__field\" />",
+        "explanation": "Missing container, control wrapper, prefix and label."
+      }
+    ]
+  }
+}

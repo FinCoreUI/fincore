@@ -1,0 +1,50 @@
+.fc-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fc-status-indicator-gap);
+  font-size: var(--fc-status-indicator-font-size);
+  font-weight: var(--fc-status-indicator-font-weight);
+  box-sizing: border-box;
+}
+
+.fc-status-indicator__dot {
+  display: inline-block;
+  border-radius: var(--fc-status-indicator-radius);
+  flex-shrink: 0;
+}
+
+.fc-status-indicator--sm .fc-status-indicator__dot {
+  width: var(--fc-status-indicator-size-sm);
+  height: var(--fc-status-indicator-size-sm);
+}
+
+.fc-status-indicator--md .fc-status-indicator__dot {
+  width: var(--fc-status-indicator-size-md);
+  height: var(--fc-status-indicator-size-md);
+}
+
+.fc-status-indicator--lg .fc-status-indicator__dot {
+  width: var(--fc-status-indicator-size-lg);
+  height: var(--fc-status-indicator-size-lg);
+}
+
+.fc-status-indicator--success .fc-status-indicator__dot {
+  background-color: var(--fc-status-indicator-color-success);
+}
+
+.fc-status-indicator--warning .fc-status-indicator__dot {
+  background-color: var(--fc-status-indicator-color-warning);
+}
+
+.fc-status-indicator--error .fc-status-indicator__dot {
+  background-color: var(--fc-status-indicator-color-error);
+}
+
+.fc-status-indicator--info .fc-status-indicator__dot {
+  background-color: var(--fc-status-indicator-color-info);
+}
+
+.fc-status-indicator--neutral .fc-status-indicator__dot {
+  background-color: var(--fc-status-indicator-color-neutral);
+}
+

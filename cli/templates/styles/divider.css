@@ -1,0 +1,27 @@
+/*
+ * FinCore Divider — structural separation line.
+ * Consumes only --fc-divider-* component tokens from tokens/dist/tokens.css.
+ */
+
+.fc-divider {
+  border: 0;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.fc-divider--horizontal {
+  width: 100%;
+  height: var(--fc-divider-width);
+  background-color: var(--fc-divider-color);
+  margin-block: var(--fc-divider-gap-vertical);
+}
+
+.fc-divider--vertical {
+  height: 100%;
+  min-height: 1rem;
+  width: var(--fc-divider-width);
+  background-color: var(--fc-divider-color);
+  margin-inline: var(--fc-divider-gap-horizontal);
+  align-self: stretch;
+}
+

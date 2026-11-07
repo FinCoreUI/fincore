@@ -1,4 +1,6 @@
+export { Alert, default as AlertDefault } from "./alert";
 export { Button, default as ButtonDefault } from "./button";
+export { Card, default as CardDefault } from "./card";
 export { Checkbox, default as CheckboxDefault } from "./checkbox";
 export { Currency, default as CurrencyDefault } from "./currency";
 export { CVV, default as CVVDefault } from "./cvv";
@@ -9,5 +11,4 @@ export { PasswordInput, default as PasswordInputDefault } from "./password-input
 export { RadioGroup, default as RadioGroupDefault } from "./radio-group";
 export { Select, default as SelectDefault } from "./select";
 export { Textarea, default as TextareaDefault } from "./textarea";
-export type { ButtonProps, ButtonVariant, CheckboxProps, CurrencyProps, CVVProps, DatePickerProps, InputProps, OTPProps, PasswordInputProps, PhoneInputProps, PhoneInputChangeResult, PhoneInputStatus, RadioGroupProps, RadioOption, SelectProps, TextareaProps, TextareaResize } from "./types";
-
+export type { AlertProps, AlertVariant, ButtonProps, ButtonVariant, CardProps, CheckboxProps, CurrencyProps, CVVProps, DatePickerProps, InputProps, OTPProps, PasswordInputProps, PhoneInputProps, PhoneInputChangeResult, PhoneInputStatus, RadioGroupProps, RadioOption, SelectProps, TextareaProps, TextareaResize } from "./types";

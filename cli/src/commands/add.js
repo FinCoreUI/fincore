@@ -5,6 +5,8 @@ import { checkboxRegistry } from '../registry/checkbox.js';
 import { currencyRegistry } from '../registry/currency.js';
 import { cvvRegistry } from '../registry/cvv.js';
 import { datePickerRegistry } from '../registry/date-picker.js';
+import { cardRegistry } from '../registry/card.js';
+import { alertRegistry } from '../registry/alert.js';
 import { inputRegistry } from '../registry/input.js';
 import { otpRegistry } from '../registry/otp.js';
 import { passwordInputRegistry } from '../registry/password-input.js';
@@ -20,6 +22,8 @@ function getRegistry(component) {
   if (component === 'currency') return currencyRegistry;
   if (component === 'cvv') return cvvRegistry;
   if (component === 'date-picker' || component === 'datepicker') return datePickerRegistry;
+  if (component === 'card') return cardRegistry;
+  if (component === 'alert') return alertRegistry;
   if (component === 'input') return inputRegistry;
   if (component === 'otp') return otpRegistry;
   if (component === 'password-input' || component === 'passwordinput') return passwordInputRegistry;
@@ -47,13 +51,13 @@ export async function addCommand(args) {
   if (!component) {
     console.error('Error: Component name required');
     console.error('Usage: weft add <component> [--dir <path>] [--dry-run]');
-    console.error('Components: button, checkbox, currency, cvv, date-picker, input, otp, password-input, phone-input, radio-group, select, textarea');
+    console.error('Components: alert, button, card, checkbox, currency, cvv, date-picker, input, otp, password-input, phone-input, radio-group, select, textarea');
     process.exit(1);
   }
   
   const registry = getRegistry(component);
   if (!registry) {
-    console.error(`Error: Unknown component "${component}". Only "button", "checkbox", "currency", "cvv", "date-picker", "input", "otp", "password-input", "phone-input", "radio-group", "select", and "textarea" are supported in this version.`);
+    console.error(`Error: Unknown component "${component}". Only "alert", "button", "card", "checkbox", "currency", "cvv", "date-picker", "input", "otp", "password-input", "phone-input", "radio-group", "select", and "textarea" are supported in this version.`);
     process.exit(1);
   }
   

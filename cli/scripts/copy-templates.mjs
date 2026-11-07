@@ -117,6 +117,24 @@ const templateManifest = [
     source: path.resolve(repoRoot, "components/date-picker/date-picker.css"),
     dest: path.resolve(templatesDir, "styles/date-picker.css")
   },
+  // card
+  {
+    source: path.resolve(repoRoot, "react/card/index.tsx"),
+    dest: path.resolve(templatesDir, "components/card/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/card/card.css"),
+    dest: path.resolve(templatesDir, "styles/card.css")
+  },
+  // alert
+  {
+    source: path.resolve(repoRoot, "react/alert/index.tsx"),
+    dest: path.resolve(templatesDir, "components/alert/index.tsx")
+  },
+  {
+    source: path.resolve(repoRoot, "components/alert/alert.css"),
+    dest: path.resolve(templatesDir, "styles/alert.css")
+  },
   // Shared types
   {
     source: path.resolve(repoRoot, "react/types/index.ts"),

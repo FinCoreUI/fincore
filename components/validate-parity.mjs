@@ -21,6 +21,22 @@ const TEMPLATES_DIR = join(ROOT, "cli", "templates");
 
 const PAIRS = [
   {
+    template: "components/alert/index.tsx",
+    canonical: "react/alert/index.tsx",
+  },
+  {
+    template: "styles/alert.css",
+    canonical: "components/alert/alert.css",
+  },
+  {
+    template: "components/card/index.tsx",
+    canonical: "react/card/index.tsx",
+  },
+  {
+    template: "styles/card.css",
+    canonical: "components/card/card.css",
+  },
+  {
     template: "components/button/index.tsx",
     canonical: "react/button/index.tsx",
   },

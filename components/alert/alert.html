@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinCore Alert — reference markup</title>
+  <link rel="stylesheet" href="../../tokens/dist/tokens.css">
+  <link rel="stylesheet" href="./alert.css">
+</head>
+<body>
+  <main>
+    <h1>Alert reference markup</h1>
+    <p>Contextual callout messages using native ARIA alert or status roles.</p>
+
+    <div class="fc-alert fc-alert--info" role="status">
+      <p class="fc-alert__title">Information</p>
+      <p class="fc-alert__message">This is an informational announcement.</p>
+    </div>
+
+    <div class="fc-alert fc-alert--success" role="status">
+      <p class="fc-alert__title">Success</p>
+      <p class="fc-alert__message">Your payment was processed successfully.</p>
+    </div>
+
+    <div class="fc-alert fc-alert--warning" role="alert">
+      <p class="fc-alert__title">Attention</p>
+      <p class="fc-alert__message">Please verify your account details before proceeding.</p>
+    </div>
+
+    <div class="fc-alert fc-alert--error" role="alert">
+      <p class="fc-alert__title">Transaction Failed</p>
+      <p class="fc-alert__message">Insufficient funds to complete this transfer.</p>
+    </div>
+  </main>
+</body>
+</html>
+

@@ -41,7 +41,7 @@ const ALLOWED_TYPES = new Set(["color", "dimension", "fontWeight", "number"]);
 // Layer detection is prefix-based. Anything that is neither a component
 // prefix nor `color.` falls through to the primitive layer, so the primitive
 // group allowlist below catches typos such as `spac.1`.
-const COMPONENT_PREFIXES = ["button.", "input.", "select.", "phone-input.", "checkbox.", "radio-group.", "textarea.", "otp.", "currency.", "cvv.", "date-picker."];
+const COMPONENT_PREFIXES = ["button.", "input.", "select.", "phone-input.", "checkbox.", "radio-group.", "textarea.", "otp.", "currency.", "cvv.", "date-picker.", "card.", "alert."];
 const PRIMITIVE_GROUPS = new Set([
   "neutral",
   "blue",

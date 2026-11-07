@@ -1,5 +1,5 @@
 /* FinCore design tokens — generated file. Do not edit by hand. */
-/* Source: tokens/tokens.json (sha256: f3458936537d7dc011159606cc1c08b4d2365482d9c0f1403ea8e142ce93594a) */
+/* Source: tokens/tokens.json (sha256: d80034ade16223cb7b11b403b9a0f58a7ae33dde9efec2c62264c712f1cda2a4) */
 /* Themes: light (default) and dark ([data-theme="dark"], .dark). */
 /* Regenerate: node tokens/check.mjs --write */
 
@@ -471,6 +471,40 @@
   --fc-date-picker-helper-color: var(--fc-color-content-helper);
   --fc-date-picker-helper-font-size: var(--fc-font-size-xs);
   --fc-date-picker-helper-line-height: var(--fc-font-line-height-xs);
+  --fc-card-background: var(--fc-color-surface-default);
+  --fc-card-foreground: var(--fc-color-content-primary);
+  --fc-card-border: var(--fc-color-border-subtle);
+  --fc-card-border-width: var(--fc-size-border-width);
+  --fc-card-radius: var(--fc-radius-md);
+  --fc-card-padding: var(--fc-space-6);
+  --fc-card-header-gap: var(--fc-space-3);
+  --fc-card-footer-gap: var(--fc-space-4);
+  --fc-card-title-color: var(--fc-color-content-primary);
+  --fc-card-title-font-size: var(--fc-font-size-sm);
+  --fc-card-title-font-weight: var(--fc-font-weight-medium);
+  --fc-card-title-line-height: var(--fc-font-line-height-sm);
+  --fc-card-description-color: var(--fc-color-content-secondary);
+  --fc-card-description-font-size: var(--fc-font-size-xs);
+  --fc-card-description-line-height: var(--fc-font-line-height-xs);
+  --fc-alert-radius: var(--fc-radius-md);
+  --fc-alert-border-width: var(--fc-size-border-width);
+  --fc-alert-padding: var(--fc-space-4);
+  --fc-alert-font-size: var(--fc-font-size-sm);
+  --fc-alert-line-height: var(--fc-font-line-height-sm);
+  --fc-alert-font-weight: var(--fc-font-weight-regular);
+  --fc-alert-title-font-weight: var(--fc-font-weight-medium);
+  --fc-alert-info-background: var(--fc-color-feedback-info-background);
+  --fc-alert-info-border: var(--fc-color-feedback-info-border);
+  --fc-alert-info-foreground: var(--fc-color-feedback-info-foreground);
+  --fc-alert-success-background: var(--fc-color-feedback-success-background);
+  --fc-alert-success-border: var(--fc-color-feedback-success-border);
+  --fc-alert-success-foreground: var(--fc-color-feedback-success-foreground);
+  --fc-alert-warning-background: var(--fc-color-feedback-warning-background);
+  --fc-alert-warning-border: var(--fc-color-feedback-warning-border);
+  --fc-alert-warning-foreground: var(--fc-color-feedback-warning-foreground);
+  --fc-alert-error-background: var(--fc-color-feedback-error-background);
+  --fc-alert-error-border: var(--fc-color-feedback-error-border);
+  --fc-alert-error-foreground: var(--fc-color-feedback-error-foreground);
 }
 
 /* Semantic tokens — dark theme overrides */

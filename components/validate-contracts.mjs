@@ -32,6 +32,8 @@ const CONTRACT_PATHS = [
   join(ROOT, "components", "currency", "contract.json"),
   join(ROOT, "components", "cvv", "contract.json"),
   join(ROOT, "components", "date-picker", "contract.json"),
+  join(ROOT, "components", "card", "contract.json"),
+  join(ROOT, "components", "alert", "contract.json"),
 ];
 const MARKDOWN_PATHS = [
   join(ROOT, "components", "button", "README.md"),
@@ -343,6 +345,8 @@ const EXPECTED = {
   "fincore.currency": { dependencies: 30, variants: 1, properties: 1 },
   "fincore.cvv": { dependencies: 29, variants: 1, properties: 1 },
   "fincore.date-picker": { dependencies: 30, variants: 1, properties: 1 },
+  "fincore.card": { dependencies: 15, variants: 1, properties: 1 },
+  "fincore.alert": { dependencies: 19, variants: 1, properties: 1 },
 };
 
 const contracts = [];
@@ -542,6 +546,12 @@ for (const entry of contracts) {
     "fincore.date-picker": {
       Label: { type: "TEXT", default: "Date" },
     },
+    "fincore.card": {
+      Content: { type: "TEXT", default: "Card content" },
+    },
+    "fincore.alert": {
+      Message: { type: "TEXT", default: "Alert message" },
+    },
   };
 
   const EXPECTED_VARIANT_IDS = {
@@ -572,6 +582,8 @@ for (const entry of contracts) {
     "fincore.currency": ["0:0"],
     "fincore.cvv": ["0:0"],
     "fincore.date-picker": ["0:0"],
+    "fincore.card": ["0:0"],
+    "fincore.alert": ["0:0"],
   };
 
   if (expected) {
@@ -690,7 +702,11 @@ for (const entry of contracts) {
                           ? "cvv."
                           : id === "fincore.date-picker"
                             ? "date-picker."
-                            : null;
+                            : id === "fincore.card"
+                              ? "card."
+                              : id === "fincore.alert"
+                                ? "alert."
+                                : null;
     if (!prefix || !dependency.name.startsWith(prefix)) {
       problems.push(
         `${relative}: dependency ${dependency.name} is not a ${prefix ? prefix + "*" : "component"}* component token`,
@@ -1037,8 +1053,8 @@ for (const entry of contracts) {
 
 {
   const problems = [];
-  if (contracts.length !== 11) {
-    problems.push(`expected 11 contracts, found ${contracts.length}`);
+  if (contracts.length !== 13) {
+    problems.push(`expected 13 contracts, found ${contracts.length}`);
   }
   const versions = new Set(contracts.map((entry) => entry.contract.contract?.version));
   if (versions.size > 1) {

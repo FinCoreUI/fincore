@@ -532,3 +532,58 @@ export interface DatePickerProps
   "aria-describedby"?: string;
 }
 
+
+/**
+ * Props for the Card component.
+ */
+export interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+  /**
+   * Optional title rendered in the card header.
+   */
+  title?: React.ReactNode;
+  /**
+   * Optional description text rendered below the title in the header.
+   */
+  description?: React.ReactNode;
+  /**
+   * Optional custom footer content.
+   */
+  footer?: React.ReactNode;
+  /**
+   * Main card body content.
+   */
+  children?: React.ReactNode;
+  /**
+   * Additional className to attach to the card root.
+   */
+  className?: string;
+}
+
+export type AlertVariant = "info" | "success" | "warning" | "error";
+
+/**
+ * Props for the Alert component.
+ */
+export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+  /**
+   * Semantic variant of the alert.
+   * @default "info"
+   */
+  variant?: AlertVariant;
+  /**
+   * Optional bold heading above the alert message.
+   */
+  title?: React.ReactNode;
+  /**
+   * Alert body message or content.
+   */
+  children?: React.ReactNode;
+  /**
+   * Accessible ARIA role. Defaults to 'alert' for warning/error, 'status' for info/success.
+   */
+  role?: "alert" | "status";
+  /**
+   * Additional className.
+   */
+  className?: string;
+}

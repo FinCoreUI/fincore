@@ -1,0 +1,59 @@
+/*
+ * FinCore Alert — production styles for callouts and feedback alerts.
+ * Contract: components/alert/contract.json (1.0.0)
+ *
+ * Consumes only --fc-alert-* component tokens from tokens/dist/tokens.css.
+ */
+
+.fc-alert {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-width: var(--fc-alert-border-width);
+  border-style: solid;
+  border-radius: var(--fc-alert-radius);
+  padding: var(--fc-alert-padding);
+  font-size: var(--fc-alert-font-size);
+  line-height: var(--fc-alert-line-height);
+  font-weight: var(--fc-alert-font-weight);
+}
+
+.fc-alert__title {
+  font-weight: var(--fc-alert-title-font-weight);
+  margin: 0;
+}
+
+.fc-alert__message {
+  margin: 0;
+}
+
+/* Info Variant (default) */
+.fc-alert,
+.fc-alert--info {
+  background-color: var(--fc-alert-info-background);
+  border-color: var(--fc-alert-info-border);
+  color: var(--fc-alert-info-foreground);
+}
+
+/* Success Variant */
+.fc-alert--success {
+  background-color: var(--fc-alert-success-background);
+  border-color: var(--fc-alert-success-border);
+  color: var(--fc-alert-success-foreground);
+}
+
+/* Warning Variant */
+.fc-alert--warning {
+  background-color: var(--fc-alert-warning-background);
+  border-color: var(--fc-alert-warning-border);
+  color: var(--fc-alert-warning-foreground);
+}
+
+/* Error Variant */
+.fc-alert--error {
+  background-color: var(--fc-alert-error-background);
+  border-color: var(--fc-alert-error-border);
+  color: var(--fc-alert-error-foreground);
+}
+
